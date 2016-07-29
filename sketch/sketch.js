@@ -56,7 +56,7 @@ function getYVel() {
   var again = true;
   while (again) {
     var inp1 = window.prompt("y velocity (0-30)", "1");
-    if (isPositiveNumber(inp1 / 10)) {
+    if (isPositiveNumber(inp1)) {
       setYVel(inp1);
       again = false;
     }
