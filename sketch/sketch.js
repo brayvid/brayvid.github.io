@@ -20,9 +20,6 @@ function draw() {
   
   if(xPos>=1200){
     return;
-  };
-  if(yPos>=700){
-    return;
   }
 }
 
