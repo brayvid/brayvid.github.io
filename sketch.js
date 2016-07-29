@@ -2,7 +2,7 @@ function setup() {
   createCanvas(1200,700);
 }
 
-var xPos = 0;
+var xPos = 30;
 var yPos = 700;
 xInit = xPos;
 yInit = yPos;
