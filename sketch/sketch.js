@@ -6,11 +6,11 @@ function setup() {
   
   angSlider = createSlider(1, 90, 80);
   angSlider.position(20, 20);
-  velSlider = createSlider(1, 10, 5);
+  velSlider = createSlider(1, 10, 5.2);
   velSlider.position(20, 50);
   
   button = createButton('launch');
-  button.position(225, 35);
+  button.position(240, 35);
 }
 
 // launch button
@@ -50,8 +50,14 @@ function draw() {
     fill(50, 255, 50);
     ellipse(xInit, yInit, 10, 10);
   }
-  text("angle", 165, 35);
-  text("speed", 165, 65);
+  text("angle", 190, 35);
+  text("speed", 190, 65);
+  
+  text("1",5,35);
+  text(angSlider.value(),160,35);
+  
+  text("1",5,65);
+  text(velSlider.value(),160,65);
   
  
   
