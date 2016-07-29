@@ -60,7 +60,7 @@ function draw() {
   button.mousePressed(mouseWasPressed);
   
   if (yPos <= 700 && xPos <= 1300 && launch) {
-    
+    // the guts
     fill(50, 255, 50);
     ellipse(xPos, yPos, 10, 10);
     incPos(xPos, yPos);
