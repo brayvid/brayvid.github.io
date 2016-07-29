@@ -42,8 +42,6 @@ function draw() {
 
 function getXVel() {
 
-
-
   var again = true;
   while (again) {
     var inp1 = window.prompt("x velocity (0-30)", "1");
@@ -76,8 +74,6 @@ function setYVel(val) {
 function isPositiveNumber(s) {
   return true;
 }
-
-
 
 function incPos(x, y) {
   xPos = xInit + (xInitVel * t);
