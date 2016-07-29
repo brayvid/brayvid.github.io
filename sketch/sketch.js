@@ -10,8 +10,11 @@ var g = .007;
 var t = 1;
 var xInitVel = 1.2;
 var yInitVel = 2.8;
+var d = new Date();
+var time = d.getTime();
 
 function draw() {
+  
   background(0);
   fill(50,255,50);
   ellipse(xPos, yPos, 10,10);
@@ -19,8 +22,9 @@ function draw() {
 }
 
 function incPos(x,y){
-  xPos = xInit + (xInitVel*t);
-  yPos = yInit - (yInitVel*t) + .5*g*Math.pow(t,2);
+  time = time - d.getTime();
+  xPos = xInit + (xInitVel*time);
+  yPos = yInit - (yInitVel*time) + .5*g*Math.pow(time,2);
   t++;
 }
 
