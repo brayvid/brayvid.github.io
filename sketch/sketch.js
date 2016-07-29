@@ -11,7 +11,7 @@ var t = 1;
 var xInitVel = 1.2;
 var yInitVel = 2.8;
 var d = new Date();
-var time = d.getTime();
+var time = 0;
 
 function draw() {
   
@@ -22,7 +22,7 @@ function draw() {
 }
 
 function incPos(x,y){
-  time = time - d.getTime();
+  time = time + d.getTime();
   xPos = xInit + (xInitVel*time);
   yPos = yInit - (yInitVel*time) + .5*g*Math.pow(time,2);
   t++;
