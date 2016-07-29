@@ -83,6 +83,7 @@ function incPos(x,y){
   xPos = xInit + (xInitVel*t);
   yPos = yInit - (yInitVel*t) + .5*g*Math.pow(t,2);
   t++;
+  t++;
   
 }
 
