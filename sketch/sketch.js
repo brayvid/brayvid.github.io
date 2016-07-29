@@ -1,6 +1,7 @@
 function setup() {
   createCanvas(1200,700);
 }
+
 // Position (constantly updated)
 var xPos = 100;
 var yPos = 700;
@@ -13,8 +14,12 @@ yInit = yPos;
 var g = .01;
 
 // Velocities
-var xInitVel = 4;
-var yInitVel = 3;
+var xInitVel;
+var yInitVel;
+
+// Ask for velocities
+getXVel();
+getYVel();
 
 // Time counter
 var t = 1;
@@ -22,19 +27,58 @@ var t = 1;
 
 function draw() {
   
-if(yPos <= 700 && xPos <= 1200){
-  background(0);
-  fill(50,255,50);
-  ellipse(xPos, yPos, 10,10);
-  incPos(xPos, yPos);
-}else{
-    xPos = xInit;
-    yPos = yInit;
-    t=1;
-}
+  if(yPos <= 700 && xPos <= 1200){
+    background(0);
+    fill(50,255,50);
+    ellipse(xPos, yPos, 10,10);
+    incPos(xPos, yPos);
+  }else{
+      xPos = xInit;
+      yPos = yInit;
+      t=1;
+  }
 
 }
 
+function getXVel(){
+  
+
+    
+    var again = true;
+    while(again){
+      var inp1 = window.prompt("x velocity","1");
+      if(isPositiveInteger(inp1)){
+        setXVel(inp1);
+        again = false;
+      }
+    }
+}
+    
+function getYVel(){
+    var again = true;
+    while(again){
+      var inp1 = window.prompt("y velocity","1");
+      if(isPositiveInteger(inp1)){
+        setYVel(inp1);
+        again = false;
+      }
+    }
+}
+
+function setXVel(val){
+  xInitVel = val;
+}
+
+function setYVel(val){
+  yInitVel = val;
+}
+
+function isPositiveInteger(s) {
+  return true;
+}
+
+
+  
 function incPos(x,y){
   xPos = xInit + (xInitVel*t);
   yPos = yInit - (yInitVel*t) + .5*g*Math.pow(t,2);
