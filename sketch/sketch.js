@@ -22,7 +22,8 @@ function draw() {
 }
 
 function incPos(x,y){
-  time = time + d.getTime();
+  time = d.getTime();
+  time = d.getTime() - time;
   xPos = xInit + (xInitVel*time);
   yPos = yInit - (yInitVel*time) + .5*g*Math.pow(time,2);
   t++;
