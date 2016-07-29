@@ -10,9 +10,6 @@ var g = .01;
 var t = 1;
 var xInitVel = 1;
 var yInitVel = 3;
-var d = new Date();
-var initTime = d.getTime();
-var time = initTime;
 
 function draw() {
   
