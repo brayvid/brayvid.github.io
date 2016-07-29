@@ -2,16 +2,16 @@ function setup() {
   createCanvas(1200, 700);
 }
 
+// Gravity
+var g = .018;
+
+// Initial position
+xInit = 100;
+yInit = 700;
+
 // Position (constantly updated)
-var xPos = 100;
-var yPos = 700;
-
-// First position
-xInit = xPos;
-yInit = yPos;
-
-// Constants
-var g = .02;
+var xPos = xInit;
+var yPos = yInit;
 
 // Velocities
 var xInitVel;
@@ -21,7 +21,7 @@ var yInitVel;
 getXVel();
 getYVel();
 
-// Time counter
+// Time
 var t = 1;
 
 
