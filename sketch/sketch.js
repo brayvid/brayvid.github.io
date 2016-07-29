@@ -44,7 +44,7 @@ function getXVel() {
 
   var again = true;
   while (again) {
-    var inp1 = window.prompt("x velocity (0-30)", "1");
+    var inp1 = window.prompt("x velocity", "30");
     if (isPositiveNumber(inp1)) {
       setXVel(inp1);
       again = false;
@@ -55,7 +55,7 @@ function getXVel() {
 function getYVel() {
   var again = true;
   while (again) {
-    var inp1 = window.prompt("y velocity (0-30)", "1");
+    var inp1 = window.prompt("y velocity", "30");
     if (isPositiveNumber(inp1)) {
       setYVel(inp1);
       again = false;
