@@ -73,6 +73,13 @@ function draw() {
   }
 }
 
+// guts
+function incPos(x, y) {
+  xPos = xInit + (xInitVel * t);
+  yPos = yInit - (yInitVel * t) + .5 * g * Math.pow(t, 2);
+  t = t + 4;
+}
+
 function reset(){
   xPos = xInit;
   yPos = yInit;
@@ -107,20 +114,14 @@ function mouseWasPressed(){
 //   }
 // }
 
-function setXVel(val) {
-  xInitVel = val / 10;
-}
+// function setXVel(val) {
+//   xInitVel = val / 10;
+// }
 
-function setYVel(val) {
-  yInitVel = val / 10;
-}
+// function setYVel(val) {
+//   yInitVel = val / 10;
+// }
 
-function isPositiveNumber(s) {
-  return true;
-}
-
-function incPos(x, y) {
-  xPos = xInit + (xInitVel * t);
-  yPos = yInit - (yInitVel * t) + .5 * g * Math.pow(t, 2);
-  t = t + 4;
-}
+// function isPositiveNumber(s) {
+//   return true;
+// }
