@@ -11,7 +11,7 @@ xInit = xPos;
 yInit = yPos;
 
 // Constants
-var g = .01;
+var g = .02;
 
 // Velocities
 var xInitVel;
