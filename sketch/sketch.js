@@ -73,7 +73,7 @@ function setYVel(val){
   yInitVel = val;
 }
 
-function isPositiveInteger(s) {
+function isPositiveNumber(s) {
   return true;
 }
 
