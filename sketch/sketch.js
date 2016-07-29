@@ -17,6 +17,10 @@ function draw() {
   fill(50,255,50);
   ellipse(xPos, yPos, 10,10);
   incPos(xPos, yPos);
+  
+  if(xPos>1200 || yPos>700){
+    return;
+  };
 }
 
 function incPos(x,y){
