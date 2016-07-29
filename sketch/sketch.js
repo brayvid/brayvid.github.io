@@ -1,7 +1,7 @@
 var angSlider, velSlider, button;
 
 function setup() {
-  createCanvas(800, 700);
+  createCanvas(1300, 700);
   textSize(15);
   
   angSlider = createSlider(1, 90, 80);
@@ -40,10 +40,8 @@ var t = 1;
 
 function draw() {
   
-  
-  
-  xInitVel = velSlider.value()*Math.cos(3.14 * angSlider.value() / 180);
-  yInitVel = velSlider.value()*Math.sin(3.14 * angSlider.value() / 180);
+  xInitVel = velSlider.value() * Math.cos(3.14 * angSlider.value() / 180);
+  yInitVel = velSlider.value() * Math.sin(3.14 * angSlider.value() / 180);
   
   background(0);
   if(!launch){
@@ -59,11 +57,9 @@ function draw() {
   text("1",5,65);
   text(velSlider.value(),160,65);
   
- 
-  
-  
   button.mousePressed(mouseWasPressed);
-  if (yPos <= 700 && xPos <= 800 && launch) {
+  
+  if (yPos <= 700 && xPos <= 1300 && launch) {
     
     fill(50, 255, 50);
     ellipse(xPos, yPos, 10, 10);
@@ -71,14 +67,10 @@ function draw() {
   } else {
     reset();
     return;
-    
     //
     //t = 1;
     
   }
-  
-  
-
 }
 
 function reset(){
@@ -91,28 +83,29 @@ function reset(){
 function mouseWasPressed(){
   launch = true;
 }
-function getXVel() {
 
-  var again = true;
-  while (again) {
-    var inp1 = window.prompt("x velocity", "30");
-    if (isPositiveNumber(inp1)) {
-      setXVel(inp1);
-      again = false;
-    }
-  }
-}
+// function getXVel() {
 
-function getYVel() {
-  var again = true;
-  while (again) {
-    var inp1 = window.prompt("y velocity", "30");
-    if (isPositiveNumber(inp1)) {
-      setYVel(inp1);
-      again = false;
-    }
-  }
-}
+//   var again = true;
+//   while (again) {
+//     var inp1 = window.prompt("x velocity", "30");
+//     if (isPositiveNumber(inp1)) {
+//       setXVel(inp1);
+//       again = false;
+//     }
+//   }
+// }
+
+// function getYVel() {
+//   var again = true;
+//   while (again) {
+//     var inp1 = window.prompt("y velocity", "30");
+//     if (isPositiveNumber(inp1)) {
+//       setYVel(inp1);
+//       again = false;
+//     }
+//   }
+// }
 
 function setXVel(val) {
   xInitVel = val / 10;
@@ -130,5 +123,4 @@ function incPos(x, y) {
   xPos = xInit + (xInitVel * t);
   yPos = yInit - (yInitVel * t) + .5 * g * Math.pow(t, 2);
   t = t + 4;
-
 }
