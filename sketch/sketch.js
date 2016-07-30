@@ -2,6 +2,7 @@ var angSlider, velSlider, button;
 
 function setup() {
   createCanvas(1300, 700);
+  frameRate(60);
   textSize(15);
   
   angSlider = createSlider(1, 90, 80);
