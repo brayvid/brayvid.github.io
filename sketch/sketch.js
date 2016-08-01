@@ -5,6 +5,17 @@ function setup() {
   frameRate(60);
   textSize(15);
   
+  // Bouncing ball
+  //choose random vectors for the balls initial motion
+  pos = createVector(random(0,width),random(0,height))
+  vel = createVector(random(-5,5),random(-5,5));
+  accel = 0;
+  //make the ball! It is an instance of the mover object
+  ball = new Mover(pos,vel,accel,10,'red');
+  
+  // End bouncing ball
+  
+  
   angSlider = createSlider(1, 90, 80);
   angSlider.position(20, 20);
   velSlider = createSlider(1, 10, 5.2);
@@ -40,11 +51,23 @@ var yInitVel;
 var t = 1;
 
 function draw() {
+  background(0);
+  
+  // Bouncing ball
+  
+  //update the position
+  ball.update();
+  //make the ball bounce
+  ball.bounceEdges();
+  //display changes
+  ball.display();
+  
+  // End bouncing ball
   
   xInitVel = velSlider.value() * Math.cos(3.14 * angSlider.value() / 180);
   yInitVel = velSlider.value() * Math.sin(3.14 * angSlider.value() / 180);
   
-  background(0);
+  
   if(!launch){
     fill(50, 255, 50);
     ellipse(xInit, yInit, 10, 10);
