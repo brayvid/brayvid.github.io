@@ -1,8 +1,9 @@
 var angSlider, velSlider, button;
 
 function setup() {
-  createCanvas(displayWidth,displayHeight);
+  createCanvas(windowWidth,windowHeight);
   frameRate(60);
+  noStroke();
   textSize(15);
   
   // Bouncing ball
@@ -16,10 +17,12 @@ function setup() {
   // End bouncing ball
   
   
-  angSlider = createSlider(1, 90, 80);
-  angSlider.position(20, 20);
+  
   velSlider = createSlider(1, 10, 5.2);
   velSlider.position(20, 50);
+  angSlider = createSlider(1, 90, 80);
+  angSlider.position(20, 20);
+  
   
   button = createButton('launch');
   button.position(240, 35);
