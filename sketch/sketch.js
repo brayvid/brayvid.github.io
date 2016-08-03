@@ -6,8 +6,6 @@ function setup() {
   noStroke();
   textSize(15);
   
-  
-  
   velSlider = createSlider(1, 10, 5.2);
   velSlider.position(20, 50);
   angSlider = createSlider(1, 90, 80);
@@ -26,7 +24,7 @@ var g = .018;
 
 // Initial position
 var xInit = 100;
-var yInit = 700;
+var yInit = windowHeight;
 
 // Position (constantly updated)
 var xPos = xInit;
