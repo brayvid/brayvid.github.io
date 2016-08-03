@@ -1,16 +1,14 @@
 var angSlider, velSlider, button;
 
 function setup() {
-  createCanvas(windowWidth,windowHeight);
+  createCanvas(1300, 700);
   frameRate(60);
-  noStroke();
   textSize(15);
   
-  velSlider = createSlider(1, 10, 5.2);
-  velSlider.position(20, 50);
   angSlider = createSlider(1, 90, 80);
   angSlider.position(20, 20);
-  
+  velSlider = createSlider(1, 10, 5.2);
+  velSlider.position(20, 50);
   
   button = createButton('launch');
   button.position(240, 35);
@@ -24,7 +22,7 @@ var g = .018;
 
 // Initial position
 var xInit = 100;
-var yInit = windowHeight;
+var yInit = 700;
 
 // Position (constantly updated)
 var xPos = xInit;
@@ -42,13 +40,11 @@ var yInitVel;
 var t = 1;
 
 function draw() {
-  background(0);
-
   
   xInitVel = velSlider.value() * Math.cos(3.14 * angSlider.value() / 180);
   yInitVel = velSlider.value() * Math.sin(3.14 * angSlider.value() / 180);
   
-  
+  background(0);
   if(!launch){
     fill(50, 255, 50);
     ellipse(xInit, yInit, 10, 10);
