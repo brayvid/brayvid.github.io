@@ -1,31 +1,29 @@
 function setup() {
-  createCanvas(736,408);
-  frameRate(60);
+  
+  frameRate(30);
 }
+
+var posX;
+var posY;
+var velX;
+var velY;
+
 
 function draw() {
+  fill(255);
+  stroke(255);
+  var originX = 10;
+  var originY = windowHeight - 10;
+  
+  createCanvas(windowWidth,windowHeight);
+  
   background(0);
   
-  fill(255);
-  stroke(30,255,30);
+  ellipse(originX,originY,20,20);
   
-  var originX = 150;
-  var originY = height-100;
-  
-  var ptX = mouseX;
-  var ptY = mouseY;
-  
-  ellipse(originX,originY,10,10);
-  line(originX,originY,ptX,ptY);
-  ellipse(ptX,ptY,10,10);
-  
-  stroke(69,63,127);
-  strokeWeight(2);
-  line(originX,originY,mouseX,originY);
-  stroke(136,34,17);
-  line(mouseX,mouseY,mouseX,originY);
-  
+  ellipse(mouseX,mouseY,20,20);
+  stroke(0,255,0);
+  line(originX,originY,mouseX,mouseY);
 
-  text();
-  
 }
+
