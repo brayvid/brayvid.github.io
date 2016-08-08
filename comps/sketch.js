@@ -24,7 +24,9 @@ function draw() {
   ellipse(mouseX,mouseY,20,20);
   stroke(0,255,0);
   line(originX,originY,mouseX,mouseY);
+  fill(255,0,0);
   line(originX,originY,mouseX,originY);
+  fill(0,0,255);
   line(mouseX,originY,mouseX,mouseY);
 
 }
