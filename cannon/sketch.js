@@ -1,8 +1,9 @@
 var angSlider, velSlider, button;
 
 function setup() {
-  createCanvas(1300, 700);
-  frameRate(60);
+
+
+  createCanvas(windowWidth, windowHeight);
   textSize(15);
   
   angSlider = createSlider(1, 90, 80);
@@ -45,6 +46,8 @@ function draw() {
   yInitVel = velSlider.value() * Math.sin(3.14 * angSlider.value() / 180);
   
   background(0);
+  fill(128,128,128);
+  rect(0,700,width,height-700);
   if(!launch){
     fill(50, 255, 50);
     ellipse(xInit, yInit, 10, 10);
@@ -72,6 +75,7 @@ function draw() {
     //t = 1;
     
   }
+
 }
 
 // guts
