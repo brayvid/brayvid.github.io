@@ -15,6 +15,7 @@ function draw() {
   var originX = 10;
   var originY = windowHeight - 10;
   
+  // note that createcanvas is in the draw function
   createCanvas(windowWidth,windowHeight);
   
   background(0);
