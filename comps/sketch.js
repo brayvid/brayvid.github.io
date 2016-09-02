@@ -29,7 +29,7 @@ function draw() {
   noStroke();
   var pxFromBottom = height - mouseY;
   var pxFromLeft = mouseX;
-  text(floor(dist(originX,originY,mouseX+10,mouseY))+" px @ " + round((180/PI)*atan(pxFromBottom/pxFromLeft))+"°", mouseX + 10, mouseY - 10);
+  text(floor(dist(originX,originY,mouseX+10,mouseY-10))+" px @ " + round((180/PI)*atan(pxFromBottom/pxFromLeft))+"°", mouseX + 10, mouseY - 10);
 
   // X component
   stroke(255, 0, 0);
