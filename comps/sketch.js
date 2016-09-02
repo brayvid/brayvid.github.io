@@ -1,5 +1,5 @@
 function setup() {
-  
+
   frameRate(30);
 }
 
@@ -14,21 +14,38 @@ function draw() {
   stroke(255);
   var originX = 10;
   var originY = windowHeight - 10;
-  
+
   // note that createcanvas is in the draw function
-  createCanvas(windowWidth,windowHeight);
-  
+  createCanvas(windowWidth, windowHeight);
+
   background(0);
-  
-  ellipse(originX,originY,20,20);
-  
-  ellipse(mouseX,mouseY,20,20);
-  stroke(0,255,0);
-  line(originX,originY,mouseX,mouseY);
-  stroke(255,0,0);
-  line(originX,originY,mouseX,originY);
-  stroke(0,0,255);
-  line(originX,mouseY,originX,originY);
 
+  // main vector
+  stroke(0, 255, 0);
+  line(originX, originY, mouseX, mouseY);
+
+  // main vector text
+  fill(255);
+  noStroke();
+  var pxFromBottom = height - mouseY;
+  var pxFromLeft = mouseX;
+  text(floor(dist(originX,originY,mouseX+10,mouseY))+" px @ " + round((180/PI)*atan(pxFromBottom/pxFromLeft))+"°", mouseX + 10, mouseY - 10);
+
+  // X component
+  stroke(255, 0, 0);
+  line(originX, originY, mouseX, originY);
+  fill(255);
+  noStroke();
+  text(mouseX + " px", mouseX + 10, originY);
+
+  // Y component
+  stroke(50, 50, 200);
+  line(originX, mouseY, originX, originY);
+  fill(255);
+  noStroke();
+  text(pxFromBottom + " px", originX, mouseY - 10);
+
+  // Circles
+  ellipse(mouseX, mouseY, 20, 20);
+  ellipse(originX, originY, 20, 20);
 }
-
