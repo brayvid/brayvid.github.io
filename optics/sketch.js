@@ -32,7 +32,7 @@ function setup() {
   heightSlider.position(width/4, height/4 + 20);
   heightSlider.style('width', '150px');
 
-  radius = 100;
+  radius = 100  ;
   image_height = 0;
   image_distance = 0;
   focal_length = 1;
