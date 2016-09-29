@@ -74,10 +74,13 @@ function setup() {
 }
 
 function draw() {
-  background(180);
+  background(255);
 
   image(img, width/2-15, height/4);
 
+  noFill();
+  stroke(0);
+  rect(0,0,width,height);
 
 
 
