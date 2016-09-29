@@ -91,8 +91,8 @@ function draw() {
   objHeightArrow.update();
   objHeightArrow.display();
 
-  object_distance = map(distSlider.value(),50, width/2-lensWidth,0,100);
-  object_height = map(heightSlider.value(),25, height/2-75,-100,0);
+  object_distance = distSlider.value();
+  object_height = heightSlider.value();
 
 
 
