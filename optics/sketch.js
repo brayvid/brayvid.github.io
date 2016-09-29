@@ -9,7 +9,7 @@ var focal_length;
 
 var axis;
 
-var lensWidth = 35;
+var lensWidth = 30;
 
 function preload() {
   img = loadImage("img/lens1.svg");
@@ -32,7 +32,7 @@ function setup() {
   heightSlider.position(width/4, height/4 + 20);
   heightSlider.style('width', '150px');
 
-  radius = 40;
+  radius = 15;
   image_height = 0;
   image_distance = 0;
   focal_length = 1;
