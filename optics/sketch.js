@@ -1,4 +1,4 @@
-var object_height = 25;
+var object_height = 50;
 var object_distance;
 
 var image_height;
@@ -7,42 +7,78 @@ var image_distance;
 var radius;
 var focal_length;
 
+var axis;
 
-
+var lensWidth = 35;
 
 
 
 function setup() {
 
-  frameRate(0.5);
-  createCanvas(600, 400);
-  object_distance = 100;
+  
+
+  frameRate(30);
+  createCanvas(800, 600);
+
+  axis = height/2;
+
+  distSlider = createSlider(50, width/2-lensWidth, 200);
+  distSlider.position(width/4, height/4);
+  distSlider.style('width', '150px');
+
+  heightSlider = createSlider(25, height/2-75, 200);
+  heightSlider.position(width/4, height/4 + 20);
+  heightSlider.style('width', '150px');
+
   radius = 70;
 
   image_height = 0;
   image_distance = 0;
   focal_length = 1;
 
-  origin = createVector(width/2,height/2);
-
+  origin = createVector(width/2,axis);
   objDist = p5.Vector.add(origin,-1*object_distance);
+  objHeight = createVector(objDist.x, axis-object_height);
 
-  objArrow = new Arrow(origin,objDist);
+  objDistArrow = new Arrow(origin,objDist);
 
-  objArrow.color = color(0);
-  objArrow.draggable = false;
-  objArrow.grab = false;
-  objArrow.width = 4;
+  objDistArrow.color = color(0);
+  objDistArrow.draggable = false;
+  objDistArrow.grab = false;
+  objDistArrow.width = 4;
 
-  objBase = createVector();
+
+  objHeightArrow = new Arrow(objDist,objHeight);
+
+  objHeightArrow.color = color(0);
+  objHeightArrow.draggable = false;
+  objHeightArrow.grab = false;
+  objHeightArrow.width = 4;
+
 
 
 }
 
 function draw() {
   background(180);
-  objArrow.update();
-  objArrow.display();
+
+
+
+  objDistArrow.update();
+  objDistArrow.display();
+  objHeightArrow.update();
+  objHeightArrow.display();
+
+  object_distance = distSlider.value();
+  object_height = heightSlider.value();
+
+  objDistArrow.target = {x: object_distance, y: axis};
+
+  objHeightArrow.origin = {x: object_distance, y: axis};
+  objHeightArrow.target = {x: object_distance, y: axis-object_height};
+
+
+  // pr();
 
 
 
@@ -66,6 +102,8 @@ function updateDistance(f, s) {
 }
 
 
+
+
 function pr() {
   console.log("image distance: " + image_distance);
   console.log("image height: " + image_height);
@@ -75,23 +113,23 @@ function pr() {
 }
 
 
-function keyPressed() {
-  if (keyCode == LEFT_ARROW) {
-    // objArrow.add(1);
-    object_distance += 1;
-  } else if (keyCode == RIGHT_ARROW) {
-    object_distance -= 1;
-  }
+// function keyPressed() {
+//   if (keyCode == LEFT_ARROW) {
+//     // objDistArrow.add(1);
+//     object_distance += 1;
+//   } else if (keyCode == RIGHT_ARROW) {
+//     object_distance -= 1;
+//   }
 
-  if (keyCode == UP_ARROW) {
-    radius += 1;
-  } else if (keyCode == DOWN_ARROW) {
-    radius -= 1;
-  }
+//   if (keyCode == UP_ARROW) {
+//     radius += 1;
+//   } else if (keyCode == DOWN_ARROW) {
+//     radius -= 1;
+//   }
 
-  updateFocus(radius);
-  updateHeight(object_height, object_distance, image_distance);
-  updateDistance(focal_length, object_distance);
-  pr();
-  return false; // prevent default
-}
+//   updateFocus(radius);
+//   updateHeight(object_height, object_distance, image_distance);
+//   updateDistance(focal_length, object_distance);
+//   
+//   return false; // prevent default
+// }
