@@ -73,5 +73,6 @@ function keyPressed() {
   updateFocus(radius);
   updateHeight(object_height, object_distance, image_distance);
   updateDistance(focal_length, image_distance);
+  pr();
   return false; // prevent default
 }
