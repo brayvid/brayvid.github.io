@@ -31,16 +31,14 @@ function setup() {
   heightSlider.style('width', '150px');
 
   radius = 70;
-
   image_height = 0;
   image_distance = 0;
   focal_length = 1;
 
+
   origin = createVector(width/2,axis);
   objDist = p5.Vector.add(origin,-1*object_distance);
   objHeight = createVector(objDist.x, axis-object_height);
-
-
 
   objDistArrow = new Arrow(origin,objDist);
 
@@ -58,6 +56,16 @@ function setup() {
   objHeightArrow.width = 4;
 
 
+  imgDist = p5.Vector.add(origin,image_distance);
+  imgHeight = createVector(imgDist.x, axis+image_height);
+
+
+  imgHeightArrow = new Arrow(imgDist,imgHeight);
+
+  imgHeightArrow.color = color(0);
+  imgHeightArrow.draggable = false;
+  imgHeightArrow.grab = false;
+  imgHeightArrow.width = 4;
 
 
 
@@ -68,6 +76,7 @@ function draw() {
 
 
 
+
   objDistArrow.update();
   // objDistArrow.display();
   objHeightArrow.update();
@@ -75,15 +84,30 @@ function draw() {
 
   object_distance = distSlider.value();
   object_height = heightSlider.value();
+  
+
 
   objDistArrow.target = {x: object_distance, y: axis};
 
   objHeightArrow.origin = {x: object_distance, y: axis};
   objHeightArrow.target = {x: object_distance, y: axis-object_height};
 
+  imgHeightArrow.origin = {x: width/2+image_distance, y: axis};
+  imgHeightArrow.target = {x: width/2+image_distance , y: axis-image_height};
+
+  // objDistArrow.display();
+  imgHeightArrow.update();
+  imgHeightArrow.display();
 
 
-  // pr();
+  updateFocus(radius);
+  updateHeight(object_height, object_distance, image_distance);
+  updateDistance(focal_length, object_distance);
+
+
+  
+
+  pr();
 
 
 
