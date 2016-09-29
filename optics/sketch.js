@@ -82,6 +82,8 @@ function draw() {
   stroke(0);
   rect(0,0,width,height);
 
+  line(0,height/2,width,height/2);
+
 
 
   objDistArrow.update();
