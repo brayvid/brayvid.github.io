@@ -80,7 +80,7 @@ function draw() {
 
   noFill();
   stroke(0);
-  rect(0,0,width,height);
+  rect(0,0,width-1,height-1);
 
   line(0,height/2,width,height/2);
 
