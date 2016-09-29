@@ -40,6 +40,8 @@ function setup() {
   objDist = p5.Vector.add(origin,-1*object_distance);
   objHeight = createVector(objDist.x, axis-object_height);
 
+
+
   objDistArrow = new Arrow(origin,objDist);
 
   objDistArrow.color = color(0);
@@ -57,6 +59,8 @@ function setup() {
 
 
 
+
+
 }
 
 function draw() {
@@ -65,7 +69,7 @@ function draw() {
 
 
   objDistArrow.update();
-  objDistArrow.display();
+  // objDistArrow.display();
   objHeightArrow.update();
   objHeightArrow.display();
 
@@ -77,7 +81,7 @@ function draw() {
   objHeightArrow.origin = {x: object_distance, y: axis};
   objHeightArrow.target = {x: object_distance, y: axis-object_height};
 
-  
+
 
   // pr();
 
