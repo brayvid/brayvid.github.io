@@ -76,7 +76,7 @@ function setup() {
 function draw() {
   background(180);
 
-  image(img, width/2, height/2);
+  image(img, width/2-15, height/4);
 
 
 
