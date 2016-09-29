@@ -11,7 +11,9 @@ var axis;
 
 var lensWidth = 35;
 
-
+function preload() {
+  img = loadImage("img/lens1.svg");
+}
 
 function setup() {
 
@@ -74,6 +76,8 @@ function setup() {
 function draw() {
   background(180);
 
+  image(img, width/2, height/2);
+
 
 
 
@@ -84,7 +88,7 @@ function draw() {
 
   object_distance = distSlider.value();
   object_height = heightSlider.value();
-  
+
 
 
   objDistArrow.target = {x: object_distance, y: axis};
