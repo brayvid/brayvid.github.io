@@ -77,6 +77,7 @@ function draw() {
   objHeightArrow.origin = {x: object_distance, y: axis};
   objHeightArrow.target = {x: object_distance, y: axis-object_height};
 
+  
 
   // pr();
 
