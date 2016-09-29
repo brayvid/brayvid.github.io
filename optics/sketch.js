@@ -9,7 +9,7 @@ var focal_length;
 
 var axis;
 
-var lensWidth = 30;
+var lensWidth = 35;
 
 function preload() {
   img = loadImage("img/lens1.svg");
