@@ -24,7 +24,7 @@ function setup() {
 
   axis = height/2;
 
-  distSlider = createSlider(75, width/2-50, 200);
+  distSlider = createSlider(150, width/2-50, 200);
   distSlider.position(width/4, height/4);
   distSlider.style('width', '150px');
 
