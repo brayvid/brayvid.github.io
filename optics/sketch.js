@@ -33,7 +33,7 @@ function setup() {
   heightSlider.style('width', '150px');
 
 
-  focalSlider = createSlider(40, 150, 50);
+  focalSlider = createSlider(40, 300, 50);
   focalSlider.position(width/4, height/4 + 40);
   focalSlider.style('width', '150px');
 
