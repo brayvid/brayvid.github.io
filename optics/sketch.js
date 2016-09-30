@@ -24,19 +24,23 @@ function setup() {
 
   axis = height/2;
 
-  distSlider = createSlider(50, width/2-lensWidth, 200);
+  distSlider = createSlider(75, width/2-50, 200);
   distSlider.position(width/4, height/4);
   distSlider.style('width', '150px');
 
-  heightSlider = createSlider(25, height/2-75, 200);
+  heightSlider = createSlider(50, 125, 50);
   heightSlider.position(width/4, height/4 + 20);
   heightSlider.style('width', '150px');
+
+
+  focalSlider = createSlider(40, 150, 50);
+  focalSlider.position(width/4, height/4 + 40);
+  focalSlider.style('width', '150px');
 
   radius = 100  ;
   image_height = 0;
   image_distance = 0;
   focal_length = 1;
-
 
   origin = createVector(width/2,axis);
   objDist = p5.Vector.add(origin,-1*object_distance);
@@ -64,7 +68,7 @@ function setup() {
 
   imgHeightArrow = new Arrow(imgDist,imgHeight);
 
-  imgHeightArrow.color = color(0);
+  imgHeightArrow.color = color(0,200,0);
   imgHeightArrow.draggable = false;
   imgHeightArrow.grab = false;
   imgHeightArrow.width = 4;
@@ -74,16 +78,23 @@ function setup() {
 }
 
 function draw() {
+
+
+  
+  updateFocus(radius);
+  updateHeight(object_height, object_distance, image_distance);
+  updateDistance(focal_length, object_distance);
+
+
   background(255);
 
-  image(img, width/2-15, height/4);
+  image(img, width/2-13, height/4);
 
   noFill();
   stroke(0);
   rect(0,0,width-1,height-1);
 
   line(0,height/2,width,height/2);
-
 
 
   objDistArrow.update();
@@ -93,6 +104,7 @@ function draw() {
 
   object_distance = distSlider.value();
   object_height = heightSlider.value();
+  radius = focalSlider.value();
 
 
 
@@ -109,17 +121,13 @@ function draw() {
   imgHeightArrow.display();
 
 
-  updateFocus(radius);
-  updateHeight(object_height, object_distance, image_distance);
-  updateDistance(focal_length, object_distance);
-
 
   
 
   pr();
-
-
-
+  fill(0);
+  ellipse(width/2+focal_length,height/2,10,10);
+  ellipse(width/2-focal_length,height/2,10,10);
 }
 
 function updateFocus(r) {
