@@ -79,7 +79,6 @@ function setup() {
 
 function draw() {
 
-
   
   updateFocus(radius);
   updateHeight(object_height, object_distance, image_distance);
@@ -125,9 +124,9 @@ function draw() {
   
 
   pr();
-  fill(0);
-  ellipse(width/2+focal_length,height/2,10,10);
-  ellipse(width/2-focal_length,height/2,10,10);
+  drawFocalPoints();
+
+  drawLabels();
 }
 
 function updateFocus(r) {
@@ -147,8 +146,18 @@ function updateDistance(f, s) {
   }
 }
 
+function drawFocalPoints(){
+  fill(0);
+  ellipse(width/2+focal_length,height/2,10,10);
+  ellipse(width/2-focal_length,height/2,10,10);
+}
 
-
+function drawLabels(){
+  textSize(16);
+  text("d",175,45);
+  text("h",175,65); 
+  text("f",176,86);
+}
 
 function pr() {
   console.log("image distance: " + image_distance);
