@@ -33,7 +33,7 @@ function setup() {
   lensCenter = createVector(width/2,height/2);
   focalLength = createVector(focalSlider.value(),0);
 
-  objectPosition = createVector(50,100);
+  objectPosition = createVector(300,150);
   // objectGhost = createVector(lensCenter.x-(width/4-50),lensCenter.y-height/8);
 
   // objectPosition = createVector(lensCenter.x-distSlider.value(),lensCenter.y-heightSlider.value();
