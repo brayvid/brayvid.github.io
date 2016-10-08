@@ -64,7 +64,7 @@ function draw() {
   // Environment
 
   background(255);
-  image(img, width/2, height/2,(width/30)/(.01*focalSlider.value()),6*height/7);
+  image(img, width/2, height/2,(width/30)/(.005*focalSlider.value()),6*height/7);
   noFill();
   stroke(0);
   rect(0,0,width-1,height-1);
@@ -221,6 +221,7 @@ function drawFocalPoints(){
 
 
 function drawArrows(){
+  
   var objectOrigin = createVector(objectPosition.x,lensCenter.y);
   objectArrow = new Arrow(objectOrigin,objectPosition);
   objectArrow.color = color(0);
