@@ -61,6 +61,7 @@ function setup() {
 
 function draw() {
   // Environment
+
   background(255);
   image(img, width/2-14, height/4+40);
   noFill();
@@ -75,18 +76,11 @@ function draw() {
 
   // objectPosition = {x:0,y:0};
   
-
-  if(mouseIsPressed){
-    if(!(mouseX<lensCenter.x+100 && mouseX>lensCenter.x-100 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){ 
-      objectPosition = createVector(mouseX,mouseY);
-}
+  if(mouseX<=lensCenter.x){
+    console.log(mouseX);
   }
 
-  if(touchIsDown){
-    if(!(mouseX<lensCenter.x+100 && mouseX>lensCenter.x-100 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){ 
-      objectPosition = createVector(mouseX,mouseY);
-}
-  }
+
   imagePosition = newImagePosition(lensCenter.x-focalLength.x,lensCenter.x-objectPosition.x,lensCenter.y-objectPosition.y);
 
   drawArrows();
@@ -109,6 +103,28 @@ function draw() {
 //   ellipse(width/2-focal_length,height/2,10,10);
 // }
 
+function mousePressed(){
+
+  if(!(mouseX<lensCenter.x+100 && mouseX>lensCenter.x-100 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){
+      objectPosition.x = mouseX;
+      objectPosition.y = mouseY;
+  }
+
+  if(lensCenter.x-objectPosition.x <= 50 && lensCenter.x - objectPosition.x > 0){
+    objectPosition.x = lensCenter.x - 100;
+  }else if(lensCenter.x - objectPosition.x <= 0 && lensCenter.x - objectPosition.x >= -50){
+    objectPosition.x = lensCenter.x + 100;
+  }
+  if(lensCenter.y-objectPosition.y <= 25 && lensCenter.y-objectPosition.y > 0){
+    objectPosition.y = lensCenter.y - 13;
+  }else if(lensCenter.y-objectPosition.y<=0 && lensCenter.y-objectPosition.y > -25){
+    objectPosition.y = lensCenter.y + 13;
+  }
+
+
+    // console.log({x:lensCenter.x-mouseX,y:lensCenter.y-mouseY});
+
+}
 
 function displayValues(){
 
@@ -125,8 +141,13 @@ function displayValues(){
     text(lensCenter.y-objectPosition.y, objectPosition.x-12, objectPosition.y+50);
   }
 
+if(objectPosition.y<=lensCenter.y){
   text('Object distance',objectPosition.x,lensCenter.y+15);
   text(round(lensCenter.x-objectPosition.x),objectPosition.x,lensCenter.y+35);
+}else{
+  text('Object distance',objectPosition.x,lensCenter.y-15);
+  text(round(lensCenter.x-objectPosition.x),objectPosition.x,lensCenter.y-35);
+}
 
 
 
