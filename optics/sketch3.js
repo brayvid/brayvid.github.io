@@ -6,7 +6,6 @@ var imagePosition;
 
 var objectArrow;
 var imageArrow;
-var objectGhost;
 
 
 function preload() {
@@ -25,6 +24,7 @@ function setup() {
   // heightSlider = createSlider(-height/4, height/4, height/8);
   // heightSlider.position(width/4, height/4 + 20);
   // heightSlider.style('width', '150px');
+
   focalSlider = createSlider(100, 500, 300);
   focalSlider.position(width/2-77, height/2-9);
   focalSlider.style('width', '150px');
@@ -153,17 +153,21 @@ if(objectPosition.y<=lensCenter.y){
 
 
   if(imagePosition.y<=lensCenter.y){
+    // on top
     text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y-50,topBorder,bottomBorder));
     text(round(lensCenter.y-imagePosition.y),constrain(imagePosition.x,leftBorder,rightBorder),constrain(imagePosition.y-30,topBorder-20,bottomBorder));
 }else{
+  // on bottom
     text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+30,topBorder,bottomBorder));
     text(round(lensCenter.y-imagePosition.y), constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+50,topBorder-20,bottomBorder));
   }
 
 if(imagePosition.y<=lensCenter.y){
+  // on top
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+15,topBorder,bottomBorder));
   text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+35,topBorder+20,bottomBorder));
 }else{
+  // on bottom
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-15,topBorder,bottomBorder));
   text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder+20,bottomBorder));
 }
@@ -172,9 +176,10 @@ if(imagePosition.y<=lensCenter.y){
 
 }
 function drawFocalPoints(){
-  fill(0);
-  ellipse(lensCenter.x+focalLength.x,lensCenter.y,5,5);
-  ellipse(lensCenter.x-focalLength.x,lensCenter.y,5,5);
+  line(lensCenter.x+focalLength.x-5,lensCenter.y-5,lensCenter.x+focalLength.x+5,lensCenter.y+5);
+  line(lensCenter.x+focalLength.x+5,lensCenter.y-5,lensCenter.x+focalLength.x-5,lensCenter.y+5);
+  line(lensCenter.x-focalLength.x-5,lensCenter.y-5,lensCenter.x-focalLength.x+5,lensCenter.y+5);
+  line(lensCenter.x-focalLength.x+5,lensCenter.y-5,lensCenter.x-focalLength.x-5,lensCenter.y+5);
 }
 
 
