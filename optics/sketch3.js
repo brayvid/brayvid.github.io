@@ -91,7 +91,7 @@ function draw() {
   
   // drawFocalPoints();
   // drawLabels();
-  pr();
+  // pr();
 
   displayValues();
 }
@@ -124,6 +124,13 @@ function displayValues(){
 
   textAlign(CENTER);
 
+  var leftBorder = 40;
+  var rightBorder = width-40;
+
+  var topBorder = 40;
+  var bottomBorder = height-40;
+
+
   text('Focal length',lensCenter.x + focalLength.x, lensCenter.y - 5);
   text(focalLength.x,lensCenter.x + focalLength.x,lensCenter.y + 15);
 
@@ -145,19 +152,19 @@ if(objectPosition.y<=lensCenter.y){
 
 
   if(imagePosition.y<=lensCenter.y){
-    text('image height', imagePosition.x, imagePosition.y-50);
-    text(round(lensCenter.y-imagePosition.y),imagePosition.x,imagePosition.y-30);
+    text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y-50,topBorder,bottomBorder));
+    text(round(lensCenter.y-imagePosition.y),constrain(imagePosition.x,leftBorder,rightBorder),constrain(imagePosition.y-30,topBorder-20,bottomBorder));
 }else{
-    text('image height', imagePosition.x, imagePosition.y+30);
-    text(round(lensCenter.y-imagePosition.y), imagePosition.x, imagePosition.y+50);
+    text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+30,topBorder,bottomBorder));
+    text(round(lensCenter.y-imagePosition.y), constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+50,topBorder-20,bottomBorder));
   }
 
 if(imagePosition.y<=lensCenter.y){
-  text('image distance',imagePosition.x,lensCenter.y+15);
-  text(round(lensCenter.x-imagePosition.x),imagePosition.x,lensCenter.y+35);
+  text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+15,topBorder,bottomBorder));
+  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+35,topBorder,bottomBorder));
 }else{
-  text('image distance',imagePosition.x,lensCenter.y-15);
-  text(round(lensCenter.x-imagePosition.x),imagePosition.x,lensCenter.y-35);
+  text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-15,topBorder,bottomBorder));
+  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder,bottomBorder));
 }
 
 
@@ -178,9 +185,16 @@ function drawArrows(){
   objectArrow.draggable = false;
   objectArrow.grab = false;
 
+
+
   var imageOrigin = createVector(imagePosition.x,lensCenter.y);
   imageArrow = new Arrow(imageOrigin,imagePosition);
-  imageArrow.color = color(0,100,0);
+
+  if(imagePosition.x<lensCenter.x){
+    imageArrow.color = color(100,0,0);
+  }else{
+    imageArrow.color = color(0,100,0);
+  }
   imageArrow.display();
   imageArrow.draggable = false;
   objectArrow.grab = false;
@@ -189,7 +203,8 @@ function drawArrows(){
 }
 // New
 function newImagePosition(f,o,oh){
-  if(o!=f){var x = o*f/(o-f);
+  if(o!=f){
+    var x = o*f/(o-f);
   }else{
     var x = 999999;
   }
@@ -202,20 +217,20 @@ function newImagePosition(f,o,oh){
   return createVector(lensCenter.x+x,lensCenter.y+y);
 }
 
-function drawLabels(){
-  textSize(16);
-  text("d",175,45);
-  text("h",175,65); 
-  text("f",176,86);
-}
+// function drawLabels(){
+//   textSize(16);
+//   text("d",175,45);
+//   text("h",175,65); 
+//   text("f",176,86);
+// }
 
-function pr() {
-  // console.log("image distance: " + image_distance);
-  // console.log("image height: " + image_height);
-  // console.log("object_distance: " + object_distance);
-  // console.log("object_height :" + object_height);
-  // console.log("focal length :" + focal_length);
-}
+// function pr() {
+//   // console.log("image distance: " + image_distance);
+//   // console.log("image height: " + image_height);
+//   // console.log("object_distance: " + object_distance);
+//   // console.log("object_height :" + object_height);
+//   // console.log("focal length :" + focal_length);
+// }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
