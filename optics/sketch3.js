@@ -17,6 +17,7 @@ function preload() {
 function setup() {
   frameRate(30);
   createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
 
   // distSlider = createSlider(20, width/2-50, width/4-50);
   // distSlider.position(width/4, height/4);
@@ -25,14 +26,14 @@ function setup() {
   // heightSlider.position(width/4, height/4 + 20);
   // heightSlider.style('width', '150px');
   focalSlider = createSlider(100, 500, 300);
-  focalSlider.position(width/2-77, height/2-9);
+  focalSlider.position(width/2-0.054*width, height/2-.011*height);
   focalSlider.style('width', '150px');
 
 
   lensCenter = createVector(width/2,height/2);
   focalLength = createVector(focalSlider.value(),0);
 
-  objectPosition = createVector(50,50);
+  objectPosition = createVector(50,100);
   // objectGhost = createVector(lensCenter.x-(width/4-50),lensCenter.y-height/8);
 
   // objectPosition = createVector(lensCenter.x-distSlider.value(),lensCenter.y-heightSlider.value();
@@ -63,7 +64,7 @@ function draw() {
   // Environment
 
   background(255);
-  image(img, width/2-14, height/4+40);
+  image(img, width/2, height/2,width/30,height/2);
   noFill();
   stroke(0);
   rect(0,0,width-1,height-1);
@@ -76,12 +77,12 @@ function draw() {
 
   // objectPosition = {x:0,y:0};
   
-  if(mouseX<=lensCenter.x){
-    console.log(mouseX);
-  }
+  // if(mouseX<=lensCenter.x){
+  //   console.log(mouseX);
+  // }
 
 
-  imagePosition = newImagePosition(lensCenter.x-focalLength.x,lensCenter.x-objectPosition.x,lensCenter.y-objectPosition.y);
+  imagePosition = newImagePosition(focalLength.x,lensCenter.x-objectPosition.x,lensCenter.y-objectPosition.y);
 
   drawArrows();
   
@@ -161,10 +162,10 @@ if(objectPosition.y<=lensCenter.y){
 
 if(imagePosition.y<=lensCenter.y){
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+15,topBorder,bottomBorder));
-  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+35,topBorder,bottomBorder));
+  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y+35,topBorder+20,bottomBorder));
 }else{
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-15,topBorder,bottomBorder));
-  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder,bottomBorder));
+  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder+20,bottomBorder));
 }
 
 
@@ -234,6 +235,7 @@ function newImagePosition(f,o,oh){
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  image(img,width/2,height/2);
 }
 
 
