@@ -26,14 +26,14 @@ function setup() {
   // heightSlider.position(width/4, height/4 + 20);
   // heightSlider.style('width', '150px');
   focalSlider = createSlider(100, 500, 300);
-  focalSlider.position(width/2-0.054*width, height/2-.011*height);
+  focalSlider.position(width/2-77, height/2-9);
   focalSlider.style('width', '150px');
 
 
   lensCenter = createVector(width/2,height/2);
   focalLength = createVector(focalSlider.value(),0);
 
-  objectPosition = createVector(300,150);
+  objectPosition = createVector(round(width/4),round(height/6));
   // objectGhost = createVector(lensCenter.x-(width/4-50),lensCenter.y-height/8);
 
   // objectPosition = createVector(lensCenter.x-distSlider.value(),lensCenter.y-heightSlider.value();
@@ -236,6 +236,9 @@ function newImagePosition(f,o,oh){
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   image(img,width/2,height/2);
+  focalSlider.position(width/2-77, height/2-9);
+  lensCenter.x = width/2;
+  lensCenter.y = height/2;
 }
 
 
