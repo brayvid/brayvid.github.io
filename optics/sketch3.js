@@ -105,23 +105,17 @@ function draw() {
 
 function mousePressed(){
 
-  if(!(mouseX<lensCenter.x+100 && mouseX>lensCenter.x-100 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){
+  if(!(mouseX<lensCenter.x+120 && mouseX>lensCenter.x-120 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){
       objectPosition.x = mouseX;
       objectPosition.y = mouseY;
   }
 
-  if(lensCenter.x-objectPosition.x <= 50 && lensCenter.x - objectPosition.x > 0){
+  if(lensCenter.x-objectPosition.x <= 50 && lensCenter.x - objectPosition.x > 0 && lensCenter.y-objectPosition.y <= 10 && lensCenter.y-objectPosition.y > 0){
     objectPosition.x = lensCenter.x - 100;
-  }else if(lensCenter.x - objectPosition.x <= 0 && lensCenter.x - objectPosition.x >= -50){
+  }else if(lensCenter.x - objectPosition.x <= 0 && lensCenter.x - objectPosition.x >= -50 && lensCenter.y-objectPosition.y <=0 && lensCenter.y-objectPosition.y > -10){
     objectPosition.x = lensCenter.x + 100;
   }
-  if(lensCenter.y-objectPosition.y <= 25 && lensCenter.y-objectPosition.y > 0){
-    objectPosition.y = lensCenter.y - 13;
-  }else if(lensCenter.y-objectPosition.y<=0 && lensCenter.y-objectPosition.y > -25){
-    objectPosition.y = lensCenter.y + 13;
-  }
-
-
+  
     // console.log({x:lensCenter.x-mouseX,y:lensCenter.y-mouseY});
 
 }
@@ -138,7 +132,7 @@ function displayValues(){
     text(lensCenter.y-objectPosition.y,objectPosition.x,objectPosition.y-30);
 }else{
     text('Object height', objectPosition.x, objectPosition.y+30);
-    text(lensCenter.y-objectPosition.y, objectPosition.x-12, objectPosition.y+50);
+    text(lensCenter.y-objectPosition.y, objectPosition.x, objectPosition.y+50);
   }
 
 if(objectPosition.y<=lensCenter.y){
@@ -149,6 +143,22 @@ if(objectPosition.y<=lensCenter.y){
   text(round(lensCenter.x-objectPosition.x),objectPosition.x,lensCenter.y-35);
 }
 
+
+  if(imagePosition.y<=lensCenter.y){
+    text('image height', imagePosition.x, imagePosition.y-50);
+    text(round(lensCenter.y-imagePosition.y),imagePosition.x,imagePosition.y-30);
+}else{
+    text('image height', imagePosition.x, imagePosition.y+30);
+    text(round(lensCenter.y-imagePosition.y), imagePosition.x, imagePosition.y+50);
+  }
+
+if(imagePosition.y<=lensCenter.y){
+  text('image distance',imagePosition.x,lensCenter.y+15);
+  text(round(lensCenter.x-imagePosition.x),imagePosition.x,lensCenter.y+35);
+}else{
+  text('image distance',imagePosition.x,lensCenter.y-15);
+  text(round(lensCenter.x-imagePosition.x),imagePosition.x,lensCenter.y-35);
+}
 
 
 
