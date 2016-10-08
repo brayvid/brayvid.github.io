@@ -64,7 +64,7 @@ function draw() {
   // Environment
 
   background(255);
-  image(img, width/2, height/2,width/30,height/2);
+  image(img, width/2, height/2,(width/30)/(.01*focalSlider.value()),6*height/7);
   noFill();
   stroke(0);
   rect(0,0,width-1,height-1);
@@ -75,6 +75,7 @@ function draw() {
   focalLength = createVector(focalSlider.value()/2,0);
   drawFocalPoints();
 
+
   // objectPosition = {x:0,y:0};
   
   // if(mouseX<=lensCenter.x){
@@ -84,7 +85,10 @@ function draw() {
 
   imagePosition = newImagePosition(focalLength.x,lensCenter.x-objectPosition.x,lensCenter.y-objectPosition.y);
 
+  
+  drawRays();
   drawArrows();
+  
   
   // ellipse(objectPosition.x,objectPosition.y,10,10);
   // noFill();
@@ -103,6 +107,39 @@ function draw() {
 //   ellipse(width/2+focal_length,height/2,10,10);
 //   ellipse(width/2-focal_length,height/2,10,10);
 // }
+
+
+
+    
+
+
+function drawRays(){
+
+    // line1 = new Arrow(objectPosition,imagePosition);
+    // line1.color = color(0);
+    // line1.width=1;
+    // line1.grab = false;
+    // line1.display();
+
+    // line2 = new Arrow(objectPosition,createVector(lensCenter.x,objectPosition.y));
+    // line2.color = color(0);
+    // line2.width=1;
+    // line2.grab = false;
+    // line2.display();
+
+    // line3 = new Arrow(createVector(lensCenter.x,objectPosition.y),imagePosition);
+    // line3.color = color(0);
+    // line3.width=1;
+    // line3.grab = false;
+    // line3.display();
+    stroke(0);
+    line(objectPosition.x,objectPosition.y,imagePosition.x,imagePosition.y);
+    line(objectPosition.x,objectPosition.y,lensCenter.x,objectPosition.y);
+    line(lensCenter.x,objectPosition.y,imagePosition.x,imagePosition.y);
+    line(objectPosition.x,objectPosition.y,lensCenter.x,imagePosition.y);
+    line(lensCenter.x,imagePosition.y,imagePosition.x,imagePosition.y);
+
+}
 
 function mousePressed(){
 
@@ -158,8 +195,8 @@ if(objectPosition.y<=lensCenter.y){
     text(round(lensCenter.y-imagePosition.y),constrain(imagePosition.x,leftBorder,rightBorder),constrain(imagePosition.y-30,topBorder-20,bottomBorder));
 }else{
   // on bottom
-    text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+30,topBorder,bottomBorder));
-    text(round(lensCenter.y-imagePosition.y), constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y+50,topBorder-20,bottomBorder));
+    text('image height', constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y-15,topBorder,bottomBorder));
+    text(round(lensCenter.y-imagePosition.y), constrain(imagePosition.x,leftBorder,rightBorder), constrain(imagePosition.y-35,topBorder+20,bottomBorder-20));
   }
 
 if(imagePosition.y<=lensCenter.y){
@@ -169,7 +206,7 @@ if(imagePosition.y<=lensCenter.y){
 }else{
   // on bottom
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-15,topBorder,bottomBorder));
-  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder+20,bottomBorder));
+  text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder+20,bottomBorder-20));
 }
 
 
