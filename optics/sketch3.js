@@ -133,11 +133,22 @@ function drawRays(){
     // line3.grab = false;
     // line3.display();
     stroke(0);
+
+    if(lensCenter.x-objectPosition.x>focalLength.x){
     line(objectPosition.x,objectPosition.y,imagePosition.x,imagePosition.y);
     line(objectPosition.x,objectPosition.y,lensCenter.x,objectPosition.y);
     line(lensCenter.x,objectPosition.y,imagePosition.x,imagePosition.y);
     line(objectPosition.x,objectPosition.y,lensCenter.x,imagePosition.y);
     line(lensCenter.x,imagePosition.y,imagePosition.x,imagePosition.y);
+  }
+
+  if(lensCenter.x-objectPosition.x < focalLength.x && objectPosition.x < lensCenter.x){
+    line(imagePosition.x,imagePosition.y,lensCenter.x,lensCenter.y);
+    line(lensCenter.x-focalLength.x,lensCenter.y,lensCenter.x,imagePosition.y);
+    line(imagePosition.x,imagePosition.y,lensCenter.x,imagePosition.y);
+  }
+
+
 
 }
 
@@ -207,6 +218,23 @@ if(imagePosition.y<=lensCenter.y){
   // on bottom
   text('image distance',constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-15,topBorder,bottomBorder));
   text(round(lensCenter.x-imagePosition.x),constrain(imagePosition.x,leftBorder,rightBorder),constrain(lensCenter.y-35,topBorder+20,bottomBorder-20));
+}
+
+
+  text('Object distance',width-200,50);
+  text('Focal length',width-100,50);
+
+
+if(lensCenter.x-objectPosition.x + 1 < focalLength.x && objectPosition.x < lensCenter.x){
+  text('<',width-145,50);
+}else if(lensCenter.x-objectPosition.x  -1 > focalLength.x && objectPosition.x < lensCenter.x){
+  text('>',width-145,50);
+}else if(abs(lensCenter.x-objectPosition.x-focalLength.x)<1){
+  text('=',width-145,50);
+}
+
+if(objectPosition.x > lensCenter.x){
+
 }
 
 
