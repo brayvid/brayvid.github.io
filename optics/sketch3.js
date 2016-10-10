@@ -25,7 +25,7 @@ function setup() {
   // heightSlider.position(width/4, height/4 + 20);
   // heightSlider.style('width', '150px');
 
-  focalSlider = createSlider(100, 500, 300);
+  focalSlider = createSlider(100, 500, floor(random(100,500)));
   focalSlider.position(width/2-77, height/2-9);
   focalSlider.style('width', '150px');
 
@@ -33,10 +33,9 @@ function setup() {
   lensCenter = createVector(width/2,height/2);
   focalLength = createVector(focalSlider.value(),0);
 
-  objectPosition = createVector(round(width/4),round(height/6));
+  // objectPosition = createVector(round(width/4),round(height/6));
 
-
-  objectArrow = new Arrow(createVector(objectPosition.x,lensCenter.y),objectPosition);
+  objectArrow = new Arrow(createVector(round(width/4),lensCenter.y),createVector(round(width/4),round(random(0,height))));
   objectArrow.color = color(100,0,0);
   objectArrow.draggable = false;
   objectArrow.grab = true;
