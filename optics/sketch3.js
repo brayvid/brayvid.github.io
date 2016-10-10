@@ -25,7 +25,7 @@ function setup() {
   // heightSlider.position(width/4, height/4 + 20);
   // heightSlider.style('width', '150px');
 
-  focalSlider = createSlider(100, 500, floor(random(100,500)));
+  focalSlider = createSlider(100, 500, floor(random(250,500)));
   focalSlider.position(width/2-77, height/2-9);
   focalSlider.style('width', '150px');
 
