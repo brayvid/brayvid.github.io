@@ -36,12 +36,12 @@ function setup() {
   // objectPosition = createVector(round(width/4),round(height/6));
 
   objectArrow = new Arrow(createVector(round(width/4),lensCenter.y),createVector(round(width/4),round(random(0,height))));
-  objectArrow.color = color(100,0,0);
+  objectArrow.color = color(190,0,0);
   objectArrow.draggable = false;
   objectArrow.grab = true;
 
   imageArrow = new Arrow(objectArrow.origin,objectArrow.target);
-  imageArrow.color = color(0,100,0);
+  imageArrow.color = color(0,150,0);
   imageArrow.draggable = false;
   imageArrow.grab = false;
 
