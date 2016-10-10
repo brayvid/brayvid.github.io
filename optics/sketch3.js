@@ -81,8 +81,11 @@ function draw() {
   stroke(0);
   // rect(0,0,width-1,height-1);
   line(0,height/2,width,height/2);
+  
+  line(lensCenter.x,height/14,lensCenter.x,13*height/14);
+  
   fill(0);
-  ellipse(lensCenter.x,lensCenter.y,5,5);
+  // ellipse(lensCenter.x,lensCenter.y,5,5);
 
   focalLength = createVector(focalSlider.value()/2,0);
   drawFocalPoints();
@@ -170,6 +173,12 @@ function drawRays(){
       ellipse(x, y,2,2);
     }
 
+    for (var i = 0; i <= 50; i++) {
+      var x = lerp(imageArrow.target.x, lensCenter.x, i/50.0);
+      var y = lerp(imageArrow.target.y, imageArrow.target.y, i/50.0);
+      ellipse(x, y,2,2);
+    }
+
     // line(,,lensCenter.x,);
     
     // line(imagePosition.x,imagePosition.y,lensCenter.x,imagePosition.y);
@@ -207,8 +216,8 @@ function displayValues(){
   var bottomBorder = height-40;
 
 
-  text('Focal length',lensCenter.x + focalLength.x, lensCenter.y - 5);
-  text(focalLength.x,lensCenter.x + focalLength.x,lensCenter.y + 15);
+  // text('Focal length',lensCenter.x + focalLength.x, lensCenter.y - 5);
+  // text(focalLength.x,lensCenter.x + focalLength.x,lensCenter.y + 15);
 
   if(objectArrow.target.y<=lensCenter.y){
     text('Object height', objectArrow.target.x, objectArrow.target.y-50);
