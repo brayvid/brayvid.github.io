@@ -34,6 +34,18 @@ function setup() {
   focalLength = createVector(focalSlider.value(),0);
 
   objectPosition = createVector(round(width/4),round(height/6));
+
+
+  objectArrow = new Arrow(createVector(objectPosition.x,lensCenter.y),objectPosition);
+  objectArrow.color = color(100,0,0);
+  objectArrow.draggable = false;
+  objectArrow.grab = true;
+
+  imageArrow = new Arrow(objectArrow.origin,objectArrow.target);
+  imageArrow.color = color(0,100,0);
+  imageArrow.draggable = false;
+  imageArrow.grab = false;
+
   // objectGhost = createVector(lensCenter.x-(width/4-50),lensCenter.y-height/8);
 
   // objectPosition = createVector(lensCenter.x-distSlider.value(),lensCenter.y-heightSlider.value();
@@ -67,7 +79,7 @@ function draw() {
   image(img, width/2, height/2,(width/30)/(.005*focalSlider.value()),6*height/7);
   noFill();
   stroke(0);
-  rect(0,0,width-1,height-1);
+  // rect(0,0,width-1,height-1);
   line(0,height/2,width,height/2);
   fill(0);
   ellipse(lensCenter.x,lensCenter.y,5,5);
@@ -83,14 +95,14 @@ function draw() {
   // }
 
 
-  imagePosition = newImagePosition(focalLength.x,lensCenter.x-objectPosition.x,lensCenter.y-objectPosition.y);
+  imagePosition = newImagePosition(focalLength.x,lensCenter.x-objectArrow.target.x,lensCenter.y-objectArrow.target.y);
 
   
   drawRays();
   drawArrows();
   
   
-  // ellipse(objectPosition.x,objectPosition.y,10,10);
+  // ellipse(objectArrow.target.x,objectArrow.target.y,10,10);
   // noFill();
   // ellipse(imagePosition.x,imagePosition.y,10,10);
   
@@ -121,53 +133,69 @@ function drawRays(){
     // line1.grab = false;
     // line1.display();
 
-    // line2 = new Arrow(objectPosition,createVector(lensCenter.x,objectPosition.y));
+    // line2 = new Arrow(objectPosition,createVector(lensCenter.x,objectArrow.target.y));
     // line2.color = color(0);
     // line2.width=1;
     // line2.grab = false;
     // line2.display();
 
-    // line3 = new Arrow(createVector(lensCenter.x,objectPosition.y),imagePosition);
+    // line3 = new Arrow(createVector(lensCenter.x,objectArrow.target.y),imagePosition);
     // line3.color = color(0);
     // line3.width=1;
     // line3.grab = false;
     // line3.display();
     stroke(0);
 
-    if(lensCenter.x-objectPosition.x>focalLength.x){
-    line(objectPosition.x,objectPosition.y,imagePosition.x,imagePosition.y);
-    line(objectPosition.x,objectPosition.y,lensCenter.x,objectPosition.y);
-    line(lensCenter.x,objectPosition.y,imagePosition.x,imagePosition.y);
-    line(objectPosition.x,objectPosition.y,lensCenter.x,imagePosition.y);
-    line(lensCenter.x,imagePosition.y,imagePosition.x,imagePosition.y);
+    if(lensCenter.x-objectArrow.target.x>focalLength.x){
+
+    line(objectArrow.target.x,objectArrow.target.y,imageArrow.target.x,imageArrow.target.y);
+    line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,objectArrow.target.y);
+    line(lensCenter.x,objectArrow.target.y,imageArrow.target.x,imageArrow.target.y);
+    line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,imageArrow.target.y);
+    line(lensCenter.x,imageArrow.target.y,imageArrow.target.x,imageArrow.target.y);
   }
 
-  if(lensCenter.x-objectPosition.x < focalLength.x && objectPosition.x < lensCenter.x){
-    line(imagePosition.x,imagePosition.y,lensCenter.x,lensCenter.y);
-    line(lensCenter.x-focalLength.x,lensCenter.y,lensCenter.x,imagePosition.y);
-    line(imagePosition.x,imagePosition.y,lensCenter.x,imagePosition.y);
+  if(lensCenter.x-objectArrow.target.x < focalLength.x && objectArrow.target.x < lensCenter.x){
+
+    // line(imagePosition.x,imagePosition.y,lensCenter.x,lensCenter.y);
+    
+    for (var i = 0; i <= 50; i++) {
+      var x = lerp(imagePosition.x, lensCenter.x, i/50.0);
+      var y = lerp(imagePosition.y, lensCenter.y, i/50.0);
+      ellipse(x, y,2,2);
+    }
+
+    for (var i = 0; i <= 50; i++) {
+      var x = lerp(lensCenter.x-focalLength.x, lensCenter.x, i/50.0);
+      var y = lerp(lensCenter.y, imagePosition.y, i/50.0);
+      ellipse(x, y,2,2);
+    }
+
+    // line(,,lensCenter.x,);
+    
+    // line(imagePosition.x,imagePosition.y,lensCenter.x,imagePosition.y);
   }
 
 
 
 }
 
-function mousePressed(){
+// function mousePressed(){
 
-  if(!(mouseX<lensCenter.x+120 && mouseX>lensCenter.x-120 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){
-      objectPosition.x = mouseX;
-      objectPosition.y = mouseY;
-  }
+//   if(!(mouseX<lensCenter.x+120 && mouseX>lensCenter.x-120 && mouseY<lensCenter.y+25 && mouseY>lensCenter-25)){
+//       objectArrow.target.x = mouseX;
+//       objectArrow.target.y = mouseY;
+//   }
 
-  if(lensCenter.x-objectPosition.x <= 50 && lensCenter.x - objectPosition.x > 0 && lensCenter.y-objectPosition.y <= 10 && lensCenter.y-objectPosition.y > 0){
-    objectPosition.x = lensCenter.x - 100;
-  }else if(lensCenter.x - objectPosition.x <= 0 && lensCenter.x - objectPosition.x >= -50 && lensCenter.y-objectPosition.y <=0 && lensCenter.y-objectPosition.y > -10){
-    objectPosition.x = lensCenter.x + 100;
-  }
+//   if(lensCenter.x-objectArrow.target.x <= 50 && lensCenter.x - objectArrow.target.x > 0 && lensCenter.y-objectArrow.target.y <= 10 && lensCenter.y-objectArrow.target.y > 0){
+//     objectArrow.target.x = lensCenter.x - 100;
+//   }else if(lensCenter.x - objectArrow.target.x <= 0 && lensCenter.x - objectArrow.target.x >= -50 && lensCenter.y-objectArrow.target.y <=0 && lensCenter.y-objectArrow.target.y > -10){
+//     objectArrow.target.x = lensCenter.x + 100;
+//   }
   
-    // console.log({x:lensCenter.x-mouseX,y:lensCenter.y-mouseY});
+//     // console.log({x:lensCenter.x-mouseX,y:lensCenter.y-mouseY});
 
-}
+// }
 
 function displayValues(){
 
@@ -183,20 +211,20 @@ function displayValues(){
   text('Focal length',lensCenter.x + focalLength.x, lensCenter.y - 5);
   text(focalLength.x,lensCenter.x + focalLength.x,lensCenter.y + 15);
 
-  if(objectPosition.y<=lensCenter.y){
-    text('Object height', objectPosition.x, objectPosition.y-50);
-    text(lensCenter.y-objectPosition.y,objectPosition.x,objectPosition.y-30);
+  if(objectArrow.target.y<=lensCenter.y){
+    text('Object height', objectArrow.target.x, objectArrow.target.y-50);
+    text(lensCenter.y-objectArrow.target.y,objectArrow.target.x,objectArrow.target.y-30);
 }else{
-    text('Object height', objectPosition.x, objectPosition.y+30);
-    text(lensCenter.y-objectPosition.y, objectPosition.x, objectPosition.y+50);
+    text('Object height', objectArrow.target.x, objectArrow.target.y+30);
+    text(lensCenter.y-objectArrow.target.y, objectArrow.target.x, objectArrow.target.y+50);
   }
 
-if(objectPosition.y<=lensCenter.y){
-  text('Object distance',objectPosition.x,lensCenter.y+15);
-  text(round(lensCenter.x-objectPosition.x),objectPosition.x,lensCenter.y+35);
+if(objectArrow.target.y<=lensCenter.y){
+  text('Object distance',objectArrow.target.x,lensCenter.y+15);
+  text(round(lensCenter.x-objectArrow.target.x),objectArrow.target.x,lensCenter.y+35);
 }else{
-  text('Object distance',objectPosition.x,lensCenter.y-15);
-  text(round(lensCenter.x-objectPosition.x),objectPosition.x,lensCenter.y-35);
+  text('Object distance',objectArrow.target.x,lensCenter.y-15);
+  text(round(lensCenter.x-objectArrow.target.x),objectArrow.target.x,lensCenter.y-35);
 }
 
 
@@ -225,15 +253,15 @@ if(imagePosition.y<=lensCenter.y){
   text('Focal length',width-100,50);
 
 
-if(lensCenter.x-objectPosition.x + 1 < focalLength.x && objectPosition.x < lensCenter.x){
+if(lensCenter.x-objectArrow.target.x + 1 < focalLength.x && objectArrow.target.x < lensCenter.x){
   text('<',width-145,50);
-}else if(lensCenter.x-objectPosition.x  -1 > focalLength.x && objectPosition.x < lensCenter.x){
+}else if(lensCenter.x-objectArrow.target.x  -1 > focalLength.x && objectArrow.target.x < lensCenter.x){
   text('>',width-145,50);
-}else if(abs(lensCenter.x-objectPosition.x-focalLength.x)<1){
+}else if(abs(lensCenter.x-objectArrow.target.x-focalLength.x)<1){
   text('=',width-145,50);
 }
 
-if(objectPosition.x > lensCenter.x){
+if(objectArrow.target.x > lensCenter.x){
 
 }
 
@@ -250,26 +278,34 @@ function drawFocalPoints(){
 
 function drawArrows(){
   
-  var objectOrigin = createVector(objectPosition.x,lensCenter.y);
-  objectArrow = new Arrow(objectOrigin,objectPosition);
-  objectArrow.color = color(0);
+  // var objectOrigin = createVector(objectArrow.target.x,lensCenter.y);
+  // objectArrow = new Arrow(objectOrigin,objectPosition);
+  // objectArrow.color = color(0);
+ 
+  objectArrow.update();
   objectArrow.display();
-  objectArrow.draggable = false;
-  objectArrow.grab = false;
-
-
-
-  var imageOrigin = createVector(imagePosition.x,lensCenter.y);
-  imageArrow = new Arrow(imageOrigin,imagePosition);
-
-  if(imagePosition.x<lensCenter.x){
-    imageArrow.color = color(100,0,0);
-  }else{
-    imageArrow.color = color(0,100,0);
-  }
+  imageArrow.update();
   imageArrow.display();
-  imageArrow.draggable = false;
-  objectArrow.grab = false;
+
+
+  
+
+
+  objectArrow.origin = {x:objectArrow.target.x,y:lensCenter.y};
+  imageArrow.target = {x:imagePosition.x,y:imagePosition.y};
+  imageArrow.origin = {x:imageArrow.target.x,y:lensCenter.y};
+
+
+
+  // var imageOrigin = createVector(imagePosition.x,lensCenter.y);
+  
+
+  // if(imagePosition.x<lensCenter.x){
+  //   imageArrow.color = color(100,0,0);
+  // }else{
+  //   imageArrow.color = color(0,100,0);
+  // }
+  
 
 
 }
