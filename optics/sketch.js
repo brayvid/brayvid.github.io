@@ -61,7 +61,6 @@ function draw() {
     displayValues();
 }
 
-
 function drawRays() {
     stroke(0);
     if (lensCenter.x - objectArrow.target.x - focalLength.x > 0.6) {
@@ -132,7 +131,7 @@ function displayValues() {
         text('Image height', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y - 50, topBorder, bottomBorder));
         text(round(lensCenter.y - imageArrow.target.y), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y - 30, topBorder + 20, bottomBorder));
         text('Image distance', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y + 15, topBorder, bottomBorder));
-        text(abs(round(lensCenter.x - imageArrow.target.x)), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y + 35, topBorder + 20, bottomBorder));
+        text(-1*abs(round(lensCenter.x - imageArrow.target.x)), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y + 35, topBorder + 20, bottomBorder));
     } else if(imageArrow.target.y > lensCenter.y && abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6){// on bottom
             text('Image height', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 15, topBorder, bottomBorder - 20));
             text(round(lensCenter.y - imageArrow.target.y), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 35, topBorder, bottomBorder));
@@ -188,6 +187,8 @@ function drawFocalPoints() {
 
 
 function drawArrows() {
+    
+    objectArrow.update();
     // FIX ARROW ORIGINS TO HORIZONTAL AXIS
     objectArrow.origin = {
         x: objectArrow.target.x,
@@ -198,12 +199,12 @@ function drawArrows() {
         y: lensCenter.y
     };
     // RECALCULATE IMAGE POSITION
+    
     imageArrow.target = newImagePosition(focalLength.x, lensCenter.x - objectArrow.target.x, lensCenter.y - objectArrow.target.y);
-
+    imageArrow.update();
     
 
-    objectArrow.update();
-    imageArrow.update();
+    
     // CONSTRAIN OBJECT TO LEFT SIDE OF LENS
     if (objectArrow.target.x >= lensCenter.x - 1) {
         objectArrow.target.x = lensCenter.x - 1;
