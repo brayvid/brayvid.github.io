@@ -262,7 +262,7 @@ function newImagePosition(f, o, oh) {
 
 function mousePressed(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS
-    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x){
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x && mouseY != lensCenter.y){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
     }
