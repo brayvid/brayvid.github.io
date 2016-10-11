@@ -5,7 +5,7 @@ var objectArrow;
 var imageArrow;
 
 function preload() {
-    img = loadImage("img/lens1.svg");
+    lens = loadImage("img/lens1.svg");
     eye = loadImage("img/eye.png");
     candle = loadImage("img/candle.svg");
 }
@@ -35,7 +35,7 @@ function setup() {
 function draw() {
     // Environment
     background(255);
-    image(img, width / 2, height / 2, (width / 30) / (.005 * focalSlider.value()), 6 * height / 7);
+    image(lens, width / 2, height / 2, (width / 30) / (.005 * focalSlider.value()), 6 * height / 7);
     image(eye, width - 25, height / 2 - 15, 150, 150);
     noFill();
     stroke(0);
@@ -257,7 +257,7 @@ function newImagePosition(f, o, oh) {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    image(img, width / 2, height / 2);
+    image(lens, width / 2, height / 2);
     focalSlider.position(width / 2 - 77, height / 2 - 9);
     lensCenter.x = width / 2;
     lensCenter.y = height / 2;
