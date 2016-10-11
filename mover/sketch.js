@@ -2,9 +2,6 @@ var pos;
 var vel;
 var acc;
 var ball;
-
-var previousVelocity;
-
 var guide;
 
 function setup(){
