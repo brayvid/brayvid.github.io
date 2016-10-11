@@ -76,7 +76,7 @@ function drawRays() {
     if (lensCenter.x - objectArrow.target.x < focalLength.x && objectArrow.target.x < lensCenter.x) {
         imageArrow.color = color('rgba(200,0,0,0.2)');
 
-        for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)); i=i+round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)/15)) {
+        for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)); i=i+10) {
             var x = lerp(imageArrow.target.x, objectArrow.target.x, i / round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)));
             var y = lerp(imageArrow.target.y, objectArrow.target.y, i / round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)));
             ellipse(x, y, 2, 2);
@@ -84,7 +84,7 @@ function drawRays() {
         line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,lensCenter.y);
         line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,objectArrow.target.y);
         line(lensCenter.x,objectArrow.target.y,lensCenter.x+focalLength.x,lensCenter.y);
-        for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)); i=i+round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)/15)) {
+        for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)); i=i+10) {
             var x = lerp(imageArrow.target.x, lensCenter.x, i / round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)));
             var y = lerp(imageArrow.target.y, objectArrow.target.y, i / round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)));
             ellipse(x, y, 2, 2);
@@ -200,7 +200,6 @@ function drawArrows() {
         y: lensCenter.y
     };
     // RECALCULATE IMAGE POSITION
-
     imageArrow.target = newImagePosition(focalLength.x, lensCenter.x - objectArrow.target.x, lensCenter.y - objectArrow.target.y);
     imageArrow.update();
     
@@ -220,17 +219,23 @@ function drawArrows() {
         objectArrow.target.y = height - 20;
     }
     
-    
+    // CANDLES
     push();
     imageMode(CENTER);
-    // Object candle
-    image(candle,objectArrow.target.x,(objectArrow.target.y+lensCenter.y)/2,(lensCenter.y-objectArrow.target.y)/5,lensCenter.y-objectArrow.target.y);
-    // Image candle
-    
-    translate(imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2);
-    if(imageArrow.target.x>lensCenter.x){rotate(PI);}
+    // Object
+    translate(objectArrow.target.x,(objectArrow.target.y+lensCenter.y)/2);
+    if(objectArrow.target.y > lensCenter.y){rotate(PI);}
+    image(candle,0,0,(lensCenter.y-objectArrow.target.y)/5,lensCenter.y-objectArrow.target.y);
+    // Image
+    pop();
 
-    // image(candle,imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
+    push();
+    imageMode(CENTER);
+    translate(imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2);
+    // TEST CASES FOR ORIENTATION
+    if(imageArrow.target.x < lensCenter.x && lensCenter.x-focalLength.x>objectArrow.target.x){rotate(PI);}
+    if(imageArrow.target.y > lensCenter.y  && ! lensCenter.x-focalLength.x<objectArrow.target.x){rotate(PI);}
+    
     image(candle,0,0,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
     pop();
 
@@ -253,6 +258,13 @@ function newImagePosition(f, o, oh) {
     }
     return createVector(lensCenter.x + x, lensCenter.y + y);
 
+}
+
+function mousePressed(){
+    if(mouseX < lensCenter.x){
+        objectArrow.target.x = mouseX;
+        objectArrow.target.y = mouseY;
+    }
 }
 
 function windowResized() {
