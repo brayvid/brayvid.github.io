@@ -226,8 +226,9 @@ function drawArrows() {
     // Object candle
     image(candle,objectArrow.target.x,(objectArrow.target.y+lensCenter.y)/2,(lensCenter.y-objectArrow.target.y)/5,lensCenter.y-objectArrow.target.y);
     // Image candle
+    
     translate(imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2);
-    rotate(PI);
+    if(imageArrow.target.x>lensCenter.x){rotate(PI);}
 
     // image(candle,imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
     image(candle,0,0,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
