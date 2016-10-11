@@ -220,11 +220,22 @@ function drawArrows() {
         objectArrow.target.y = height - 20;
     }
     
+    
+    push();
+    imageMode(CENTER);
+    // Object candle
+    image(candle,objectArrow.target.x,(objectArrow.target.y+lensCenter.y)/2,(lensCenter.y-objectArrow.target.y)/5,lensCenter.y-objectArrow.target.y);
+    // Image candle
+    translate(imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2);
+    rotate(PI);
 
+    // image(candle,imageArrow.target.x,(imageArrow.target.y+lensCenter.y)/2,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
+    image(candle,0,0,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
+    pop();
 
   
-    objectArrow.display();
-    imageArrow.display();
+    // objectArrow.display();
+    // imageArrow.display();
 }
 
 function newImagePosition(f, o, oh) {
