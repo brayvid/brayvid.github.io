@@ -1,7 +1,5 @@
 var lensCenter;
 var focalLength;
-var objectPosition;
-var imagePosition;
 
 var objectArrow;
 var imageArrow;
