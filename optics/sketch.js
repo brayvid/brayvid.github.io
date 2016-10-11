@@ -21,7 +21,7 @@ function setup() {
     lensCenter = createVector(width / 2, height / 2);
     focalLength = createVector(focalSlider.value(), 0);
 
-    objectArrow = new Arrow(createVector(round(width / 4), lensCenter.y), createVector(round(width / 4), round(random(50, height - 200))));
+    objectArrow = new Arrow(createVector(round(width / 4), lensCenter.y), createVector(round(random(100,width/4)), round(random(100, height/2 - 100))));
     objectArrow.color = color(200, 0, 0);
     objectArrow.draggable = false;
     objectArrow.grab = true;
@@ -171,6 +171,9 @@ function displayValues() {
     }else{
         text('- -',lensCenter.x+30,height-30);
     }
+
+
+
 
     pop();
 
