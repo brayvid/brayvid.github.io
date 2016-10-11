@@ -7,6 +7,7 @@ var imageArrow;
 function preload() {
     img = loadImage("img/lens1.svg");
     eye = loadImage("img/eye.png");
+    candle = loadImage("img/candle.svg");
 }
 
 function setup() {
@@ -187,7 +188,7 @@ function drawFocalPoints() {
 
 
 function drawArrows() {
-    
+
     objectArrow.update();
     // FIX ARROW ORIGINS TO HORIZONTAL AXIS
     objectArrow.origin = {
@@ -199,7 +200,7 @@ function drawArrows() {
         y: lensCenter.y
     };
     // RECALCULATE IMAGE POSITION
-    
+
     imageArrow.target = newImagePosition(focalLength.x, lensCenter.x - objectArrow.target.x, lensCenter.y - objectArrow.target.y);
     imageArrow.update();
     
@@ -218,6 +219,10 @@ function drawArrows() {
     if (objectArrow.target.y >= height - 20) {
         objectArrow.target.y = height - 20;
     }
+    
+
+
+  
     objectArrow.display();
     imageArrow.display();
 }
