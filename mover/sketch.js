@@ -9,9 +9,9 @@ function setup(){
 	createCanvas(windowWidth,windowHeight);
 	d = createVector(width/2,height/2);
 	v = createVector(0,0);
-	a = createVector(0,0);
+	a = createVector(0,50);
 	ball = new Mover(d,v,a,30,'red');
-	guide = new Arrow(d, createVector(width/2,height/2-50));
+	guide = new Arrow(ball.position, createVector(width/2,height/2-50));
 	guide.color = color(0);
 	guide.width = 8;
 }
@@ -36,7 +36,7 @@ function mousePressed(){
 }
 
 function mouseReleased(){
-	ball.acceleration = p5.Vector.sub(createVector(mouseX,mouseY),guide.origin);
+	ball.acceleration = p5.Vector.add(p5.Vector.sub(createVector(mouseX,mouseY),ball.position),ball.acceleration);
 }
 
 function windowResized(){
