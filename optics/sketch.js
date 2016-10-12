@@ -46,11 +46,12 @@ function draw() {
     line(lensCenter.x, height / 14, lensCenter.x, 13 * height / 14);
     pop();
 
-    push();
-    noStroke();
-    fill('rgba(0,0,0,0.1)');
-    ellipse(lensCenter.x,lensCenter.y,150,150);
-    pop();
+    // push();
+    // stroke('rgba(0,0,0,0.1)');
+    // strokeWeight(2);
+    // noFill();
+    // ellipse(lensCenter.x,lensCenter.y,150,150);
+    // pop();
 
     // push();
     // strokeWeight(3);
@@ -61,7 +62,7 @@ function draw() {
 
     // ellipse(lensCenter.x,lensCenter.y,5,5);
 
-    focalLength = createVector(focalSlider.value() / 2, 0);
+    focalLength = createVector(round(focalSlider.value() / 2), 0);
     drawFocalPoints();
     drawArrows();
     drawRays();
@@ -197,9 +198,12 @@ function displayValues() {
 
 function drawFocalPoints() {
     // RIGHT
-    line(lensCenter.x + focalLength.x, lensCenter.y - 5, lensCenter.x + focalLength.x, lensCenter.y + 5);
+    push();
+    strokeWeight(2);
+    line(lensCenter.x + focalLength.x, lensCenter.y - 10, lensCenter.x + focalLength.x, lensCenter.y + 10);
     // LEFT
-    line(lensCenter.x - focalLength.x, lensCenter.y - 5, lensCenter.x - focalLength.x, lensCenter.y + 5);
+    line(lensCenter.x - focalLength.x, lensCenter.y - 10, lensCenter.x - focalLength.x, lensCenter.y + 10);
+    pop();
 }
 
 
@@ -279,7 +283,7 @@ function newImagePosition(f, o, oh) {
 function mouseDragged(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
     
-    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x && mouseY != lensCenter.y){
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>75 && mouseX < lensCenter.x && mouseY != lensCenter.y){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
     }
@@ -287,7 +291,7 @@ function mouseDragged(){
 function mousePressed(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
     
-    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x && mouseY != lensCenter.y){
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>75 && mouseX < lensCenter.x && mouseY != lensCenter.y){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
     }
