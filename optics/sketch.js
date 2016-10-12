@@ -67,10 +67,19 @@ function draw() {
     drawArrows();
     drawRays();
     displayValues();
+
+    if(dist(mouseX,mouseY,objectArrow.target.x,objectArrow.target.y)<=15){
+        push();
+        fill('rgba(0,0,0,0.1)')
+        ellipse(objectArrow.target.x,objectArrow.target.y,30,30);
+        pop();
+    }
 }
 
 function drawRays() {
+    push();
     stroke(0);
+    strokeWeight(2);
     if (lensCenter.x - objectArrow.target.x - focalLength.x > 0.6) {
         imageArrow.color = color('rgba(200,0,50,0.95)');
         line(objectArrow.target.x, objectArrow.target.y, imageArrow.target.x, imageArrow.target.y);
@@ -102,7 +111,10 @@ function drawRays() {
         //     var y = lerp(imageArrow.target.y, imageArrow.target.y, i / 50.0);
         //     ellipse(x, y, 2, 2);
         // }
+
+
     }
+       pop();
 }
 
 function displayValues() {
