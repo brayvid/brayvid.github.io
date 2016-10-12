@@ -68,18 +68,18 @@ function draw() {
     drawRays();
     displayValues();
 
-    if(dist(mouseX,mouseY,objectArrow.target.x,objectArrow.target.y)<=15){
-        push();
-        fill('rgba(0,0,0,0.1)')
-        ellipse(objectArrow.target.x,objectArrow.target.y,30,30);
-        pop();
-    }
+    // if(dist(mouseX,mouseY,objectArrow.target.x,objectArrow.target.y)<=15){
+    //     push();
+    //     fill('rgba(0,0,0,0.1)')
+    //     ellipse(objectArrow.target.x,objectArrow.target.y,30,30);
+    //     pop();
+    // }
 }
 
 function drawRays() {
     push();
     stroke(0);
-    strokeWeight(2);
+    strokeWeight(1);
     if (lensCenter.x - objectArrow.target.x - focalLength.x > 0.6) {
         imageArrow.color = color('rgba(200,0,50,0.95)');
         line(objectArrow.target.x, objectArrow.target.y, imageArrow.target.x, imageArrow.target.y);
@@ -95,7 +95,7 @@ function drawRays() {
         for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)); i=i+10) {
             var x = lerp(imageArrow.target.x, objectArrow.target.x, i / round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)));
             var y = lerp(imageArrow.target.y, objectArrow.target.y, i / round(dist(imageArrow.target.x,imageArrow.target.y,objectArrow.target.y,objectArrow.target.y)));
-            ellipse(x, y, 2, 2);
+            ellipse(x, y, 1, 1);
         }
         line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,lensCenter.y);
         line(objectArrow.target.x,objectArrow.target.y,lensCenter.x,objectArrow.target.y);
@@ -103,7 +103,7 @@ function drawRays() {
         for (var i = 0; i <= round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)); i=i+10) {
             var x = lerp(imageArrow.target.x, lensCenter.x, i / round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)));
             var y = lerp(imageArrow.target.y, objectArrow.target.y, i / round(dist(imageArrow.target.x,imageArrow.target.y,lensCenter.x,objectArrow.target.y)));
-            ellipse(x, y, 2, 2);
+            ellipse(x, y, 1, 1);
         }
 
         // for (var i = 0; i <= 50; i++) {

@@ -5,6 +5,7 @@
     <title>Thin Convex Lens Diagram</title>
     <!-- <link href="https://ccny-physics-sims.github.io/sim-design/sims-styles.css" rel="stylesheet" /> -->
     <link rel="shortcut icon" href="/favicon.ico">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.js" type="text/javascript"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.dom.js" type="text/javascript"></script>
@@ -30,5 +31,22 @@
     </style>
   </head>
   <body>
+
+    <script>
+    document.body.addEventListener('touchmove', function(event) {
+      console.log(event.source);
+      //if (event.source == document.body)
+        event.preventDefault();
+    }, false);
+
+    window.onresize = function() {
+      $(document.body).width(window.innerWidth).height(window.innerHeight);
+    }
+
+    $(function() {
+      window.onresize();
+    });
+  </script> 
+
   </body>
 </html>
