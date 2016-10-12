@@ -36,14 +36,20 @@ function draw() {
     // Environment
     background(255);
     image(lens, width / 2, height / 2, (width / 30) / (.005 * focalSlider.value()), 6 * height / 7);
-    image(eye, width - 25, height / 2 - 15, 150, 150);
+    image(eye, width - 25, height / 2, width/8, width/8);
     noFill();
     stroke(0);
-
     line(0, height / 2, width - 50, height / 2);
+
     push();
     stroke('rgba(0,0,0,0.3)');
     line(lensCenter.x, height / 14, lensCenter.x, 13 * height / 14);
+    pop();
+
+    push();
+    noStroke();
+    fill('rgba(0,0,0,0.1)');
+    ellipse(lensCenter.x,lensCenter.y,150,150);
     pop();
 
     // push();
@@ -165,11 +171,21 @@ function displayValues() {
       text('=',lensCenter.x,height-50);
     }
 
-    text('Magnification: ', lensCenter.x-25, height - 30);
+    text('Magnification: ', lensCenter.x-20, height - 30);
     if(abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6){
-        text(round(100*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/100,lensCenter.x+30,height-30);
+        text(round(100*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/100,lensCenter.x+40,height-30);
     }else{
-        text('- -',lensCenter.x+30,height-30);
+        text('infinite',lensCenter.x+40,height-30);
+    }
+
+    if(abs(lensCenter.x-focalLength.x-objectArrow.target.x) < 0.6){
+        
+    }else if(objectArrow.target.x < lensCenter.x-focalLength.x){
+        text('Real image',lensCenter.x,height-10);
+    }else if(objectArrow.target.x > lensCenter.x-focalLength.x){
+        text('Virtual image',lensCenter.x,height-10);
+    }else{
+        
     }
 
 
@@ -260,8 +276,17 @@ function newImagePosition(f, o, oh) {
 
 }
 
+function mouseDragged(){
+    // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
+    
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x && mouseY != lensCenter.y){
+        objectArrow.target.x = mouseX;
+        objectArrow.target.y = mouseY;
+    }
+}
 function mousePressed(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
+    
     if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>70 && mouseX < lensCenter.x && mouseY != lensCenter.y){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
