@@ -4,6 +4,8 @@ var focalLength;
 var objectArrow;
 var imageArrow;
 
+var t = 0;
+
 function preload() {
     lens = loadImage("img/lens1.svg");
     eye = loadImage("img/eye.png");
@@ -75,6 +77,7 @@ function draw() {
     drawArrows();
     drawRays();
     displayValues();
+    t++;
 
     // if(dist(mouseX,mouseY,objectArrow.target.x,objectArrow.target.y)<=15){
     //     push();
@@ -194,7 +197,7 @@ function displayValues() {
 
             text('Magnification: ', lensCenter.x-20, height - 30);
             if(abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6){
-                text(round(100*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/100,lensCenter.x+40,height-30);
+                text(round(10*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/10,lensCenter.x+40,height-30);
             }else{
                 text('Infinite',lensCenter.x+40,height-30);
             }
@@ -258,6 +261,25 @@ function drawArrows() {
     if (objectArrow.target.y >= height - 20) {
         objectArrow.target.y = height - 20;
     }
+
+    if(abs(objectArrow.target.x - (lensCenter.x-focalLength.x)) < 4 && !keyIsDown(LEFT_ARROW) && !keyIsDown(RIGHT_ARROW) && t%3==0){
+        objectArrow.target.x = lensCenter.x - focalLength.x;
+    }
+    if(t%2==0){
+     if (keyIsDown(LEFT_ARROW)){
+         objectArrow.target.x -= 2;
+     }
+      if (keyIsDown(RIGHT_ARROW)){   
+       objectArrow.target.x += 2;
+        }
+
+      if (keyIsDown(UP_ARROW)){
+        objectArrow.target.y -= 2;
+         }
+      if (keyIsDown(DOWN_ARROW)){
+        objectArrow.target.y += 2;
+        }
+    }
     
     // CANDLES
     push();
@@ -316,6 +338,10 @@ function mousePressed(){
         objectArrow.target.y = mouseY;
     }
 }
+
+// function touchStarted(){
+//     return false;
+// }
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
