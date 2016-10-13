@@ -4,7 +4,7 @@ var focalLength;
 var objectArrow;
 var imageArrow;
 
-var t = 1;
+var t = 0;
 
 function preload() {
     lens = loadImage("img/lens1.svg");
