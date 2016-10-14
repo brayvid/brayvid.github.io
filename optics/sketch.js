@@ -4,12 +4,15 @@ var focalLength;
 var objectArrow;
 var imageArrow;
 
+var focusChanging;
+
 var t = 0;
 
 function preload() {
     lens = loadImage("img/lens1.svg");
     eye = loadImage("img/eye.png");
     candle = loadImage("img/candle.svg");
+    candle2 = loadImage("img/candle_2.svg")
 }
 
 function setup() {
@@ -18,8 +21,17 @@ function setup() {
     imageMode(CENTER);
 
     focalSlider = createSlider(100, 500, floor(random(250, 500)));
-    focalSlider.position(width / 2 - 77, height / 2 - 9);
+
+    focalSlider.position(3*width/4-77, height - 100);
     focalSlider.style('width', '150px');
+
+    focalSlider.touchStarted(function(){
+        if(focusChanging == false){focusChanging = true;}
+    });
+
+    focalSlider.touchEnded(function(){
+        if(focusChanging == true){focusChanging = false;}
+    });
 
     lensCenter = createVector(width / 2, height / 2);
     focalLength = createVector(focalSlider.value(), 0);
@@ -56,6 +68,14 @@ function draw() {
     line(lensCenter.x, height / 14, lensCenter.x, 13 * height / 14);
     pop();
 
+
+    push();
+    fill(0);
+    text('_',3*width/4-90,height-92);
+    text('+',3*width/4+80,height-88);
+    textSize(20);
+    text('f',3*width/4-3,height-110);
+    pop();
     // push();
     // stroke('rgba(0,0,0,0.1)');
     // strokeWeight(2);
@@ -231,13 +251,16 @@ function drawFocalPoints() {
 
 function drawArrows() {
 
+    if(!focusChanging){
 
-    objectArrow.update();
-    // FIX ARROW ORIGINS TO HORIZONTAL AXIS
-    objectArrow.origin = {
-        x: objectArrow.target.x,
-        y: lensCenter.y
-    };
+        objectArrow.update();
+        // FIX ARROW ORIGINS TO HORIZONTAL AXIS
+        objectArrow.origin = {
+            x: objectArrow.target.x,
+            y: lensCenter.y
+        };
+    }
+
     imageArrow.origin = {
         x: imageArrow.target.x,
         y: lensCenter.y
@@ -245,8 +268,6 @@ function drawArrows() {
     // RECALCULATE IMAGE POSITION
     imageArrow.target = newImagePosition(focalLength.x, lensCenter.x - objectArrow.target.x, lensCenter.y - objectArrow.target.y);
     imageArrow.update();
-    
-
     
     // CONSTRAIN OBJECT TO LEFT SIDE OF LENS
     if (objectArrow.target.x >= lensCenter.x - 1) {
@@ -298,7 +319,7 @@ function drawArrows() {
     if(imageArrow.target.x < lensCenter.x && lensCenter.x-focalLength.x>objectArrow.target.x){rotate(PI);}
     if(imageArrow.target.y > lensCenter.y  && ! lensCenter.x-focalLength.x<objectArrow.target.x){rotate(PI);}
     
-    image(candle,0,0,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
+    image(candle2,0,0,(lensCenter.y-imageArrow.target.y)/5,lensCenter.y-imageArrow.target.y);
     pop();
 
   
@@ -325,7 +346,7 @@ function newImagePosition(f, o, oh) {
 function mouseDragged(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
     
-    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>75 && mouseX < lensCenter.x && mouseY != lensCenter.y){
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>1 && mouseX < lensCenter.x && mouseY != lensCenter.y && !focusChanging){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
     }
@@ -333,7 +354,7 @@ function mouseDragged(){
 function mousePressed(){
     // ONLY ALLOW TOUCHES ON LEFT SIDE OF LENS, AVOID SLIDER, & AVOID AXIS
     
-    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>75 && mouseX < lensCenter.x && mouseY != lensCenter.y){
+    if(dist(mouseX,mouseY,lensCenter.x,lensCenter.y)>1 && mouseX < lensCenter.x && mouseY != lensCenter.y){
         objectArrow.target.x = mouseX;
         objectArrow.target.y = mouseY;
     }
@@ -346,7 +367,15 @@ function mousePressed(){
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     image(lens, width / 2, height / 2);
-    focalSlider.position(width / 2 - 77, height / 2 - 9);
+    focalSlider.position(3*width/4-77, height - 100);
     lensCenter.x = width / 2;
     lensCenter.y = height / 2;
+
+    push();
+    fill(0);
+    text('_',3*width/4-90,height-92);
+    text('+',3*width/4+80,height-88);
+    textSize(20);
+    text('f',3*width/4-3,height-110);
+    pop();
 }
