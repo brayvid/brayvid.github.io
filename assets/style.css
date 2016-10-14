@@ -1,12 +1,26 @@
 a{
 	text-decoration: none;
+	color: black;
 }
 a:hover{
 	text-decoration: underline;
+	color: orange;
 }
 h2{
 	text-decoration:underline;
 }
 ul{
 	font-size: 1.5em;
+}
+
+li{
+	color: black;
+}
+
+#sims-link{
+	color: black;
+}
+
+footer{
+	padding-top: 25%;
 }
