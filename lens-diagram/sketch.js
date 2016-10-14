@@ -1,12 +1,8 @@
 function setup(){
-
+	createCanvas(640,480);
 }
 
 function draw(){
-
+	background(0);
 }
 
-
-function opticsObject(height_,axis_,img_){
-	
-}
