@@ -3,9 +3,7 @@ body{
 	text-align: center;
 	font-family:"Helvetica";
 	font-size: 2em;
-	
 }
-
 
 #title{
 	width: 40%;
@@ -16,16 +14,15 @@ a{
 	text-decoration: none;
 	color: black;
 }
+
 a:hover{
 	text-decoration: underline;
 }
-
 
 h2{
 
 	text-decoration:none;
 }
-
 
 #by{
 	font-size: 28px;
@@ -49,7 +46,6 @@ h2{
 .sketch-link:hover{
 	color: red;
 }
-
 
 footer{
 	padding-top: 35%;
