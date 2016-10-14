@@ -77,7 +77,7 @@ function draw() {
     textAlign(CENTER);
     text('Focal length',3*width/4-3,height-110);
     noFill();
-    rect(3*width/4-100,height-100,3*width/4+90,height-78);
+    rect(3*width/4-3,height-200,3*width/4+90,height-78);
     pop();
     // push();
     // stroke('rgba(0,0,0,0.1)');
