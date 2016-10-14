@@ -1,26 +1,55 @@
+body{
+	padding-top:10%;
+	text-align: center;
+	font-family:"Helvetica";
+	font-size: 2em;
+}
+
+
+#title{
+	width: 40%;
+	margin: 0 auto;
+}
+
 a{
 	text-decoration: none;
 	color: black;
 }
 a:hover{
 	text-decoration: underline;
-	color: orange;
 }
+
+
 h2{
-	text-decoration:underline;
-}
-ul{
-	font-size: 1.5em;
+
+	text-decoration:none;
 }
 
-li{
-	color: black;
+
+#by{
+	font-size: 28px;
+
+}
+#p5-link{
+	color: #ff0066;
 }
 
-#sims-link{
-	color: black;
+#name-link{
+	color: #009900;
 }
+
+#github-link{
+	color: #9900ff;
+}
+
+.sketch-link{
+	font-size: 36px;
+}
+.sketch-link:hover{
+	color: red;
+}
+
 
 footer{
-	padding-top: 25%;
+	padding-top: 35%;
 }
