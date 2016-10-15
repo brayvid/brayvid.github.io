@@ -102,11 +102,16 @@ function touchEnded(){
 
 	var interval = endTime - beginTime;
 
-	newVelocity = p5.Vector.div(p5.Vector.sub(endDist,beginDist),(endTime-beginTime)/8);
+	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/8);
 
-	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(0,2),50,color(100));
+	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(0,2),50,color(random(0,255),random(0,255),random(0,255)));
 }
 
+
+function windowResized(){
+	resizeCanvas(windowWidth,windowHeight);
+	
+}
 
 
 
