@@ -5,6 +5,9 @@ var newVelocity;
 var beginTime;
 var endTime;
 var globalAcc;
+var started;
+
+var time;
 
 function FreeBodyMover(p, v, a, m, c){
 	// Properties
@@ -76,14 +79,20 @@ function FreeBodyMover(p, v, a, m, c){
 
 function setup(){
 
-	frameRate(60);
+	frameRate(48);
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
+	textAlign(CENTER);
+	started = false;
 }
 
 function draw(){
 	background(255);
+
+	if(started == false){
+		text('Swipe or drag to set a ball in motion',width/2,height/8);
+	}
 
 	// Recalculate acceleration
 	// if(deviceOrientation == 'portrait' && rotationX > 0){
@@ -101,7 +110,7 @@ function draw(){
 	// globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
 	// }
 
-	
+
 
 	// Update balls
 	for(var i = 0; i < balls.length; i++){
@@ -118,6 +127,7 @@ function draw(){
 }
 
 function touchStarted(){
+	started = true;
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
 }
