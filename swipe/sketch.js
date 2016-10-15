@@ -71,11 +71,11 @@ function FreeBodyMover(p, v, a, m, c){
 			ellipse(this.position.x,this.position.y,this.mass,this.mass);
 			pop();
 	};//end refresh()
-}
+
+}// End FreeBodyMover object
 
 function setup(){
 
-	
 	frameRate(60);
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
@@ -100,7 +100,7 @@ function draw(){
 		balls.splice(i,1);
 		}
 	}
-	console.log(rotationX +', '+rotationY+', '+rotationZ);
+	console.log('x: ' + rotationX +',y: '+rotationY);
 }
 
 function touchStarted(){
