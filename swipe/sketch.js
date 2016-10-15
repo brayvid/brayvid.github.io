@@ -86,8 +86,22 @@ function draw(){
 	background(255);
 
 	// Recalculate acceleration
-	globalAcc.x = map(constrain(rotationY,-45,45),-20,20,-0.05,0.05);
-	globalAcc.y = map(constrain(rotationX,-45,45),-20,20,-0.05,0.05);
+	// if(deviceOrientation == 'portrait' && rotationX > 0){
+		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+	// }
+
+	// if(deviceOrientation == 'landscape' && rotationY < 0){
+	// globalAcc.x = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+	// globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+	// }
+
+	// if(deviceOrientation == 'landscape' && rotationY > 0){
+	// globalAcc.x = map(constrain(rotationY,-50,50),-50,50,0.2,-0.2);
+	// globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+	// }
+
+	
 
 	// Update balls
 	for(var i = 0; i < balls.length; i++){
@@ -121,3 +135,9 @@ function windowResized(){
 	// Something else
 	
 }
+
+// function deviceTurned(){
+// 	for(var i = 0; i < balls.length; i++){
+// 		balls.splice(i,1);
+// 		}
+// }
