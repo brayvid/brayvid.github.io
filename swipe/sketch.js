@@ -26,10 +26,10 @@ function FreeBodyMover(p, v, a, m, c){
 	this.forceArrow.draggable = false;
 
 	// Methods
-	this.act = function(force){
-		// add a force to the array of acting forces
-		this.fbd.forces[this.fbd.forces.length+1] = force;
-	}; //end act()
+	// this.act = function(force){
+	// 	// add a force to the array of acting forces
+	// 	this.fbd.forces[this.fbd.forces.length+1] = force;
+	// }; //end act()
 
 	this.refresh = function(){
 		  	// "bounceEdges" from science.js by http://github.com/hedbergj
