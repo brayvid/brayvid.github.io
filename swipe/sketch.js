@@ -9,6 +9,7 @@ var started;
 var currentTime;
 var touchTime;
 var currentFrameRate;
+var randColor;
 
 
 function FreeBodyMover(p, v, a, m, c){
@@ -82,16 +83,23 @@ function FreeBodyMover(p, v, a, m, c){
 function setup(){
 
 	frameRate(60);
+	
 	currentFrameRate = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
 	started = false;
 	currentTime = millis();
+	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
 }
 
 function draw(){
 	background(255);
+	// push();
+	// fill(randColor);
+	// ellipse(mouseX,mouseY,50,50);
+	// pop();
+
 	currentTime = millis();
 	push();
 	textSize(24);
@@ -174,6 +182,7 @@ function touchStarted(){
 	timeStarted = millis();
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
+
 }
 
 function touchEnded(){
@@ -181,7 +190,8 @@ function touchEnded(){
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/4);
-	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255),random(100,200)));
+	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,randColor);
+	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
 }
 
 function windowResized(){
