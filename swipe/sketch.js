@@ -96,8 +96,8 @@ function draw(){
 		textAlign(CENTER);
 		textSize(27);
 		fill(map(currentTime,0, 6000,0, 255));
-		text('Tap or swipe to launch a ball',width/2,height/2-10);
-		text('(Ensure rotation is locked)',width/2,height/2+30);
+		text('Tap or swipe to launch balls',width/2,(height/2)-20);
+		text('(Ensure screen rotation is locked)',width/2,(height/2)+20);
 		pop();
 	}
 
