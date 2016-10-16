@@ -83,22 +83,43 @@ function setup(){
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
-	textAlign(CENTER);
 	started = false;
+	time = millis();
 }
 
 function draw(){
 	background(255);
-
-	if(started == false){
+	time = millis();
+	if(started == false && time < 6000){
+		push();
+		textAlign(CENTER);
+		textSize(27);
+		fill(map(7000-time,4000,3200,0, 255));
 		text('Swipe or drag to set a ball in motion',width/2,height/8);
+		pop();
 	}
 
-	// Recalculate acceleration
-	// if(deviceOrientation == 'portrait' && rotationX > 0){
+	// Recalculate acceleration 
+	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
 		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
 		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
-	// }
+
+	}else if(deviceOrientation == 'portrait' && rotationX < 0){ // Upside down portrait
+		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+		globalAcc.y = map(constrain(rotationX,-50,50),50,-50,0.2,-0.2); // flip signs
+
+	}else if(deviceOrientation == 'landscape' && rotationY > 0){  // Clockwise landscape
+		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.2,-0.2); 
+		globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+
+	}else if(deviceOrientation == 'portrait' && rotationY < 0){ // Counterclockwise landscape
+		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+	}else{
+
+	}
+
+
 
 	// if(deviceOrientation == 'landscape' && rotationY < 0){
 	// globalAcc.x = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
@@ -128,6 +149,7 @@ function draw(){
 
 function touchStarted(){
 	started = true;
+	time = millis();
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
 }
@@ -137,7 +159,7 @@ function touchEnded(){
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/8);
-	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255)));
+	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255),random(0,255)));
 }
 
 function windowResized(){
