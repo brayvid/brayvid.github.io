@@ -8,6 +8,7 @@ var globalAcc;
 var started;
 var currentTime;
 var touchTime;
+var currentFrameRate;
 
 
 function FreeBodyMover(p, v, a, m, c){
@@ -81,6 +82,7 @@ function FreeBodyMover(p, v, a, m, c){
 function setup(){
 
 	frameRate(48);
+	currentFrameRate = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
@@ -91,6 +93,14 @@ function setup(){
 function draw(){
 	background(255);
 	currentTime = millis();
+	push();
+	textSize(24);
+	if(round(currentTime) % 10 == 0){
+		currentFrameRate = round(frameRate());
+	}
+	text(currentFrameRate,30, height-25);
+	pop();
+	
 	if(currentTime - touchTime < 200 || !started){
 		push();
 		textAlign(CENTER);
