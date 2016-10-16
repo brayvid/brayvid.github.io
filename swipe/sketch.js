@@ -10,6 +10,7 @@ var currentTime;
 var touchTime;
 var currentFrameRate;
 var randColor;
+var globalAccOn;
 
 function FreeBodyMover(p, v, a, m, c){
 
@@ -115,6 +116,7 @@ function setup(){
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
+	globalAccOn = true;
 	started = false;
 	currentTime = millis();
 	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
@@ -164,9 +166,11 @@ function draw(){
 		pop();
 	}
 
-	// Recalculate acceleration based on device rotation
-	globalAcc.x = map(constrain(rotationY,-45,45),-45,45,-2,2);
-	globalAcc.y = map(constrain(rotationX,-45,45),-45,45,-2,2);
+	if(globalAccOn){
+		// Recalculate acceleration based on device rotation
+		globalAcc.x = map(constrain(rotationY,-45,45),-45,45,-2,2);
+		globalAcc.y = map(constrain(rotationX,-45,45),-45,45,-2,2);
+	}
 
 	// Collisions
 	for(var i = 0; i < balls.length; i++){
