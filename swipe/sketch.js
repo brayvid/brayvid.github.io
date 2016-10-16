@@ -91,34 +91,40 @@ function setup(){
 function draw(){
 	background(255);
 	currentTime = millis();
-	if(currentTime - touchTime < 500 || !started){
+	if(currentTime - touchTime < 200 || !started){
 		push();
 		textAlign(CENTER);
 		textSize(27);
 		fill(map(currentTime,0, 6000,0, 255));
-		text('Swipe or drag',width/2,height/2);
+		text('Swipe or drag to launch',width/2,height/2);
+		text('(Ensure rotation is locked)',width/2,height/2+30);
 		pop();
 	}
 
 	// Recalculate acceleration 
-	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
-		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
-		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.8,0.8);
+	globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
+	globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.8,0.8);
 
-	}else if(rotationX < 0){ // Upside down portrait
-		globalAcc.x = map(constrain(rotationY,-50,50),50, -50,-0.8,0.8);
-		globalAcc.y = map(constrain(rotationX,-50,50),-50, 50,0.8,-0.8); // flip signs
+	// if(false){
+	// 	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
+	// 		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
+	// 		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.8,0.8);
 
-	}else if(deviceOrientation == 'landscape' && rotationY > 0){  // Clockwise landscape
-		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8); 
-		globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
+	// 	}else if(rotationX < 0){ // Upside down portrait
+	// 		globalAcc.x = map(constrain(rotationY,-50,50),-50, 50,0.8,-0.8);
+	// 		globalAcc.y = map(constrain(rotationX,-50,50),-50, 50,0.8,-0.8); // flip signs
 
-	}else if(rotationY < 0){ // Counterclockwise landscape
-		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8);
-		globalAcc.y = map(constrain(rotationY,-50,50),50,-50,-0.8,0.8);
-	}else{
+	// 	}else if(deviceOrientation == 'landscape' && rotationY > 0){  // Clockwise landscape
+	// 		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8); 
+	// 		globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
 
-	}
+	// 	}else if(rotationY < 0){ // Counterclockwise landscape
+	// 		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8);
+	// 		globalAcc.y = map(constrain(rotationY,-50,50),50,-50,-0.8,0.8);
+	// 	}else{
+
+	// 	}
+	// }
 
 
 
