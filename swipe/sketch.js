@@ -80,7 +80,7 @@ function FreeBodyMover(p, v, a, m, c){
 
 function setup(){
 
-	frameRate(60);
+	frameRate(48);
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
 	globalAcc = createVector(0,0);
