@@ -11,24 +11,19 @@ var touchTime;
 var currentFrameRate;
 var randColor;
 
-
 function FreeBodyMover(p, v, a, m, c){
+
 	// Properties
 	this.position = p;
 	this.velocity = v;
 	this.acceleration = a;
 	this.mass = m;
 	this.color = c;
-	this.fbd = {
-		forces: [],
-		netForce: function(forces){
-			var net = createVector(0,0);
-			for(var i = 0; i < self.forces.length; i++){
-				net = p5.Vector.add(net,self.forces[i]);
-			}
-			return net;
-		}
-	};
+	this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
+	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
+	this.forceArrow.color = this.color;
+	this.forceArrow.grab = false;
+	this.forceArrow.draggable = false;
 
 	// Methods
 	this.act = function(force){
@@ -44,6 +39,7 @@ function FreeBodyMover(p, v, a, m, c){
 				 this.velocity.x = 1*vatwidth;
 				 this.position.x = 0+this.mass/2; 
 			 	 }
+
 			  if(this.position.x > width-this.mass/2){
 			    overinx = this.position.x-width+this.mass/2;
 			    vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
@@ -66,24 +62,30 @@ function FreeBodyMover(p, v, a, m, c){
 			  }	
 			 // End bounceEdges
 
+
 	   		// Recalculate position then velocity 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAcc);
 			this.velocity = p5.Vector.add(this.velocity,this.acceleration);
 			this.position = p5.Vector.add(this.position,this.velocity);
+			
+			// Draw force arrow
+			this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
+			this.forceArrow.origin = this.position;
+			this.forceArrow.target = p5.Vector.add(this.position,this.appliedForce);
+			this.forceArrow.display();
 
-			// Display
+			// Redraw
 			push();
 			fill(this.color);
 			ellipse(this.position.x,this.position.y,this.mass,this.mass);
 			pop();
-	};//end refresh()
 
+	}; // end update method
 }// End FreeBodyMover object
 
-function setup(){
 
+function setup(){
 	frameRate(60);
-	
 	currentFrameRate = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
@@ -93,14 +95,19 @@ function setup(){
 	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
 }
 
+
 function draw(){
 	background(255);
+
 	// push();
 	// fill(randColor);
 	// ellipse(mouseX,mouseY,50,50);
 	// pop();
 
+	// Get time for intervals
 	currentTime = millis();
+
+	// Display framerate
 	push();
 	textSize(24);
 	if(round(currentTime) % 10 == 0){
@@ -109,20 +116,22 @@ function draw(){
 	text(currentFrameRate,30, height-25);
 	pop();
 	
-	if(currentTime - touchTime < 200 || !started){
+
+	// Display intro until first touch
+	if(!started){
 		push();
 		textAlign(CENTER);
-		textSize(27);
-		fill(map(currentTime,0, 6000,0, 255));
-		text('Lock your screen rotation',width/2,(height/2)-20);
-		text('Tap or swipe to launch a ball ',width/2,(height/2)+20);
-		
+		textSize(38);
+		fill(25);
+		text('Disable screen rotation',width/2,(height/2)-20);
+		text('Tap or swipe to launch',width/2,(height/2)+20);
 		pop();
 	}
 
-	// Recalculate acceleration 
-	globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-1.5,1.5);
-	globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-1.5,1.5);
+	// Recalculate acceleration based on device rotation
+	globalAcc.x = map(constrain(rotationY,-45,45),-45,45,-2,2);
+	globalAcc.y = map(constrain(rotationX,-45,45),-45,45,-2,2);
+
 
 	// if(false){
 	// 	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
@@ -145,8 +154,6 @@ function draw(){
 	// 	}
 	// }
 
-
-
 	// if(deviceOrientation == 'landscape' && rotationY < 0){
 	// globalAcc.x = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
 	// globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
@@ -156,7 +163,6 @@ function draw(){
 	// globalAcc.x = map(constrain(rotationY,-50,50),-50,50,0.2,-0.2);
 	// globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
 	// }
-
 
 
 	// Update balls
@@ -170,38 +176,39 @@ function draw(){
 		balls.splice(i,1);
 		}
 	}
-	console.log('x: ' + rotationX +',y: '+rotationY);
+
+	// console.log('x: ' + rotationX +',y: '+rotationY);
+
+	// if(balls.length > 0){
+	// 	console.log(balls[0].acceleration);
+	// }
 }
 
 function touchStarted(){
-	 // For displaying info text
+	// Record time of first touch
 	if(!started){
 		touchTime = millis();
 		started = true;
 	}
+
+	// Start measuring for initial velocity
 	timeStarted = millis();
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
-
 }
 
 function touchEnded(){
+	// Calculate initial velocity
 	endDist = createVector(mouseX, mouseY);
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
+
+	// Make a new ball
 	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),map(interval,0,1000,25,150),randColor);
 	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
 }
 
 function windowResized(){
 	resizeCanvas(windowWidth,windowHeight);
-	// Something else
-	
 }
-
-// function deviceTurned(){
-// 	for(var i = 0; i < balls.length; i++){
-// 		balls.splice(i,1);
-// 		}
-// }
