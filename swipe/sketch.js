@@ -6,8 +6,9 @@ var beginTime;
 var endTime;
 var globalAcc;
 var started;
+var currentTime;
+var touchTime;
 
-var time;
 
 function FreeBodyMover(p, v, a, m, c){
 	// Properties
@@ -84,37 +85,37 @@ function setup(){
 	balls = [];
 	globalAcc = createVector(0,0);
 	started = false;
-	time = millis();
+	currentTime = millis();
 }
 
 function draw(){
 	background(255);
-	time = millis();
-	if(started == false && time < 6000){
+	currentTime = millis();
+	if(currentTime - touchTime < 500 || !started){
 		push();
 		textAlign(CENTER);
 		textSize(27);
-		fill(map(7000-time,4000,3200,0, 255));
-		text('Swipe or drag to set a ball in motion',width/2,height/8);
+		fill(map(currentTime,0, 6000,0, 255));
+		text('Swipe or drag',width/2,height/2);
 		pop();
 	}
 
 	// Recalculate acceleration 
 	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
-		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
-		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
+		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.8,0.8);
 
-	}else if(deviceOrientation == 'portrait' && rotationX < 0){ // Upside down portrait
-		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
-		globalAcc.y = map(constrain(rotationX,-50,50),50,-50,0.2,-0.2); // flip signs
+	}else if(rotationX < 0){ // Upside down portrait
+		globalAcc.x = map(constrain(rotationY,-50,50),50, -50,-0.8,0.8);
+		globalAcc.y = map(constrain(rotationX,-50,50),-50, 50,0.8,-0.8); // flip signs
 
 	}else if(deviceOrientation == 'landscape' && rotationY > 0){  // Clockwise landscape
-		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.2,-0.2); 
-		globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
+		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8); 
+		globalAcc.y = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
 
-	}else if(deviceOrientation == 'portrait' && rotationY < 0){ // Counterclockwise landscape
-		globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.2,0.2);
-		globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
+	}else if(rotationY < 0){ // Counterclockwise landscape
+		globalAcc.x = map(constrain(rotationX,-50,50),-50,50,0.8,-0.8);
+		globalAcc.y = map(constrain(rotationY,-50,50),50,-50,-0.8,0.8);
 	}else{
 
 	}
@@ -148,8 +149,12 @@ function draw(){
 }
 
 function touchStarted(){
-	started = true;
-	time = millis();
+	 // For displaying info text
+	if(!started){
+		touchTime = millis();
+		started = true;
+	}
+	timeStarted = millis();
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
 }
@@ -158,7 +163,7 @@ function touchEnded(){
 	endDist = createVector(mouseX, mouseY);
 	endTime = millis();
 	var interval = endTime - beginTime;
-	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/8);
+	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/4);
 	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255),random(0,255)));
 }
 
