@@ -11,6 +11,9 @@ var touchTime;
 var currentFrameRate;
 var randColor;
 var globalAccOn;
+var deviceHasMoved = false;
+var numberOfCollisions;
+var previousNumberOfCollisions;
 
 function FreeBodyMover(p, v, a, m, c){
 
@@ -23,11 +26,12 @@ function FreeBodyMover(p, v, a, m, c){
 	this.color = c;
 	this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
 	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
-	this.forceArrow.color = this.color;
+	this.forceArrow.color = color(0);
 	this.forceArrow.grab = false;
 	this.forceArrow.draggable = false;
+	this.forceArrow.width = 10;
 
-	this.velocityArrow = new Arrow(this.position,p5.Vector.add(this.position,this.velocity));
+	this.velocityArrow = new Arrow(this.position,p5.Vector.mult(p5.Vector.add(this.position,this.velocity),2));
 	this.velocityArrow.color = this.color;
 	this.velocityArrow.grab = false;
 	this.velocityArrow.draggable = false;
@@ -43,41 +47,43 @@ function FreeBodyMover(p, v, a, m, c){
 
 	this.refresh = function(){
 		  	// "bounceEdges" from science.js by http://github.com/hedbergj
-			  if(this.position.x < 0+this.mass/4){
-				 overinx = this.position.x-this.mass/4;
+		  	// Still needed: "Apply Force" 
+			  if(this.position.x < 0+this.mass/2){
+				 overinx = this.position.x-this.mass/2;
 				 vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-				 this.velocity.x = 1*vatwidth;
-				 this.position.x = 0+this.mass/4; 
+				 this.velocity.x = 0.97*vatwidth;
+				 this.position.x = 0+this.mass/2; 
 			 	 }
 
-			  if(this.position.x > width-this.mass/4){
-			    overinx = this.position.x-width+this.mass/4;
+			  if(this.position.x > width-this.mass/2){
+			    overinx = this.position.x-width+this.mass/2;
 			    vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-			    this.position.x = width-this.mass/4;
-			    this.velocity.x = -1*vatwidth;
+			    this.position.x = width-this.mass/2;
+			    this.velocity.x = -0.97*vatwidth;
 			  }
 
-			  if(this.position.y < 0+this.mass/4){
-			    overiny = this.position.y-this.mass/4;
+			  if(this.position.y < 0+this.mass/2){
+			    overiny = this.position.y-this.mass/2;
 			    vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-			    this.velocity.y = 1*vatheight;
-			    this.position.y = 0+this.mass/4;
+			    this.velocity.y = 0.97*vatheight;
+			    this.position.y = 0+this.mass/2;
 			  }
 
-			  if(this.position.y > height-this.mass/4){
-			    overiny = this.position.y-height+this.mass/4;
+			  if(this.position.y > height-this.mass/2){
+			    overiny = this.position.y-height+this.mass/2;
 			    vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-			    this.position.y = height-this.mass/4;
-			    this.velocity.y = -1*vatheight;
+			    this.position.y = height-this.mass/2;
+			    this.velocity.y = -0.97*vatheight;
 			  }	
 			 // End bounceEdges
 
 	   		// Recalculate position then velocity 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAcc);
 			this.velocity = p5.Vector.add(this.velocity,this.acceleration);
-			this.position = p5.Vector.add(this.position,this.velocity);
-			this.momentum = p5.Vector.add(this.velocity,this.mass);
 			this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
+			this.position = p5.Vector.add(this.position,this.velocity);
+			this.momentum = p5.Vector.mult(this.velocity,this.mass);
+			
 			
 			// Draw force arrow
 			this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
@@ -94,18 +100,41 @@ function FreeBodyMover(p, v, a, m, c){
 			// Redraw
 			push();
 			fill(this.color);
-			ellipse(this.position.x,this.position.y,this.mass/2,this.mass/2);
+			ellipse(this.position.x,this.position.y,this.mass,this.mass);
 			pop();
 
 	}; // end update method
 
 	this.intersects = function(other){
 		var d = dist(this.position.x,this.position.y,other.position.x,other.position.y);
-		if(d < (this.mass/4) + (other.mass/4)){
+		if(d < (this.mass/2) + (other.mass/2)){
 			return true;
 		}else{
 			return false;
 		}
+	}
+
+	this.newColor = function(other){
+		
+		var r;
+		var g;
+		var b;
+		var a;
+
+		// Ball with greater momentum spreads color
+		if(p5.Vector.mag(other.momentum) > p5.Vector.mag(this.momentum)){
+			var r = map(other.color._array[0],0,1,0,255);
+			var g = map(other.color._array[1],0,1,0,255);
+			var b = map(other.color._array[2],0,1,0,255);
+			var a = map(other.color._array[3],0,1,0,255);
+		}else{
+			var r = map(this.color._array[0],0,1,0,255);
+			var g = map(this.color._array[1],0,1,0,255);
+			var b = map(this.color._array[2],0,1,0,255);
+			var a = map(this.color._array[3],0,1,0,255);
+		}
+
+		this.color = color(r,g,b,a);
 	}
 }// End FreeBodyMover object
 
@@ -120,12 +149,14 @@ function setup(){
 	started = false;
 	currentTime = millis();
 	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
+	setMoveThreshold(0.01);
+	numberOfCollisions = 0;
 }
 
 
 function draw(){
 	background(255);
-
+	// console.log('deviceHasmoved == '+deviceHasMoved);
 	// push();
 	// fill(randColor);
 	// ellipse(mouseX,mouseY,50,50);
@@ -159,10 +190,23 @@ function draw(){
 	if(!started){
 		push();
 		textAlign(CENTER);
-		textSize(38);
+		textSize(width/15);
 		fill(25);
-		text('Disable screen rotation',width/2,(height/2)-20);
-		text('Tap or swipe to launch',width/2,(height/2)+20);
+		if(deviceHasMoved){
+			push();
+			textSize(width/20);
+			text('--Disable screen rotation--',width/2,(height/2)-40);
+			pop();
+		}else{
+			push();
+			textSize(width/25);
+			text('Gravity unavailable - switch to mobile',width/2,(height/2)-70);
+			pop();
+		}
+
+		text('Tap or swipe to launch',width/2,(height/2)+30);
+		
+		
 		pop();
 	}
 
@@ -208,6 +252,12 @@ function draw(){
 				// Update velocities with calculated ones
 				balls[i].velocity = createVector(newVelX1,newVelY1);
 				balls[j].velocity = createVector(newVelX2,newVelY2);
+
+				balls[i].newColor(balls[j]);
+				balls[j].color = balls[i].color;
+
+				numberOfCollisions++;
+				// console.log('collisions: ' + numberOfCollisions);
 				
 
 
@@ -269,7 +319,7 @@ function draw(){
 	}
 
 	// Limit number of balls created
-	if(balls.length > 9){
+	if(balls.length > 30){
 		for(var i = 0; i < balls.length-1; i++){
 		balls.splice(i,1);
 		}
@@ -288,7 +338,6 @@ function touchStarted(){
 		touchTime = millis();
 		started = true;
 	}
-
 	// Start measuring for initial velocity
 	timeStarted = millis();
 	beginDist = createVector(mouseX,mouseY);
@@ -311,3 +360,6 @@ function windowResized(){
 	resizeCanvas(windowWidth,windowHeight);
 }
 
+function deviceMoved(){
+	deviceHasMoved = true;
+}
