@@ -102,8 +102,8 @@ function draw(){
 	}
 
 	// Recalculate acceleration 
-	globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
-	globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-0.8,0.8);
+	globalAcc.x = map(constrain(rotationY,-50,50),-50,50,-1.5,1.5);
+	globalAcc.y = map(constrain(rotationX,-50,50),-50,50,-1.5,1.5);
 
 	// if(false){
 	// 	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
