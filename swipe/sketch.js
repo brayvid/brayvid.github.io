@@ -189,8 +189,8 @@ function touchEnded(){
 	endDist = createVector(mouseX, mouseY);
 	endTime = millis();
 	var interval = endTime - beginTime;
-	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/4);
-	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,randColor);
+	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
+	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),map(interval,0,1000,25,100),randColor);
 	randColor = color(random(0,255),random(0,255),random(0,255),random(100,200));
 }
 
