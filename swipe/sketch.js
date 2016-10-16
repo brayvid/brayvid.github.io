@@ -81,7 +81,7 @@ function FreeBodyMover(p, v, a, m, c){
 
 function setup(){
 
-	frameRate(48);
+	frameRate(60);
 	currentFrameRate = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	balls = [];
@@ -106,8 +106,9 @@ function draw(){
 		textAlign(CENTER);
 		textSize(27);
 		fill(map(currentTime,0, 6000,0, 255));
-		text('Tap or swipe to launch balls',width/2,(height/2)-20);
-		text('(Ensure screen rotation is locked)',width/2,(height/2)+20);
+		text('Lock your screen rotation',width/2,(height/2)-20);
+		text('Tap or swipe to launch a ball ',width/2,(height/2)+20);
+		
 		pop();
 	}
 
@@ -180,7 +181,7 @@ function touchEnded(){
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),(endTime-beginTime)/4);
-	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255),random(0,255)));
+	balls[balls.length] = new FreeBodyMover(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAcc.x,globalAcc.y),50,color(random(0,255),random(0,255),random(0,255),random(100,200)));
 }
 
 function windowResized(){
