@@ -24,6 +24,8 @@ function FreeBodyMover(p, v, a, m, c){
 	this.forceArrow.color = this.color;
 	this.forceArrow.grab = false;
 	this.forceArrow.draggable = false;
+	
+	this.momentum = p5.Vector.add(this.velocity,this.mass);
 
 	// Methods
 	// this.act = function(force){
