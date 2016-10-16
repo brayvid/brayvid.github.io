@@ -42,31 +42,31 @@ function FreeBodyMover(p, v, a, m, c){
 
 	this.refresh = function(){
 		  	// "bounceEdges" from science.js by http://github.com/hedbergj
-			  if(this.position.x < 0+this.mass/2){
-				 overinx = this.position.x-this.mass/2;
+			  if(this.position.x < 0+this.mass/4){
+				 overinx = this.position.x-this.mass/4;
 				 vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
 				 this.velocity.x = 1*vatwidth;
-				 this.position.x = 0+this.mass/2; 
+				 this.position.x = 0+this.mass/4; 
 			 	 }
 
-			  if(this.position.x > width-this.mass/2){
-			    overinx = this.position.x-width+this.mass/2;
+			  if(this.position.x > width-this.mass/4){
+			    overinx = this.position.x-width+this.mass/4;
 			    vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-			    this.position.x = width-this.mass/2;
+			    this.position.x = width-this.mass/4;
 			    this.velocity.x = -1*vatwidth;
 			  }
 
-			  if(this.position.y < 0+this.mass/2){
-			    overiny = this.position.y-this.mass/2;
+			  if(this.position.y < 0+this.mass/4){
+			    overiny = this.position.y-this.mass/4;
 			    vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
 			    this.velocity.y = 1*vatheight;
-			    this.position.y = 0+this.mass/2;
+			    this.position.y = 0+this.mass/4;
 			  }
 
-			  if(this.position.y > height-this.mass/2){
-			    overiny = this.position.y-height+this.mass/2;
+			  if(this.position.y > height-this.mass/4){
+			    overiny = this.position.y-height+this.mass/4;
 			    vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-			    this.position.y = height-this.mass/2;
+			    this.position.y = height-this.mass/4;
 			    this.velocity.y = -1*vatheight;
 			  }	
 			 // End bounceEdges
