@@ -24,8 +24,9 @@ function FreeBodyMover(p, v, a, m, c){
 	this.forceArrow.color = this.color;
 	this.forceArrow.grab = false;
 	this.forceArrow.draggable = false;
-	
+
 	this.momentum = p5.Vector.add(this.velocity,this.mass);
+	this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
 
 	// Methods
 	// this.act = function(force){
@@ -69,12 +70,15 @@ function FreeBodyMover(p, v, a, m, c){
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAcc);
 			this.velocity = p5.Vector.add(this.velocity,this.acceleration);
 			this.position = p5.Vector.add(this.position,this.velocity);
+			this.momentum = p5.Vector.add(this.velocity,this.mass);
+			this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
 			
 			// Draw force arrow
 			this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
 			this.forceArrow.origin = this.position;
 			this.forceArrow.target = p5.Vector.add(this.position,this.appliedForce);
 			this.forceArrow.display();
+
 
 			// Redraw
 			push();
@@ -118,6 +122,17 @@ function draw(){
 	text(currentFrameRate,30, height-25);
 	pop();
 	
+
+	push();
+	textSize(24);
+	textAlign(CENTER);
+	var totalKE = 0;
+	for(var i = 0; i < balls.length; i++){
+		totalKE = totalKE + balls[i].kineticEnergy;
+	}
+	text('Total KE:',width-75,height-45);
+	text(round(totalKE) + ' J',width-75,height-20);
+	pop();
 
 	// Display intro until first touch
 	if(!started){
