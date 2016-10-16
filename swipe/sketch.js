@@ -127,14 +127,20 @@ function FreeBodyMover(p, v, a, m, c){
 			var g = map(other.color._array[1],0,1,0,255);
 			var b = map(other.color._array[2],0,1,0,255);
 			var a = map(other.color._array[3],0,1,0,255);
+			this.color = color(r,g,b,a);
+			this.velocityArrow.color = color(r,g,b,a);
 		}else{
 			var r = map(this.color._array[0],0,1,0,255);
 			var g = map(this.color._array[1],0,1,0,255);
 			var b = map(this.color._array[2],0,1,0,255);
 			var a = map(this.color._array[3],0,1,0,255);
+			other.color = color(r,g,b,a);
+			other.velocityArrow.color = color(r,g,b,a);
 		}
 
-		this.color = color(r,g,b,a);
+		
+		
+
 	}
 }// End FreeBodyMover object
 
@@ -254,7 +260,7 @@ function draw(){
 				balls[j].velocity = createVector(newVelX2,newVelY2);
 
 				balls[i].newColor(balls[j]);
-				balls[j].color = balls[i].color;
+				
 
 				numberOfCollisions++;
 				// console.log('collisions: ' + numberOfCollisions);
@@ -319,7 +325,7 @@ function draw(){
 	}
 
 	// Limit number of balls created
-	if(balls.length > 30){
+	if(balls.length > 50){
 		for(var i = 0; i < balls.length-1; i++){
 		balls.splice(i,1);
 		}
