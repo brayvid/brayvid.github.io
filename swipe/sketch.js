@@ -8,6 +8,7 @@ var spheres;
 var globalAccel;
 var collisionCount;
 var dissipation;
+var collisionDissipation;
 var maxSpheres;
 
 var fps;
@@ -172,6 +173,7 @@ function setup(){
 	globalAccelOn = true;
 	collisionsOn = true;
 	dissipation = 0.88;
+	collisionDissipation = 0.995;
 	started = false;
 	currentTime = millis();
 	setMoveThreshold(0.001);
@@ -292,19 +294,11 @@ function draw(){
 								// console.log('heading 1: '+ heading1 + ', heading 2: '+ heading2);
 								// console.log(collisionPoint.x + ", "+ collisionPoint.y);
 
-								// // Draw collision points
-								// push();
-								// fill(255,0,0);
-								// var r = map(collisionMomentum,0,1,0,50);
-								// ellipse(collisionPoint.x,collisionPoint.y,r,r);
-								// pop();
-
-								// COLLISION PHYSICS
 								// Calculate resultant velocities
-								var newVelX1 = (spheres[i].velocity.x * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.x)) / (spheres[i].mass + spheres[j].mass);
-								var newVelY1 = (spheres[i].velocity.y * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.y)) / (spheres[i].mass + spheres[j].mass);
-								var newVelX2 = (spheres[j].velocity.x * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + spheres[j].mass);
-								var newVelY2 = (spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass);
+								var newVelX1 = collisionDissipation*((spheres[i].velocity.x * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.x)) / (spheres[i].mass + spheres[j].mass));
+								var newVelY1 = collisionDissipation*((spheres[i].velocity.y * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.y)) / (spheres[i].mass + spheres[j].mass));
+								var newVelX2 = collisionDissipation*((spheres[j].velocity.x * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + spheres[j].mass));
+								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
 								// Update positions to prevent sticking
 								spheres[i].position.x = spheres[i].position.x + newVelX1;
@@ -327,8 +321,12 @@ function draw(){
 								 	/ (spheres[i].mass/2 + spheres[j].mass/2)
 								);
 
-								var collisionMomentum = p5.Vector.add(spheres[i].momentum,spheres[j].momentum);
-
+								// // Draw collision points
+								// push();
+								// fill(255,0,0);
+								// var r = map(collisionMomentum,0,1,0,50);
+								// ellipse(collisionPoint.x,collisionPoint.y,r,r);
+								// pop();
 
 								spheres[i].newColor(spheres[j]);
 
