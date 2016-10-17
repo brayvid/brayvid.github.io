@@ -226,16 +226,16 @@ function draw(){
 				// textAlign(CENTER);
 				// text('GRAVITY ON',(35+(width/2-30))/2, height-450);
 				// text('GRAVITY OFF',((width/2+30)+(width/2-60)/2), height-450);
-
-			}else{
-				push();
-				textSize(width/25);
-				fill(225,0,75,125);
-				text('Gravity off - needs accelerometer.',width/2,(height/2)-70);
-				pop();
 			}
+			// else{
+			// 	push();
+			// 	textSize(width/25);
+			// 	fill(225,0,75,125);
+			// 	text('Gravity disabled - needs an accelerometer.',width/2,(height/2)-70);
+			// 	pop();
+			// }
 			// Displayed on both types of devices
-			text('Tap or drag anywhere',width/2,(height/2)+30);
+			text('Tap or drag anywhere',width/2,(height/2)+10);
 			
 		}
 
