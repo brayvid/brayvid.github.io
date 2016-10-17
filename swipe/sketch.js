@@ -19,13 +19,10 @@ var deviceHasMoved = false;
 var stopAll;
 
 var beginDist;
-var endDist;
 var beginTime;
 var endTime;
-var newVelocity;
 var currentTime;
 
-var randColor;
 var initialSpheres;
 
 var pausedSpheres;
@@ -37,6 +34,14 @@ var tempIsSet = false;
 var totalKE;
 var totalP;
 
+var invalidSize;
+
+var touchEndedCount = 0;
+
+var invalidSize;
+var sphereCreated;
+
+var netMomentumArrow;
 
 // Modified mover object in science.js
 function Sphere(p, v, a, m, c){
@@ -199,13 +204,21 @@ function setup(){
 	pausedSpheres = [];
 	totalKE = 0;
 	totalP = createVector(0,0);
+	invalidSize = true;
+	sphereCreated = false;
+
+	netMomentumArrow = new Arrow(createVector(3*width/4-100,120),p5.Vector.add(createVector(3*width/4-100,120),totalP));
+	netMomentumArrow.draggable = false;
+	netMomentumArrow.grab = false;
+	netMomentumArrow.color = color(0,0,0,255);
+	netMomentumArrow.width = 8;
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
 					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
 					createVector(random(-25,25),random(-25,25)), // velocity
 					createVector(random(-1,1),random(-1,1)), // acceleration
-					random(50,90),	// mass
+					random(75,90),	// mass
 					color(random(0,255),random(0,255),random(0,255),random(100,200))); // color
 	}
 }
@@ -216,69 +229,71 @@ function draw(){
 		--	"started" is false to start and is true after first touch
 		-- 	"stopAll" is false to start and is flipped when spacebar is typed 	*/
 
-		// Intro screen
-		if(!started && !stopAll){
-			push();
-			textAlign(CENTER);
-			textSize(width/15);
-			fill(25);
 
-			// Check if on mobile or desktop
-			if(deviceHasMoved){
-				push();
-				textSize(width/20);
-				text('Lock your screen rotation',width/2,(height/2)-60);
-				pop();
+		// // Intro screen
+		// if(!started && !stopAll){
+		// 	push();
+		// 	textAlign(CENTER);
+		// 	textSize(width/15);
+		// 	fill(25);
 
-				// Gravity on/off switch
-				// pop();
-				// push();
-				// rectMode(CORNER);
-				// fill(0,230,0);
-				// rect(25,height-550,width/2-30,150);
-				// fill(230,0,0);
-				// rect(width/2+30,height-550,width/2-60,150);
-				// pop();
+		// 	// Check if on mobile or desktop
+		// 	if(deviceHasMoved){
+		// 		push();
+		// 		textSize(width/20);
+		// 		text('Lock your screen rotation',width/2,(height/2)-60);
+		// 		pop();
 
-				// push();
-				// fill(255);
-				// textSize(60);
-				// noStroke();
-				// textAlign(CENTER);
-				// text('GRAVITY ON',(35+(width/2-30))/2, height-450);
-				// text('GRAVITY OFF',((width/2+30)+(width/2-60)/2), height-450);
-			}
-			// else{
-			// 	push();
-			// 	textSize(width/25);
-			// 	fill(225,0,75,125);
-			// 	text('Gravity disabled - needs an accelerometer.',width/2,(height/2)-70);
-			// 	pop();
-			// }
-			// Displayed on both types of devices
-			text('Tap or drag anywhere',width/2,(height/2)+10);
+		// 		// Gravity on/off switch
+		// 		// pop();
+		// 		// push();
+		// 		// rectMode(CORNER);
+		// 		// fill(0,230,0);
+		// 		// rect(25,height-550,width/2-30,150);
+		// 		// fill(230,0,0);
+		// 		// rect(width/2+30,height-550,width/2-60,150);
+		// 		// pop();
+
+		// 		// push();
+		// 		// fill(255);
+		// 		// textSize(60);
+		// 		// noStroke();
+		// 		// textAlign(CENTER);
+		// 		// text('GRAVITY ON',(35+(width/2-30))/2, height-450);
+		// 		// text('GRAVITY OFF',((width/2+30)+(width/2-60)/2), height-450);
+		// 	}
+
+		// 	// else{
+		// 	// 	push();
+		// 	// 	textSize(width/25);
+		// 	// 	fill(225,0,75,125);
+		// 	// 	text('Gravity disabled - needs an accelerometer.',width/2,(height/2)-70);
+		// 	// 	pop();
+		// 	// }
+		// 	// Displayed on both types of devices
+		// 	text('Tap or drag anywhere',width/2,(height/2)+10);
 			
-		}
+		// }
 
 		// Pause screen
-		if(stopAll){
+		if(false){
 
-			// If not paused
-			if(!tempIsSet){
+			// // If not paused
+			// if(!tempIsSet){
 
-				// Store current spheres in temp array
-				for(var i = 0; i < spheres.length; i++){
-					pausedSpheres[i] = spheres[i];
-				}
-				tempIsSet = true;
-				// Do not repeat this code
-			}
-			push();
-			textAlign(CENTER);
-			textSize(80);
-			fill(0,0,0,90);
-			text('paused',width/2,height/2);
-			pop();
+			// 	// Store current spheres in temp array
+			// 	for(var i = 0; i < spheres.length; i++){
+			// 		pausedSpheres[i] = spheres[i];
+			// 	}
+			// 	tempIsSet = true;
+			// 	// Do not repeat this code
+			// }
+			// push();
+			// textAlign(CENTER);
+			// textSize(80);
+			// fill(0,0,0,90);
+			// text('paused',width/2,height/2);
+			// pop();
 
 		}else{
 		// Normal operations
@@ -452,9 +467,12 @@ function draw(){
 			push();
 			textSize(28);
 			textAlign(CENTER);
-			text('Momentum',3*width/4-100,42);
-			text(round(totalP.mag()) + ' g/cm/frame',3*width/4-100,82);
-
+			text('Net momentum',3*width/4-100,42);
+			text(round(totalP.mag()/60) + ' g/mm/frame',3*width/4-100,82);
+			netMomentumArrow.origin = p5.Vector.sub(createVector(3*width/4-100,120),totalP.normalize().mult(20));
+			netMomentumArrow.target = p5.Vector.add(createVector(3*width/4-100,120),totalP.normalize().mult(20));
+			netMomentumArrow.update();
+			netMomentumArrow.display();
 
 			// Display number used
 			push();
@@ -487,7 +505,7 @@ function touchStarted(){
 	// }
 
 	// Record time of first touch
-	if(!started && !stopAll){
+	if(!started){
 		started = true;
 	}
 	// Start measuring for initial velocity
@@ -495,26 +513,20 @@ function touchStarted(){
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
 
+	touchEndedCount = 0;
+
 }
 
 function touchEnded(){
-
-	if(!stopAll){
-		// Calculate initial velocity
-		endDist = createVector(mouseX, mouseY);
-		endTime = millis();
-		var interval = endTime - beginTime;
-		var newMass = map(interval,0,200,25,125);
-		newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
-
-		// MAKE A NEW SPHERE
-		randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
-		spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),newMass,randColor);
+		// Only do this once per touch (in case touchEnded is called multiple times accidentally)
 		
-		// Report new 
-		totalKE += (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
-		console.log("New E = " + round(totalKE)  +" mJ");
-	}
+		if(touchEndedCount == 0){
+
+			touchEndedCount++;
+			launchNewSphere();
+
+		}
+
 }
 
 function windowResized(){
@@ -532,8 +544,86 @@ function keyPressed(){
 	//  flip stopAll on and off
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
+		frameRate(16);
 	}else if(keyCode == 32 && stopAll){
 		stopAll = false;
+		frameRate(60);
 	}
 
+}
+
+function launchNewSphere(){
+
+	sphereCreated = false;
+	invalidSize = true;
+	var attemptToFix = true;
+
+	endTime = millis();
+	var interval = endTime - beginTime;
+
+	// Calculate new parameters
+	var newPosition = createVector(mouseX, mouseY);
+	var newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(newPosition,beginDist),4),map(interval,0,1000,0,1500)/4);
+	var newAcceleration = globalAccel;
+	var newMass = constrain(map(interval,0,500,25,75),75,400); // This may get reduced
+	var randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
+	// console.log(newMass);
+
+	var count = 0;
+	do{
+		
+		var d = 0;
+		var ok = [];
+		var inTheWay = 0;
+
+		/*	Check the distance to each sphere. If the distance from the mouse to 
+			the sphere is greater than the sum of the new radius and the radius of the 
+			sphere being checked, mark its index as ok. If any index is not ok, reduce
+			new mass until distance is ok. 	*/
+
+		for(var i = 0; i < spheres.length; i++){
+
+			d = dist(newPosition.x,newPosition.y,spheres[i].position.x,spheres[i].position.y);
+
+			if (d > spheres[i].mass + newMass && d > spheres[i].mass/2) {
+				ok[i] = true;	
+			}else{
+				ok[i] = false;
+			}
+
+			// See if every element of ok is true. If they are, let allOk remain true
+			for(var i = 0; i < ok.length; i++){
+				if(ok[i] == false){
+					inTheWay++;
+				}
+			}
+		}
+
+		// console.log(inTheWay + ' overlapping');
+
+		if(invalidSize && inTheWay == 0 && !sphereCreated && attemptToFix){
+		// All checks have been passed
+
+			//Create a new sphere
+			spheres[spheres.length] = new Sphere(newPosition,newVelocity,newAcceleration,newMass,randColor);
+			
+			// Report new 
+			totalKE += (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
+			console.log(round(totalKE/1000)  +" J at launch");
+
+			sphereCreated = true;
+			// Break out of loop once one sphere has been created
+			invalidSize = false;
+			attemptToFix = false;
+		}else{
+			// Try again with a smaller radius
+			if(newMass > 25){
+				newMass -= 3;
+			}else{
+				attemptToFix = false;
+			}
+		} 
+		count++; // count iterations of do-while to ensure no infinite looping
+	}while(invalidSize && !sphereCreated && attemptToFix && count<25);
+	// console.log(touchEndedCount);		
 }
