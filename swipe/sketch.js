@@ -35,7 +35,6 @@ function Sphere(p, v, a, m, c){
 	this.acceleration = a;
 	this.mass = m;
 	this.color = c;
-
 	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
 	this.forceArrow.color = color(0);
 	this.forceArrow.grab = false;
@@ -162,16 +161,25 @@ function setup(){
 	fps = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	spheres = [];
-	globalAccel = createVector(0,0);
+	globalAccel = createVector(0,20);
 	globalAccelOn = true;
 	collisionsOn = true;
-	dissipation = 0.8;
+	dissipation = 0.88;
 	started = false;
 	currentTime = millis();
 	setMoveThreshold(0.001);
 	collisionCount = 0;
 	stopAll = false;
 	maxSpheres = 50;
+
+	for(var i = 0; i < 5; i++){
+		spheres[i] = new Sphere(
+					createVector(random(0,width),random(0,height)),
+					createVector(random(0,25),random(0,25)),
+					createVector(random(-1,1),random(-1,1)),
+					random(0,75),
+					color(random(0,255),random(0,255),random(0,255),random(100,200)));
+	}
 }
 
 
@@ -193,7 +201,7 @@ function draw(){
 	if(round(currentTime) % 10 == 0){
 		fps = round(frameRate());
 	}
-	text(fps,40, height-25);
+	text(fps + ' fps',60, height-25);
 	pop();
 	
 	// Display total kinetic energy
@@ -204,7 +212,7 @@ function draw(){
 	for(var i = 0; i < spheres.length; i++){
 		totalKE += spheres[i].kineticEnergy;
 	}
-	text('Total KE:',width-75,height-45);
+	text('KE:',width-75,height-45);
 	text(round(totalKE) + ' J',width-75,height-20);
 	pop();
 
@@ -243,11 +251,12 @@ function draw(){
 		}else{
 			push();
 			textSize(width/25);
-			text('Gravity is offline - switch to mobile',width/2,(height/2)-70);
+			fill(225,0,75,125);
+			text('Gravity off - needs accelerometers.',width/2,(height/2)-70);
 			pop();
 		}
 		// Displayed on both types of devices
-		text('Tap or swipe to begin',width/2,(height/2)+30);
+		text('Tap or drag to begin',width/2,(height/2)+30);
 		
 	}else{
 		push();
@@ -302,8 +311,8 @@ function draw(){
 					spheres[j].position.y = spheres[j].position.y + newVelY2;
 
 					// Update velocities with calculated ones
-					spheres[i].velocity = createVector(newVelX1,newVelY1);
-					spheres[j].velocity = createVector(newVelX2,newVelY2);
+					spheres[i].velocity.set(newVelX1,newVelY1);
+					spheres[j].velocity.set(newVelX2,newVelY2);
 
 
 
@@ -433,7 +442,7 @@ function touchEnded(){
 
 	// MAKE A NEW SPHERE
 	randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
-	spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),map(interval,0,500,25,125),randColor);
+	spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),map(interval,0,200,25,125),randColor);
 	console.log("Speed = " + p5.Vector.mag(newVelocity).toFixed(2)+" pixels per frame");
 }
 
@@ -455,3 +464,5 @@ function keyTyped(){
 		stopAll = false;
 	}
 }
+
+
