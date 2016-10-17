@@ -100,7 +100,9 @@ function Sphere(p, v, a, m, c){
 
 	   		// Recalculate position then velocity 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAccel);
-			this.velocity = p5.Vector.add(this.velocity,this.acceleration);
+			var tempVelocity = p5.Vector.add(this.velocity,this.acceleration);
+			this.velocity.x = (tempVelocity.x + this.velocity.x) / 2;
+			this.velocity.y = (tempVelocity.y + this.velocity.y) / 2;
 			this.position = p5.Vector.add(this.position,this.velocity);
 			this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
 			this.momentum = p5.Vector.mult(this.velocity,this.mass);
@@ -287,7 +289,6 @@ function draw(){
 							// Spheres perform the check themselves
 							if(i != j && spheres[i].intersects(spheres[j])){
 
-								// Old
 								// var heading1 = degrees(spheres[i].velocity.heading());
 								// var heading2 = degrees(spheres[j].velocity.heading());
 								// console.log(spheres[i] + ' intersects ' + spheres[j]);
@@ -301,6 +302,7 @@ function draw(){
 								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
 								// Update positions to prevent sticking
+								
 								spheres[i].position.x = spheres[i].position.x + newVelX1;
 								spheres[j].position.x = spheres[j].position.x + newVelX2;
 								spheres[i].position.y = spheres[i].position.y + newVelY1;
@@ -309,7 +311,6 @@ function draw(){
 								// Update velocities with calculated ones
 								spheres[i].velocity.set(newVelX1,newVelY1);
 								spheres[j].velocity.set(newVelX2,newVelY2);
-
 
 
 								var collisionPoint = createVector(
