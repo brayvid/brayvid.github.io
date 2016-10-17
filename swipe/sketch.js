@@ -42,6 +42,7 @@ function Sphere(p, v, a, m, c){
 	this.acceleration = a;
 	this.mass = m;
 	this.color = c;
+
 	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
 	this.forceArrow.color = color(0);
 	this.forceArrow.grab = false;
@@ -210,7 +211,7 @@ function draw(){
 			if(deviceHasMoved){
 				push();
 				textSize(width/20);
-				text('Lock your screen rotation',width/2,(height/2)-40);
+				text('Lock your screen rotation',width/2,(height/2)-60);
 				pop();
 
 				// Gravity on/off switch
