@@ -8,6 +8,7 @@ var spheres;
 var globalAccel;
 var collisionCount;
 var dissipation;
+var maxSpheres;
 
 var fps;
 var started;
@@ -170,21 +171,12 @@ function setup(){
 	setMoveThreshold(0.001);
 	collisionCount = 0;
 	stopAll = false;
+	maxSpheres = 50;
 }
 
 
 function draw(){
 	background(255);
-
-	// Pause screen
-	if(stopAll){
-		push();
-		textAlign(CENTER);
-		textSize(80);
-		fill(0,0,0,90);
-		text('paused',width/2,height/2);
-		pop();
-	}
 
 	// console.log('deviceHasmoved == '+deviceHasMoved);
 	// push();
@@ -257,23 +249,32 @@ function draw(){
 		// Displayed on both types of devices
 		text('Tap or swipe to begin',width/2,(height/2)+30);
 		
+	}else{
+		push();
+		textSize(24);
+		textAlign(CENTER);
+
+		text(spheres.length + "/" + maxSpheres,width-50,50);
+		pop();
 	}
 
-	// Recalculate acceleration based on device rotation
+	// Only calculate if enabled
 	if(globalAccelOn){
+		//Get acceleration from device rotation data
 		globalAccel.x = map(constrain(rotationY,-45,45),-45,45,-2,2);
 		globalAccel.y = map(constrain(rotationX,-45,45),-45,45,-2,2);
 	}
 
-
+	// Only check if enabled
 	if(collisionsOn){
-		
+
 		for(var i = 0; i < spheres.length; i++){
 			for(var j = 0; j < spheres.length; j++){
 
-				// spheres check intersections themselves
+				// Spheres perform the check themselves
 				if(i != j && spheres[i].intersects(spheres[j])){
 
+					// Old
 					// var heading1 = degrees(spheres[i].velocity.heading());
 					// var heading2 = degrees(spheres[j].velocity.heading());
 					// console.log(spheres[i] + ' intersects ' + spheres[j]);
@@ -287,8 +288,7 @@ function draw(){
 					// ellipse(collisionPoint.x,collisionPoint.y,r,r);
 					// pop();
 
-					// Collision physics
-
+					// COLLISION PHYSICS
 					// Calculate resultant velocities
 					var newVelX1 = (spheres[i].velocity.x * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.x)) / (spheres[i].mass + spheres[j].mass);
 					var newVelY1 = (spheres[i].velocity.y * (spheres[i].mass - spheres[j].mass) + (2 * spheres[j].mass * spheres[j].velocity.y)) / (spheres[i].mass + spheres[j].mass);
@@ -306,11 +306,12 @@ function draw(){
 					spheres[j].velocity = createVector(newVelX2,newVelY2);
 
 
+
 					var collisionPoint = createVector(
-						// X coord
+						// X
 						((spheres[i].position.x * spheres[j].mass/2) + (spheres[j].position.x * spheres[i].mass/2)) 
 					 	/ (spheres[i].mass/2 + spheres[j].mass/2),
-					 	// Y coord
+					 	// Y
 					 	((spheres[i].position.y * spheres[j].mass/2) + (spheres[j].position.y * spheres[i].mass/2)) 
 					 	/ (spheres[i].mass/2 + spheres[j].mass/2)
 					);
@@ -320,9 +321,9 @@ function draw(){
 
 					spheres[i].newColor(spheres[j]);
 
-
-					// Collisions count
+					// Increment count
 					collisionCount++;
+
 
 					// console.log('collisions: ' + collisionCount);
 
@@ -334,8 +335,9 @@ function draw(){
 				}
 			}
 		}
-	}
+	} // end collisions section
 
+	// Account for device rotation -- incomplete
 	// if(false){
 	// 	if(deviceOrientation == 'portrait' && rotationX > 0){ // normal phone orientation
 	// 		globalAccel.x = map(constrain(rotationY,-50,50),-50,50,-0.8,0.8);
@@ -367,22 +369,29 @@ function draw(){
 	// globalAccel.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
 	// }
 
-
-	// CORE FUNCTIONALITY
+	
+	// Only update if not paused
 	if(!stopAll){
 		for(var i = 0; i < spheres.length; i++){
 			spheres[i].refresh();
 		}
 	}
 
-
-
-	// Limit total # spheres
-	if(spheres.length > 50){
-		for(var i = 0; i < spheres.length-1; i++){
-		spheres.splice(i,1);
-		}
+	// Pause screen
+	if(stopAll){
+		push();
+		textAlign(CENTER);
+		textSize(80);
+		fill(0,0,0,90);
+		text('paused',width/2,height/2);
+		pop();
 	}
+
+	// Limit # of spheres
+	if(spheres.length > maxSpheres){
+		spheres.splice(0,26);
+	}
+
 
 	// console.log('x: ' + rotationX +',y: '+rotationY);
 
@@ -412,35 +421,37 @@ function touchStarted(){
 	timeStarted = millis();
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
-
 }
 
 function touchEnded(){
-	// Calculate initial velocity
 
+	// Calculate initial velocity
 	endDist = createVector(mouseX, mouseY);
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
-	// Make a new Sphere
+
+	// MAKE A NEW SPHERE
 	randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
 	spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),map(interval,0,500,25,125),randColor);
 	console.log("Speed = " + p5.Vector.mag(newVelocity).toFixed(2)+" pixels per frame");
 }
 
+
 function windowResized(){
 	resizeCanvas(windowWidth,windowHeight);
 }
 
+// Is device mobile or desktop
 function deviceMoved(){
 	deviceHasMoved = true;
 }
 
+// Pause functionality
 function keyTyped(){
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
 	}else if(keyCode == 32 && stopAll){
 		stopAll = false;
 	}
-
 }
