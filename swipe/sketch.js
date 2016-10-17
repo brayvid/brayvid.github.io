@@ -193,7 +193,7 @@ function draw(){
 	if(round(currentTime) % 10 == 0){
 		fps = round(frameRate());
 	}
-	text(fps,30, height-25);
+	text(fps,40, height-25);
 	pop();
 	
 	// Display total kinetic energy
@@ -369,7 +369,7 @@ function draw(){
 	// globalAccel.y = map(constrain(rotationX,-50,50),-50,50,-0.2,0.2);
 	// }
 
-	
+
 	// Only update if not paused
 	if(!stopAll){
 		for(var i = 0; i < spheres.length; i++){
