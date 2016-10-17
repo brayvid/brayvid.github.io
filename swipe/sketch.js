@@ -24,9 +24,9 @@ var beginTime;
 var endTime;
 var newVelocity;
 var currentTime;
-var touchTime;
 
 var randColor;
+var initialSpheres;
 
 var pausedSpheres;
 
@@ -34,6 +34,8 @@ var wasPaused = false;
 
 var tempIsSet = false;
 
+
+// Modified mover object in science.js
 function Sphere(p, v, a, m, c){
 
 	// Properties
@@ -61,6 +63,8 @@ function Sphere(p, v, a, m, c){
 	this.actingForces = [];
 
 	// Methods
+
+	// unimplemented
 	this.act = function(force){
 		// add a force to the array of acting forces
 		this.actingForces.push(force);
@@ -98,8 +102,7 @@ function Sphere(p, v, a, m, c){
 				this.velocity.y = -dissipation*vatheight; // Dissipation
 			}	// End edge detection
 
-
-	   		// Recalculate position then velocity 
+	   		// Recalculate variables 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAccel);
 			var tempVelocity = p5.Vector.add(this.velocity,this.acceleration);
 			this.velocity.x = (tempVelocity.x + this.velocity.x) / 2;
@@ -108,13 +111,13 @@ function Sphere(p, v, a, m, c){
 			this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
 			this.momentum = p5.Vector.mult(this.velocity,this.mass);
 			
-			// Draw force arrow
+			// net force arrow
 			this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
 			this.forceArrow.origin = this.position;
 			this.forceArrow.target = p5.Vector.add(this.position,p5.Vector.mult(this.appliedForce,0.35));
 			this.forceArrow.display();
 
-			// Draw velocity arrow
+			// velocity arrow
 			this.velocityArrow.origin = this.position;
 			this.velocityArrow.target.x = this.position.x + map(this.velocity.x,-200,200,-150,150);
 			this.velocityArrow.target.y = this.position.y + map(this.velocity.y,-200,200,-150,150);
@@ -123,7 +126,11 @@ function Sphere(p, v, a, m, c){
 
 			// Redraw
 			push();
+			fill(0,0,0,100);
+			noStroke();
+			ellipse(this.position.x-2,this.position.y+2,this.mass+0.01*this.mass,this.mass+0.01*this.mass);
 			fill(this.color);
+			stroke(0);
 			ellipse(this.position.x,this.position.y,this.mass,this.mass);
 			pop();
 	};
@@ -160,10 +167,6 @@ function Sphere(p, v, a, m, c){
 		}
 	};
 
-	// New methods here:
-
-
-
 }// End object definition
 
 
@@ -172,6 +175,7 @@ function setup(){
 	fps = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	spheres = [];
+	initialSpheres = 2;
 	globalAccel = createVector(0,0);
 	globalAccelOn = true;
 	collisionsOn = true;
@@ -186,7 +190,7 @@ function setup(){
 	pausedSpheres = [];
 
 
-	for(var i = 0; i < 5; i++){
+	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
 					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
 					createVector(random(-25,25),random(-25,25)), // velocity
@@ -198,7 +202,9 @@ function setup(){
 
 
 function draw(){
-	background(255);
+		/* 	Two variables, "started" and "stopAll", control the primary flow of draw().
+		    --	"started" is false to start and is true after first touch
+		    -- 	"stopAll" is false to start and is flipped when spacebar is typed 	*/
 
 		// Intro screen
 		if(!started && !stopAll){
@@ -244,26 +250,29 @@ function draw(){
 			
 		}
 
-	// Pause screen
-	if(stopAll){
+		// Pause screen
+		if(stopAll){
 
-		if(!tempIsSet){
-			// Store current spheres in temp array
-			for(var i = 0; i < spheres.length; i++){
-				pausedSpheres[i] = spheres[i];
+			// If not paused
+			if(!tempIsSet){
+
+				// Store current spheres in temp array
+				for(var i = 0; i < spheres.length; i++){
+					pausedSpheres[i] = spheres[i];
+				}
+				tempIsSet = true;
+				// Do not repeat this code
 			}
-			tempIsSet = true;
-		}
-		push();
-		textAlign(CENTER);
-		textSize(80);
-		fill(0,0,0,90);
-		text('paused',width/2,height/2);
-		pop();
+			push();
+			textAlign(CENTER);
+			textSize(80);
+			fill(0,0,0,90);
+			text('paused',width/2,height/2);
+			pop();
 
-	}else{
-	// Normal operations
-
+		}else{
+		// Normal operations
+			background(255);
 			tempIsSet = false;
 
 			//Get acceleration from device rotation data
@@ -272,6 +281,7 @@ function draw(){
 				globalAccel.y = map(constrain(rotationX,-45,45),-45,45,-2,2);
 			}
 
+			// Main update
 			for(var i = 0; i < spheres.length; i++){
 				spheres[i].refresh();
 			}
@@ -281,7 +291,7 @@ function draw(){
 				spheres.splice(0,26);
 			}
 
-				// Only check if enabled
+			// Only check if enabled
 			if(collisionsOn){
 
 					for(var i = 0; i < spheres.length; i++){
@@ -303,7 +313,6 @@ function draw(){
 								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
 								// Update positions to prevent sticking
-								
 								spheres[i].position.x = spheres[i].position.x + newVelX1;
 								spheres[j].position.x = spheres[j].position.x + newVelX2;
 								spheres[i].position.y = spheres[i].position.y + newVelY1;
@@ -313,15 +322,15 @@ function draw(){
 								spheres[i].velocity.set(newVelX1,newVelY1);
 								spheres[j].velocity.set(newVelX2,newVelY2);
 
-
-								var collisionPoint = createVector(
-									// X
-									((spheres[i].position.x * spheres[j].mass/2) + (spheres[j].position.x * spheres[i].mass/2)) 
-								 	/ (spheres[i].mass/2 + spheres[j].mass/2),
-								 	// Y
-								 	((spheres[i].position.y * spheres[j].mass/2) + (spheres[j].position.y * spheres[i].mass/2)) 
-								 	/ (spheres[i].mass/2 + spheres[j].mass/2)
-								);
+								// Unused
+								// var collisionPoint = createVector(
+								// 	// X
+								// 	((spheres[i].position.x * spheres[j].mass/2) + (spheres[j].position.x * spheres[i].mass/2)) 
+								//  	/ (spheres[i].mass/2 + spheres[j].mass/2),
+								//  	// Y
+								//  	((spheres[i].position.y * spheres[j].mass/2) + (spheres[j].position.y * spheres[i].mass/2)) 
+								//  	/ (spheres[i].mass/2 + spheres[j].mass/2)
+								// );
 
 								// // Draw collision points
 								// push();
@@ -421,18 +430,13 @@ function draw(){
 
 		}
 
-	if(pausedSpheres.length != 0 && !stopAll){
-		for(var i = 0; i < pausedSpheres.length; i++){
-			spheres[i] = pausedSpheres[i];
-		}
-	}
-
 		// console.log('deviceHasmoved == '+deviceHasMoved);
 		// push();
 		// fill(randColor);
 		// ellipse(mouseX,mouseY,50,50);
-		// pop();	
-}
+		// pop();
+
+}// end draw
 
 
 function touchStarted(){
@@ -449,11 +453,10 @@ function touchStarted(){
 
 	// Record time of first touch
 	if(!started && !stopAll){
-		touchTime = millis();
 		started = true;
 	}
 	// Start measuring for initial velocity
-	timeStarted = millis();
+	
 	beginDist = createVector(mouseX,mouseY);
 	beginTime = millis();
 
@@ -467,7 +470,6 @@ function touchEnded(){
 	endTime = millis();
 	var interval = endTime - beginTime;
 	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
-
 	
 		// MAKE A NEW SPHERE
 		randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
@@ -476,20 +478,19 @@ function touchEnded(){
 	}
 }
 
-
 function windowResized(){
 	resizeCanvas(windowWidth,windowHeight);
 }
 
-// Is device mobile or desktop
+// Is device mobile?
 function deviceMoved(){
 	deviceHasMoved = true;
 }
 
-// Pause input
+// Pause button
 function keyPressed(){
 
-	// Simply flip stopAll on and off
+	//  flip stopAll on and off
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
 	}else if(keyCode == 32 && stopAll){
@@ -497,5 +498,3 @@ function keyPressed(){
 	}
 
 }
-
-
