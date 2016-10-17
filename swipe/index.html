@@ -3,47 +3,42 @@
 
 
 <head>
-  <title>2D Collisions (with gravity)</title>
+  <title>2D Particle Collider</title>
+
   <meta name="HandheldFriendly" content="true" charset="utf-8" name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
-  <script type="text/javascript" src="libraries/inobounce.js"></script>
-  
-  <style>
-  body {
-    font-family:Helvetica, Arial, Sans-serif;
-  }</style>
-  <!-- load the p5 libraries we need. At first, we'll try from a CDN, but if for some reason that doesn't work, then we can load it from our local copy. For most sketches, all we'll need is the p5 and p5.dom libs -->
 
-  <!-- get p5.js from cdn -->
-  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.js"></script>
-  <!-- uh oh. Can't find CDN?, then load from local. -->
+  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
 
-  <!-- get p5.dom.js from cdn -->
-  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.dom.js"></script>
+  <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.dom.min.js"></script>
 
-  <!-- let's get the science library -->
   <script language="javascript" src="libraries/science.js"></script>
 
-  <!-- let's get our sketch! -->
   <script language="javascript" src="sketch.js"></script>
 
-  <!-- this line removes any default padding and style. you might only need one of these values set. -->
-  <style> body{
+  <!-- iNoBounce <https://github.com/lazd/iNoBounce> -->
+  <script type="text/javascript" src="https://rawgit.com/lazd/iNoBounce/master/inobounce.js"></script>
+
+  <style> 
+
+      body{
+
           margin-top: 0px; 
           margin-bottom: 0px; 
           margin-left: 0px; 
           margin-right: 0px;
           padding: 0;
-          /*color: black; 
-          font-size: 10pt; 
-          font-family: "Trebuchet MS", sans-serif;
-          background-color: #E2E2E2;*/
+          font-family:Helvetica, Arial, Sans-serif;
+          color: black; 
+          font-size: 10pt;
+          background-color: #E2E2E2;
           height: 100%;
           overflow: auto;
           -webkit-overflow-scrolling: touch;
-          }
-          </style>
+      }
+          
+  </style>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   // Detect whether device supports orientationchange event, otherwise fall back to
   // the resize event.
   var supportsOrientationChange = "onorientationchange" in window,
@@ -61,33 +56,23 @@
         document.getElementById('landscape').style.display = '';
       }
   }, false);
-</script>
-  
+</script> --> 
 
-</script>
 
 </head>
 
 <body>
-<!-- <h1>A basic free body diagram</h1>
-<p>
-  Instructions: Use the sliders to change the values for the third force.
-</p>
-<div id="sketch-holder" style="position: relative;">
-  
-</div> -->
-
-<script type="text/javascript">
-if(window.orientation==0)
-{
-  document.getElementById('portrait').style.display = '';
-  document.getElementById('landscape').style.display = 'none';
-}
-else if(window.orientation==90)
-{
-  document.getElementById('portrait').style.display = 'none';
-  document.getElementById('landscape').style.display = '';
-}
-</script>
+<!-- <script type="text/javascript">
+  if(window.orientation==0)
+  {
+    document.getElementById('portrait').style.display = '';
+    document.getElementById('landscape').style.display = 'none';
+  }
+  else if(window.orientation==90)
+  {
+    document.getElementById('portrait').style.display = 'none';
+    document.getElementById('landscape').style.display = '';
+  }
+</script> -->
 </body>
 </html>
