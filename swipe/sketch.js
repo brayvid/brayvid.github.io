@@ -187,11 +187,11 @@ function setup(){
 
 	for(var i = 0; i < 5; i++){
 		spheres[i] = new Sphere(
-					createVector(random(0,width),random(0,height)),
-					createVector(random(0,25),random(0,25)),
-					createVector(random(-1,1),random(-1,1)),
-					random(50,90),
-					color(random(0,255),random(0,255),random(0,255),random(100,200)));
+					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
+					createVector(random(-25,25),random(-25,25)), // velocity
+					createVector(random(-1,1),random(-1,1)), // acceleration
+					random(50,90),	// mass
+					color(random(0,255),random(0,255),random(0,255),random(100,200))); // color
 	}
 }
 
