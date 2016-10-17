@@ -34,6 +34,9 @@ var wasPaused = false;
 
 var tempIsSet = false;
 
+var totalKE;
+var totalP;
+
 
 // Modified mover object in science.js
 function Sphere(p, v, a, m, c){
@@ -185,8 +188,8 @@ function setup(){
 	globalAccel = createVector(0,0);
 	globalAccelOn = false;
 	collisionsOn = true;
-	dissipation = 0.88;
-	collisionDissipation = 0.995;
+	dissipation = 0.96;
+	collisionDissipation = 0.992;
 	started = false;
 	currentTime = millis();
 	setMoveThreshold(0.001);
@@ -194,6 +197,8 @@ function setup(){
 	stopAll = false;
 	maxSpheres = 50;
 	pausedSpheres = [];
+	totalKE = 0;
+	totalP = createVector(0,0);
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
@@ -207,9 +212,9 @@ function setup(){
 
 
 function draw(){
-		/* 	Two variables, "started" and "stopAll", control the primary flow of draw().
-		    --	"started" is false to start and is true after first touch
-		    -- 	"stopAll" is false to start and is flipped when spacebar is typed 	*/
+	/* 	Two variables, "started" and "stopAll", control the primary flow of draw().
+		--	"started" is false to start and is true after first touch
+		-- 	"stopAll" is false to start and is flipped when spacebar is typed 	*/
 
 		// Intro screen
 		if(!started && !stopAll){
@@ -279,6 +284,15 @@ function draw(){
 		// Normal operations
 			background(255);
 			tempIsSet = false;
+			totalKE = 0;
+			totalP.set(0,0);
+			for(var i = 0; i < spheres.length; i++){
+				totalKE += spheres[i].kineticEnergy;
+			}
+
+			for(var i = 0; i < spheres.length; i++){
+				totalP = p5.Vector.add(totalP,spheres[i].momentum);
+			}
 
 			//Get acceleration from device rotation data
 			if(globalAccelOn && !stopAll){
@@ -411,26 +425,42 @@ function draw(){
 			if(round(currentTime) % 10 == 0){
 				fps = round(frameRate());
 			}
-			text(fps + ' fps',60, height-25);
+			text(fps + ' fps',90, 60);
 			pop();
 			
 			// Display total kinetic energy
 			push();
-			textSize(24);
+			textSize(28);
 			textAlign(CENTER);
-			var totalKE = 0;
-			for(var i = 0; i < spheres.length; i++){
-				totalKE += spheres[i].kineticEnergy;
+
+			// var totalKE = 0;
+			// for(var i = 0; i < spheres.length; i++){
+			// 	totalKE += spheres[i].kineticEnergy;
+			// }
+
+			text('Energy',width/4+100,42);999
+			if(totalKE > 1000 && totalKE < 999999){	
+				text('KE = ' + round(totalKE/1000) + ' J',width/4+100,82);
+			}else if(totalKE > 999999 && totalKE < 999999999){
+				text('KE = ' + (totalKE/1000000).toFixed(3) + ' KJ',width/4+100,82);
+			}else{
+				text('KE = ' + round(totalKE/1000000000) + ' MJ',width/4+100,82);
 			}
-			text('KE:',width-75,height-45);
-			text(round(totalKE) + ' J',width-75,height-20);
 			pop();
+
+			// display momentum
+			push();
+			textSize(28);
+			textAlign(CENTER);
+			text('Momentum',3*width/4-100,42);
+			text(round(totalP.mag()) + ' g/cm/frame',3*width/4-100,82);
+
 
 			// Display number used
 			push();
 			textSize(24);
 			textAlign(CENTER);
-			text(spheres.length + "/" + maxSpheres,width-50,50);
+			text(spheres.length + "/" + maxSpheres,width-90,60);
 			pop();
 
 		}
@@ -470,16 +500,20 @@ function touchStarted(){
 function touchEnded(){
 
 	if(!stopAll){
-	// Calculate initial velocity
-	endDist = createVector(mouseX, mouseY);
-	endTime = millis();
-	var interval = endTime - beginTime;
-	newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
-	
+		// Calculate initial velocity
+		endDist = createVector(mouseX, mouseY);
+		endTime = millis();
+		var interval = endTime - beginTime;
+		var newMass = map(interval,0,200,25,125);
+		newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(endDist,beginDist),4),interval/4);
+
 		// MAKE A NEW SPHERE
 		randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
-		spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),map(interval,0,200,25,125),randColor);
-		console.log("Speed = " + p5.Vector.mag(newVelocity).toFixed(2)+" pixels per frame");
+		spheres[spheres.length] = new Sphere(createVector(mouseX,mouseY),createVector(newVelocity.x,newVelocity.y),createVector(globalAccel.x,globalAccel.y),newMass,randColor);
+		
+		// Report new 
+		totalKE += (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
+		console.log("New E = " + round(totalKE)  +" mJ");
 	}
 }
 
