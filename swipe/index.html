@@ -6,19 +6,16 @@
   <title>2D Particle Collider</title>
 
   <meta name="HandheldFriendly" content="true" charset="utf-8" name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
-
+  
+  <!-- iNoBounce <https://github.com/lazd/iNoBounce> -->
+  <script type="text/javascript" src="https://rawgit.com/lazd/iNoBounce/master/inobounce.js"></script>
   <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
   <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.dom.min.js"></script>
   <script language="javascript" src="https://rawgit.com/ccny-physics-sims/science-library/master/lib/science.js"></script>
   <script language="javascript" src="sketch.js"></script>
-  
-  <!-- iNoBounce <https://github.com/lazd/iNoBounce> -->
-  <script type="text/javascript" src="https://rawgit.com/lazd/iNoBounce/master/inobounce.js"></script>
 
   <style> 
-
       body{
-
           margin-top: 0px; 
           margin-bottom: 0px; 
           margin-left: 0px; 
@@ -31,45 +28,44 @@
           height: 100%;
           overflow: auto;
           -webkit-overflow-scrolling: touch;
-      }
-          
+      }    
   </style>
 
-<!-- <script type="text/javascript">
-  // Detect whether device supports orientationchange event, otherwise fall back to
-  // the resize event.
-  var supportsOrientationChange = "onorientationchange" in window,
-      orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+  <!-- <script type="text/javascript">
+    // Detect whether device supports orientationchange event, otherwise fall back to
+    // the resize event.
+    var supportsOrientationChange = "onorientationchange" in window,
+        orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
 
-  window.addEventListener(orientationEvent, function() {
-      if(window.orientation==0)
-      {
-        document.getElementById('portrait').style.display = '';
-        document.getElementById('landscape').style.display = 'none';
-      }
-      else if(window.orientation==90)
-      {
-        document.getElementById('portrait').style.display = 'none';
-        document.getElementById('landscape').style.display = '';
-      }
-  }, false);
-</script> --> 
+    window.addEventListener(orientationEvent, function() {
+        if(window.orientation==0)
+        {
+          document.getElementById('portrait').style.display = '';
+          document.getElementById('landscape').style.display = 'none';
+        }
+        else if(window.orientation==90)
+        {
+          document.getElementById('portrait').style.display = 'none';
+          document.getElementById('landscape').style.display = '';
+        }
+    }, false);
+  </script> --> 
 
 
 </head>
 
 <body>
-<!-- <script type="text/javascript">
-  if(window.orientation==0)
-  {
-    document.getElementById('portrait').style.display = '';
-    document.getElementById('landscape').style.display = 'none';
-  }
-  else if(window.orientation==90)
-  {
-    document.getElementById('portrait').style.display = 'none';
-    document.getElementById('landscape').style.display = '';
-  }
-</script> -->
+  <!-- <script type="text/javascript">
+    if(window.orientation==0)
+    {
+      document.getElementById('portrait').style.display = '';
+      document.getElementById('landscape').style.display = 'none';
+    }
+    else if(window.orientation==90)
+    {
+      document.getElementById('portrait').style.display = 'none';
+      document.getElementById('landscape').style.display = '';
+    }
+  </script> -->
 </body>
 </html>
