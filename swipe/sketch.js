@@ -45,34 +45,33 @@ function Sphere(p, v, a, m, c){
 	this.mass = m;
 	this.color = c;
 
+	this.momentum = p5.Vector.mult(this.velocity,this.mass);
+	this.kineticEnergy = 0.5 * this.mass * Math.pow(p5.Vector.mag(this.velocity),2);
+
 	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
 	this.forceArrow.color = color(0);
 	this.forceArrow.grab = false;
 	this.forceArrow.draggable = false;
 	this.forceArrow.width = 10;
 
-	this.velocityArrow = new Arrow(this.position,p5.Vector.add(this.position,p5.Vector.mult(this.velocity,16)));
-	this.velocityArrow.color = this.color;
-	this.velocityArrow.grab = false;
-	this.velocityArrow.draggable = false;
-	this.velocityArrow.width = 10;
-	
-	this.momentum = p5.Vector.add(this.velocity,this.mass);
-	this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
+	this.momentumArrow = new Arrow(this.position,p5.Vector.add(this.position,this.momentum));
+	this.momentumArrow.color = color(0,0,0,255);
+	this.momentumArrow.grab = false;
+	this.momentumArrow.draggable = false;
+	this.momentumArrow.width = 10;
 
-	this.actingForces = [];
+	// this.actingForces = []; 
 
 	// Methods
 
-	// unimplemented
-	this.act = function(force){
-		// add a force to the array of acting forces
-		this.actingForces.push(force);
-	};
+	// this.act = function(force){
+	// 	// add a force to the array of acting forces
+	// 	this.actingForces.push(force);
+	// };
 
 	// 
 	this.refresh = function(){
-		  
+
 			// Window edge detection by http://github.com/hedbergj	(adadpted from the science.js library)
 			if(this.position.x < 0+this.mass/2){
 				overinx = this.position.x-this.mass/2;
@@ -102,6 +101,7 @@ function Sphere(p, v, a, m, c){
 				this.velocity.y = -dissipation*vatheight; // Dissipation
 			}	// End edge detection
 
+
 	   		// Recalculate variables 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAccel);
 			var tempVelocity = p5.Vector.add(this.velocity,this.acceleration);
@@ -111,28 +111,35 @@ function Sphere(p, v, a, m, c){
 			this.kineticEnergy = 0.5 * this.mass * (Math.pow(this.velocity.x,2)+Math.pow(this.velocity.y,2));
 			this.momentum = p5.Vector.mult(this.velocity,this.mass);
 			
-			// net force arrow
-			this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
-			this.forceArrow.origin = this.position;
-			this.forceArrow.target = p5.Vector.add(this.position,p5.Vector.mult(this.appliedForce,0.35));
-			this.forceArrow.display();
+			// net force arrow - not implemented
+			// this.appliedForce = p5.Vector.mult(this.acceleration,this.mass);
+			// this.forceArrow.origin = this.position;
+			// this.forceArrow.target = p5.Vector.add(this.position,p5.Vector.mult(this.appliedForce,0.35));
+			// this.forceArrow.display();
 
-			// velocity arrow
-			this.velocityArrow.origin = this.position;
-			this.velocityArrow.target.x = this.position.x + map(this.velocity.x,-200,200,-150,150);
-			this.velocityArrow.target.y = this.position.y + map(this.velocity.y,-200,200,-150,150);
-			this.velocityArrow.display();
+			// momentum arrow
+			this.momentumArrow.origin = this.position;
+			this.momentumArrow.target.x = this.position.x + map(this.momentum.x,-10000,10000,-500,500);
+			this.momentumArrow.target.y = this.position.y + map(this.momentum.y,-10000,10000,-500,500);
+			
 
+			// Shadows
+			// var dFromCenter = p5.Vector.sub(createVector(width/2,height/2),this.position);
+			// push();
+			// fill(0,0,0,35);
+			// noStroke();
+			// ellipse(this.position.x+map(dFromCenter.x*log(this.mass),-4000,4000,-15,15),this.position.y+map(dFromCenter.y*log(this.mass),-4000,4000,-15,15),this.mass-0.1*this.mass,this.mass-0.14*this.mass); // Shadow
+			// pop();
 
-			// Redraw
+			// Draw a ball
 			push();
-			fill(0,0,0,100);
-			noStroke();
-			ellipse(this.position.x-2,this.position.y+2,this.mass+0.01*this.mass,this.mass+0.01*this.mass);
 			fill(this.color);
 			stroke(0);
-			ellipse(this.position.x,this.position.y,this.mass,this.mass);
+			// noStroke();
+			ellipse(this.position.x,this.position.y,this.mass,this.mass); // sphere
 			pop();
+
+			this.momentumArrow.display();
 	};
 
 
@@ -156,28 +163,27 @@ function Sphere(p, v, a, m, c){
 			var b = map(other.color._array[2],0,1,0,255);
 			var a = map(other.color._array[3],0,1,0,255);
 			this.color = color(r,g,b,a);
-			this.velocityArrow.color = color(r,g,b,a);
+			this.momentumArrow.color = color(0,0,0,255);
 		}else{
 			var r = map(this.color._array[0],0,1,0,255);
 			var g = map(this.color._array[1],0,1,0,255);
 			var b = map(this.color._array[2],0,1,0,255);
 			var a = map(this.color._array[3],0,1,0,255);
 			other.color = color(r,g,b,a);
-			other.velocityArrow.color = color(r,g,b,a);
+			other.momentumArrow.color = color(0,0,0,255);
 		}
 	};
 
 }// End object definition
-
 
 function setup(){
 	frameRate(60);
 	fps = frameRate();
 	createCanvas(windowWidth,windowHeight);
 	spheres = [];
-	initialSpheres = 2;
+	initialSpheres = 1;
 	globalAccel = createVector(0,0);
-	globalAccelOn = true;
+	globalAccelOn = false;
 	collisionsOn = true;
 	dissipation = 0.88;
 	collisionDissipation = 0.995;
@@ -188,7 +194,6 @@ function setup(){
 	stopAll = false;
 	maxSpheres = 50;
 	pausedSpheres = [];
-
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
