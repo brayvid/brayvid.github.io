@@ -163,7 +163,7 @@ function setup(){
 	createCanvas(windowWidth,windowHeight);
 	spheres = [];
 	globalAccel = createVector(0,0);
-	globalAccelOn = false;
+	globalAccelOn = true;
 	collisionsOn = true;
 	dissipation = 0.8;
 	started = false;
