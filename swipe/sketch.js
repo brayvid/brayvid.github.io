@@ -314,17 +314,20 @@ function draw(){
 			}
 
 			tempIsSet = false;
-			totalKE = 0;
-			totalP.set(0,0);
 
+
+			// Recalculate total kinetic energy
+			totalKE = 0;
 			if(spheres.length == 0){
-				totalKE = 0;
+				
 			}else{
 				for(var i = 0; i < spheres.length; i++){
 				totalKE += spheres[i].kineticEnergy;
-			}
+				}
 			}
 
+			// Recalculate net momentum
+			totalP.set(0,0);
 			for(var i = 0; i < spheres.length; i++){
 				totalP = p5.Vector.add(totalP,spheres[i].momentum);
 			}
@@ -367,14 +370,14 @@ function draw(){
 								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
 								// Update positions to prevent sticking
-								spheres[i].position.x = spheres[i].position.x + newVelX1;
-								spheres[j].position.x = spheres[j].position.x + newVelX2;
-								spheres[i].position.y = spheres[i].position.y + newVelY1;
-								spheres[j].position.y = spheres[j].position.y + newVelY2;
+								spheres[i].position.x = spheres[i].position.x + 1.2*newVelX1;
+								spheres[j].position.x = spheres[j].position.x + 1.2*newVelX2;
+								spheres[i].position.y = spheres[i].position.y + 1.2*newVelY1;
+								spheres[j].position.y = spheres[j].position.y + 1.2*newVelY2;
 
 								// Update velocities with calculated ones
-								spheres[i].velocity.set(newVelX1,newVelY1);
-								spheres[j].velocity.set(newVelX2,newVelY2);
+								spheres[i].velocity.set(0.98*newVelX1,0.98*newVelY1);
+								spheres[j].velocity.set(0.98*newVelX2,0.98*newVelY2);
 
 								// Unused
 								// var collisionPoint = createVector(
@@ -509,7 +512,6 @@ function draw(){
 			textAlign(CENTER);
 			text(spheres.length + "/" + maxSpheres,width-70,height-35);
 			pop();
-
 		}
 
 		// console.log('deviceHasmoved == '+deviceHasMoved);
@@ -612,7 +614,6 @@ function launchNewSphere(){
 
 			//Create a new sphere
 			spheres[spheres.length] = new Sphere(newPosition,newVelocity,newAcceleration,newMass,randColor);
-
 			// Report new 
 			var launchKE = (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
 			// console.log(round(launchKE/1000)  +" J added");
