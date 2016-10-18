@@ -1,5 +1,5 @@
 body{
-	padding-top:5%;
+	padding-top:1%;
 	text-align: center;
 	font-family:"Helvetica";
 	font-size: 2em;
@@ -25,12 +25,22 @@ h2{
 }
 
 
+ul{
+
+	list-style: none;
+	/*margin-right: 50px;*/
+	padding: 50px;
+	text-transform: uppercase;
+
+}
+
 #phys-demos{
 	font-size: 34px;
+	text-transform: uppercase;
 }
 
 #by{
-	font-size: 24px;
+	font-size: 28px;
 
 }
 #p5-link{
@@ -38,12 +48,13 @@ h2{
 }
 
 #name-link{
-	color: #009999;
-	font-size: 26px;
+	color: #000;
+	font-size:24px;
+	text-transform: uppercase;
 }
 
 #github-link{
-	color: #5900b3;
+	color: #000;
 }
 
 .sketch-link{
