@@ -392,8 +392,8 @@ function draw(){
 								spheres[j].position.y = spheres[j].position.y + newVelY2;
 
 								// Update velocities with calculated ones
-								spheres[i].velocity.set(0.98*newVelX1,0.98*newVelY1);
-								spheres[j].velocity.set(0.98*newVelX2,0.98*newVelY2);
+								spheres[i].velocity.set(newVelX1,newVelY1);
+								spheres[j].velocity.set(newVelX2,newVelY2);
 
 
 								// Unused
