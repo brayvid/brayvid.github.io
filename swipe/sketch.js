@@ -373,10 +373,22 @@ function draw(){
 							// Spheres perform the check themselves
 							if(i != j && spheres[i].intersects(spheres[j])){
 
+								// console.log(spheres[i] + ' intersects ' + spheres[j]);
+
 								// var heading1 = degrees(spheres[i].velocity.heading());
 								// var heading2 = degrees(spheres[j].velocity.heading());
-								// console.log(spheres[i] + ' intersects ' + spheres[j]);
+
 								// console.log('heading 1: '+ heading1 + ', heading 2: '+ heading2);
+
+								// var collisionPoint = createVector(
+								// 	//	X
+								// 		((spheres[i].position.x * spheres[j].mass/2) + (spheres[j].position.x * spheres[i].mass/2)) 
+								// 		/ (spheres[i].mass/2 + spheres[j].mass/2),
+								// 	//	Y
+								// 		((spheres[i].position.y * spheres[j].mass/2) + (spheres[j].position.y * spheres[i].mass/2)) 
+								//  		/ (spheres[i].mass/2 + spheres[j].mass/2)
+								// );
+
 								// console.log(collisionPoint.x + ", "+ collisionPoint.y);
 
 								// Calculate resultant velocities
@@ -394,17 +406,6 @@ function draw(){
 								// Update velocities with calculated ones
 								spheres[i].velocity.set(newVelX1,newVelY1);
 								spheres[j].velocity.set(newVelX2,newVelY2);
-
-
-								// Unused
-								// var collisionPoint = createVector(
-								// 	// X
-								// 	((spheres[i].position.x * spheres[j].mass/2) + (spheres[j].position.x * spheres[i].mass/2)) 
-								//  	/ (spheres[i].mass/2 + spheres[j].mass/2),
-								//  	// Y
-								//  	((spheres[i].position.y * spheres[j].mass/2) + (spheres[j].position.y * spheres[i].mass/2)) 
-								//  	/ (spheres[i].mass/2 + spheres[j].mass/2)
-								// );
 
 								// // Draw collision points
 								// push();
