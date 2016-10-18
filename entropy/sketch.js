@@ -17,7 +17,6 @@ var totalP;
 
 var avgSpeed;
 
-
 var started;
 var stopAll;
 var deviceHasMoved = false;
@@ -74,15 +73,21 @@ function setup(){
 	netMomentumArrow.grab = false;
 	netMomentumArrow.color = color(0,0,0,255);
 	netMomentumArrow.width = 20;
-
-	gasBox = new Box(100,createVector(2,-2));
+	
+	var randomVel = createVector(0,0);
+	// if(floor(random(0,2)) == 0){
+	// 	randomVel = createVector(random(-2,-1),random(-2,-1));
+	// }else{
+	// 	randomVel = createVector(random(1,2),random(1,2));
+	// }
+	gasBox = new Box(1000,randomVel);
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
-					createVector(random(gasBox.leftX + 20,gasBox.rightX - 20),random(gasBox.topY + 20,gasBox.bottomY - 20)),  // position
+					createVector(gasBox.center.x,gasBox.center.y),  // position
 					createVector(random(-10,10),random(-10,10)), // velocity
 					createVector(random(-1,1),random(-1,1)), // acceleration
-					random(20,20),	// mass
+					random(50,50),	// mass
 					color(random(0,255),random(0,255),random(0,255),random(25,75))); // color
 	}
 }
@@ -112,47 +117,83 @@ function Sphere(p, v, a, m, c){
 	this.momentumArrow.draggable = false;
 	this.momentumArrow.width = 10;
 
-	// this.actingForces = []; 
+	this.actingForces = []; 
 
 	// Methods
 
-	// this.act = function(force){
-	// 	// add a force to the array of acting forces
-	// 	this.actingForces.push(force);
-	// };
+	this.applyForce = function(force){
+		// add a force to the array of acting forces
+		this.actingForces.push(force);
+	};
 
-	// 
+	this.hitWall = function(wall){
+		
+		var distLeft = dist(this.position.x, this.position.y, wall.cornerTL.x, this.position.y);
+		var distRight = dist(this.position.x, this.position.y, wall.cornerTR.x, this.position.y);
+		var distTop = dist(this.position.x, this.position.y, this.position.x, wall.cornerTL.y);
+		var distBottom = dist(this.position.x, this.position.y, this.position.x, wall.cornerBR.y);
+
+		var hit = false;
+
+		if(distLeft < this.mass/2){
+			hit = true;
+		}else if(distRight < this.mass/2){
+			hit = true;
+		}else if(distTop < this.mass/2){
+			hit = true;
+		}else if(distBottom < this.mass/2){
+			hit = true;
+		}else{
+		}
+
+		// if(distLeft < distRight && distTop < distBottom){
+		// 	// on top left
+			
+		// 	if(distLeft < distTop){
+		// 		// closer to left
+		// 	}else{
+		// 		// closer to top
+		// 	}
+		// }else if(distLeft > distRight && distTop < distBottom){
+		// 	// on top right
+			
+		// 	if(distRight < distTop){
+		// 		// closer to right
+		// 	}else{
+		// 		// closer to top
+		// 	}
+		// }else if(distLeft < distRight && distTop > distBottom){
+		// 	// on bottom left
+			
+		// 	if(distLeft < distBottom){
+		// 		// closer to left
+		// 	}else{
+		// 		// closer to bottom
+		// 	}
+
+		// }else if(distLeft > distRight && distTop > distBottom){
+		// 	// on bottom right
+			
+		// 	if(distRight < distBottom){
+		// 		// closer to right
+		// 	}else{
+		// 		// closer to bottom
+		// 	}
+
+		// }else{
+		// 	// in center
+		// }
+
+		if(hit){
+			console.log(hit);
+		}
+
+		return hit;
+		
+
+	}
+
 	this.refresh = function(){
-
-			// Window edge detection by http://github.com/hedbergj	(adadpted from the science.js library)
-			if(this.position.x < gasBox.leftX+this.mass/2){
-				overinx = this.position.x + gasBox.leftX -this.mass/2;
-				vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-				this.velocity.x = wallDissipation*vatwidth;
-				this.position.x = gasBox.leftX+this.mass/2; 
-			}
-
-			if(this.position.x > gasBox.rightX-this.mass/2){
-				overinx = this.position.x-gasBox.rightX+this.mass/2;
-				vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-				this.position.x = gasBox.rightX-this.mass/2;
-				this.velocity.x = -wallDissipation*vatwidth;
-			}
-
-			if(this.position.y < gasBox.topY+this.mass/2){
-				overiny = this.position.y + gasBox.topY -this.mass/2;
-				vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-				this.velocity.y = wallDissipation*vatheight;
-				this.position.y = gasBox.topY+this.mass/2;
-			}
-
-			if(this.position.y > gasBox.bottomY-this.mass/2){
-				overiny = this.position.y-gasBox.bottomY +this.mass/2;
-				vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-				this.position.y = gasBox.bottomY-this.mass/2;
-				this.velocity.y = -wallDissipation*vatheight;
-			}	// End edge detection
-
 
 	   		// Recalculate variables 
 	   		this.acceleration = p5.Vector.add(createVector(0,0),globalAccel);
@@ -194,6 +235,36 @@ function Sphere(p, v, a, m, c){
 			this.momentumArrow.display();
 	};
 
+	this.checkEdges = function(){
+		// Window edge detection by http://github.com/hedbergj	(adadpted from the science.js library)
+		if(this.position.x < gasBox.cornerTL.x+this.mass/2){
+			overinx = this.position.x + gasBox.cornerTL.x -this.mass/2;
+			vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
+			this.velocity.x = wallDissipation*vatwidth;
+			this.position.x = gasBox.cornerTL.x+this.mass/2; 
+		}
+
+		if(this.position.x > gasBox.cornerTR.x-this.mass/2){
+			overinx = this.position.x-gasBox.cornerTR.x+this.mass/2;
+			vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
+			this.position.x = gasBox.cornerTR.x-this.mass/2;
+			this.velocity.x = -wallDissipation*vatwidth;
+		}
+
+		if(this.position.y < gasBox.cornerTL.y+this.mass/2){
+			overiny = this.position.y + gasBox.cornerTL.y -this.mass/2;
+			vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
+			this.velocity.y = wallDissipation*vatheight;
+			this.position.y = gasBox.cornerTL.y+this.mass/2;
+		}
+
+		if(this.position.y > gasBox.cornerBL.y-this.mass/2){
+			overiny = this.position.y-gasBox.cornerBL.y +this.mass/2;
+			vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
+			this.position.y = gasBox.cornerBL.y-this.mass/2;
+			this.velocity.y = -wallDissipation*vatheight;
+		}	// End edge detection
+	}
 
 	// Sphere checks itself against one passed to it
 	this.intersects = function(other){
@@ -225,11 +296,11 @@ function Sphere(p, v, a, m, c){
 			other.momentumArrow.color = color(0,0,0,255);
 		}
 	};
-
 }// End object definition
 
 function Box(m, v){
-	this.position = createVector(width/2,height/2); // p5 Vector
+	this.center = createVector(width/2,height/2); // p5 Vector
+	
 	this.length = width/2;	// number	
 	this.height = height/2;	// number
 	this.mass = m;
@@ -237,65 +308,88 @@ function Box(m, v){
 	this.acceleration = createVector(0,0);
 	this.color = color(0,0,0,0); // Transparent
 	this.borderColor = color(0,0,0); // black
-	this.leftX;
-	this.rightX;
-	this.topY;
-	this.bottomY;
+
+	this.cornerTL = createVector(this.center.x - this.length/2, this.center.y - this.height/2);
+	this.cornerTR = createVector(this.center.x + this.length/2, this.center.y - this.height/2);
+	this.cornerBL = createVector(this.center.x - this.length/2, this.center.y + this.height/2);
+	this.cornerBR = createVector(this.center.x + this.length/2, this.center.y + this.height/2);
+	// this.leftX;
+	// this.rightX;
+	// this.topY;
+	// this.bottomY;
+
+	this.actingForces = [];
 
 	this.update = function(){
-		this.leftX = this.position.x - this.length/2;
-		this.rightX = this.position.x + this.length/2;
-		this.topY = this.position.y - this.height/2;
-		this.bottomY = this.position.y + this.height/2;
+
+		// this.acceleration = p5.Vector.add(createVector(0,0),globalAccel);
+		// var tempVelocity = p5.Vector.add(this.velocity,this.acceleration);
+		// this.velocity.x = (tempVelocity.x + this.velocity.x) / 2;
+		// this.velocity.y = (tempVelocity.y + this.velocity.y) / 2;
+		// console.log("x: "+this.velocity.x +", y: "+ this.velocity.y);
+		this.center.add(this.velocity);
+
+		this.cornerTL.set(this.center.x - this.length/2, this.center.y - this.height/2);
+		this.cornerTR.set(this.center.x + this.length/2, this.center.y - this.height/2);
+		this.cornerBL.set(this.center.x - this.length/2, this.center.y + this.height/2);
+		this.cornerBR.set(this.center.x + this.length/2, this.center.y + this.height/2);
+
+		var netF = createVector(0,0);
+		for(var i = 0; i < this.actingForces.length; i++){
+			netF.add(netF,this.actingForces[i]);
+		}
+
 	}
 	this.display = function(){
 
-		this.position.add(this.velocity);
 		push();	
 		fill(this.color);
 		stroke(this.borderColor);
-		rectMode(CENTER);
-		rect(this.position.x,this.position.y,this.length,this.height);
+		rectMode(CORNER);
+		rect(this.cornerTL.x,this.cornerTL.y,this.length,this.height);
 		pop();
 	}
 
+	// Bounce off window edges
 	this.checkEdges = function(){
 		// Window edge detection by http://github.com/hedbergj	(adadpted from the science.js library)
-		if(this.leftX < 0){
-			overinx = this.position.x;
+		if(this.cornerTL.x <= 0){
+			overinx = this.cornerTL.x
 			vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
 			this.velocity.x = wallDissipation*vatwidth;
-			// this.position.x = this.width/2; 
+			// this.center.x = this.width/2; 
 		}
 
-		if(this.rightX > width){
-			overinx = this.position.x-width;
+		if(this.cornerTR.x > width-1){
+			overinx = this.cornerTR.x-width;
 			vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-			// this.position.x = width-this.width/2;
+			// this.center.x = width-this.width/2;
 			this.velocity.x = -wallDissipation*vatwidth;
 		}
 
-		if(this.topY < 0){
-			overiny = this.position.y;
+		if(this.cornerTL.y <= 0){
+			overiny = this.cornerTL.y;
 			vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
 			this.velocity.y = wallDissipation*vatheight;
-			// this.position.y = this.height/2;
+			// this.center.y = this.height/2;
 		}
 
-		if(this.bottomY > height){
-			overiny = this.position.y-height;
+		if(this.cornerBR.y > height-1){
+			overiny = this.cornerBR.y-height;
 			vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-			// this.position.y = height-this.height/2;
+			// this.center.y = height-this.height/2;
 			this.velocity.y = -wallDissipation*vatheight;
 		}	// End edge detection
 	}
 
-	this.act = function(force){
 
+	this.applyForce = function(force){
+		this.actingForces.push(force);
 	}
 
+
 	this.resized = function(){
-		this.position.set(width/2,height/2);
+		this.center.set(width/2,height/2);
 		this.length = width/2;
 		this.height = height/2;
 	}
@@ -375,6 +469,8 @@ function draw(){
 		// Normal operations
 			background(255);
 
+			// rect(0,0,width,height);
+
 			// Intro screen
 			// if(!started){	
 			// 	displayIntroScreen();	
@@ -396,9 +492,10 @@ function draw(){
 
 			// Main update
 			for(var i = 0; i < spheres.length; i++){
+				spheres[i].checkEdges();
 				spheres[i].refresh();
 			}
-			
+
 			gasBox.update();
 			gasBox.checkEdges();
 			gasBox.display();
@@ -406,7 +503,11 @@ function draw(){
 
 			// Only check if enabled
 			if(collisionsOn){
-				checkForCollisions();
+				wallCollisions();
+
+				ballCollisions();
+
+				// console.log("x: "+gasBox.velocity.x + ", y: "+gasBox.velocity.y);
 			} // end collisions section
 
 
@@ -634,14 +735,13 @@ function launchNewSphere(){
 	// console.log(touchEndedCount);		
 }
 
-// Collision detection & arbitration 
-function checkForCollisions(){
+// sphere-sphere collision resolution 
+function ballCollisions(){
 	
-	// Sphere-sphere interactions
 	for(var i = 0; i < spheres.length; i++){
 		for(var j = 0; j < spheres.length; j++){
 
-			// Spheres perform the check themselves
+			
 			if(i != j && spheres[i].intersects(spheres[j])){
 
 				// console.log(spheres[i] + ' intersects ' + spheres[j]);
@@ -702,14 +802,52 @@ function checkForCollisions(){
 		}
 	}
 }
+// wall-sphere collision resolution
+function wallCollisions(){
 
+
+	for(var i = 0; i < spheres.length; i++){
+		console.log(spheres[i].hitWall(gasBox));
+
+		if(spheres[i].hitWall(gasBox)){
+
+			var newBallVelocity;
+			var newWallVelocity;
+			
+			// console.log("old momentum: " + (p5.Vector.add(spheres[i].momentum, p5.Vector.mult(gasBox.velocity, gasBox.mass)).mag().toFixed(2)));
+
+
+			newBallVelocity = p5.Vector.mult(createVector(((spheres[i].velocity.x * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.x)) / (spheres[i].mass + gasBox.mass)),((spheres[i].velocity.y * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.y)) / (spheres[i].mass + gasBox.mass))),-1);
+			newWallVelocity = createVector(((gasBox.velocity.x * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + gasBox.mass)),((gasBox.velocity.y * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + gasBox.mass)));
+			
+
+			// console.log("ball x: "+ newBallVelocity.x.toFixed(2) + ", y: "+newBallVelocity.y.toFixed(2));
+			// console.log("wall x: "+ newWallVelocity.x.toFixed(2) + ", y: "+newWallVelocity.y.toFixed(2));
+			// // Update positions to prevent sticking
+			// spheres[i].position.x = spheres[i].position.x + newBallVelocity.x;
+			// gasBox.position.x = gasBox.position.x + newWallVelocity.x;
+			// spheres[i].position.y = spheres[i].position.y + newBallVelocity.y;
+			// gasBox.position.y = gasBox.position.y + newWallVelocity.y;
+			
+			// Update velocities with calculated ones
+			gasBox.velocity.set(newWallVelocity.x,newWallVelocity.y);
+
+			spheres[i].velocity.set(newBallVelocity.x,newBallVelocity.y);
+
+			
+			// console.log("new momentum: ");
+
+			// console.log("x: " + gasBox.velocity.x+", y: "+ gasBox.velocity.y);
+		}
+	}
+}
 // Slow-motion
 function keyPressed(){
 
 	//  flip stopAll on and off
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
-		frameRate(16);
+		frameRate(1);
 	}else if(keyCode == 32 && stopAll){
 		stopAll = false;
 		frameRate(60);
