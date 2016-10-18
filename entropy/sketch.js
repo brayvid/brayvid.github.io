@@ -1,12 +1,3 @@
-/* 2D Collision Simulator in p5.js
-   @author Blake Rayvid <https://github.com/brayvid>
-   @author CCNY Science Sims <http://sciencesims.com>
-   @version 10.17.2016
-	
-   @file 
-   	*/
-
-
 var spheres = [];	// Primary object storage
 
 var gasBox;
