@@ -485,8 +485,8 @@ function draw(){
 			totalP.set(0,0);
 			for(var i = 0; i < spheres.length; i++){
 				// totalP = p5.Vector.add(totalP,spheres[i].momentum);
-				totalP.x += abs(spheres[i].momentum.x);
-				totalP.y += abs(spheres[i].momentum.y);
+				totalP.x += spheres[i].momentum.x;
+				totalP.y += spheres[i].momentum.y;
 			}
 
 			// Get time for intervals
