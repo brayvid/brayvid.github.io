@@ -1,4 +1,4 @@
-/* A 2D Collision Simulator in p5.js
+/* 2D Particle Collision Simulator in p5.js
    @author Blake Rayvid <https://github.com/brayvid>
    @author CCNY Science Sims <http://sciencesims.com>
    @version 10.16.2016	*/
@@ -7,7 +7,7 @@ var spheres;
 
 var globalAccel;
 var collisionCount;
-var dissipation;
+var wallDissipation;
 var collisionDissipation;
 var maxSpheres;
 
@@ -40,8 +40,53 @@ var touchEndedCount = 0;
 
 var invalidSize;
 var sphereCreated;
-
 var netMomentumArrow;
+var dataFontSize;
+
+function setup(){
+	createCanvas(windowWidth,windowHeight);
+	frameRate(60);
+	fps = frameRate();
+	spheres = [];
+
+	initialSpheres = 0;
+	// globalAccel = createVector(0,0);
+	globalAccelOn = false;
+	collisionsOn = true;
+	wallDissipation = 0.950;
+
+	collisionDissipation = 0.990;
+	started = false;
+	// currentTime = millis();
+	setMoveThreshold(0.001);
+	collisionCount = 0;
+	stopAll = false;
+	maxSpheres = 50;
+	pausedSpheres = [];
+	totalKE = 0;
+	totalP = createVector(0,0);
+	invalidSize = true;
+	sphereCreated = false;
+
+	dataFontSize = (width+height)/80;
+	textStyle(BOLD);
+
+	netMomentumArrow = new Arrow(createVector(3*width/4-100,120),p5.Vector.add(createVector(3*width/4-100,120),totalP));
+	netMomentumArrow.draggable = false;
+	netMomentumArrow.grab = false;
+	netMomentumArrow.color = color(0,0,0,255);
+	netMomentumArrow.width = 20;
+
+	for(var i = 0; i < initialSpheres; i++){
+		spheres[i] = new Sphere(
+					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
+					createVector(random(-25,25),random(-25,25)), // velocity
+					createVector(random(-1,1),random(-1,1)), // acceleration
+					random(75,90),	// mass
+					color(random(0,255),random(0,255),random(0,255),random(100,200))); // color
+	}
+}
+
 
 // Modified mover object in science.js
 function Sphere(p, v, a, m, c){
@@ -84,7 +129,7 @@ function Sphere(p, v, a, m, c){
 			if(this.position.x < 0+this.mass/2){
 				overinx = this.position.x-this.mass/2;
 				vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
-				this.velocity.x = dissipation*vatwidth;
+				this.velocity.x = wallDissipation*vatwidth;
 				this.position.x = 0+this.mass/2; 
 			}
 
@@ -92,13 +137,13 @@ function Sphere(p, v, a, m, c){
 				overinx = this.position.x-width+this.mass/2;
 				vatwidth = Math.sqrt(Math.pow(this.velocity.x,2)-2*this.acceleration.x*overinx);
 				this.position.x = width-this.mass/2;
-				this.velocity.x = -dissipation*vatwidth; // Dissipation
+				this.velocity.x = -wallDissipation*vatwidth;
 			}
 
 			if(this.position.y < 0+this.mass/2){
 				overiny = this.position.y-this.mass/2;
 				vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
-				this.velocity.y = dissipation*vatheight; // Dissipation
+				this.velocity.y = wallDissipation*vatheight;
 				this.position.y = 0+this.mass/2;
 			}
 
@@ -106,7 +151,7 @@ function Sphere(p, v, a, m, c){
 				overiny = this.position.y-height+this.mass/2;
 				vatheight = Math.sqrt(Math.pow(this.velocity.y,2)-2*this.acceleration.y*overiny);
 				this.position.y = height-this.mass/2;
-				this.velocity.y = -dissipation*vatheight; // Dissipation
+				this.velocity.y = -wallDissipation*vatheight;
 			}	// End edge detection
 
 
@@ -184,44 +229,6 @@ function Sphere(p, v, a, m, c){
 
 }// End object definition
 
-function setup(){
-	frameRate(60);
-	fps = frameRate();
-	createCanvas(windowWidth,windowHeight);
-	spheres = [];
-	initialSpheres = 1;
-	globalAccel = createVector(0,0);
-	globalAccelOn = false;
-	collisionsOn = true;
-	dissipation = 0.96;
-	collisionDissipation = 0.992;
-	started = false;
-	currentTime = millis();
-	setMoveThreshold(0.001);
-	collisionCount = 0;
-	stopAll = false;
-	maxSpheres = 50;
-	pausedSpheres = [];
-	totalKE = 0;
-	totalP = createVector(0,0);
-	invalidSize = true;
-	sphereCreated = false;
-
-	netMomentumArrow = new Arrow(createVector(3*width/4-100,120),p5.Vector.add(createVector(3*width/4-100,120),totalP));
-	netMomentumArrow.draggable = false;
-	netMomentumArrow.grab = false;
-	netMomentumArrow.color = color(0,0,0,255);
-	netMomentumArrow.width = 8;
-
-	for(var i = 0; i < initialSpheres; i++){
-		spheres[i] = new Sphere(
-					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
-					createVector(random(-25,25),random(-25,25)), // velocity
-					createVector(random(-1,1),random(-1,1)), // acceleration
-					random(75,90),	// mass
-					color(random(0,255),random(0,255),random(0,255),random(100,200))); // color
-	}
-}
 
 
 function draw(){
@@ -271,7 +278,7 @@ function draw(){
 		// 	// 	pop();
 		// 	// }
 		// 	// Displayed on both types of devices
-		// 	text('Tap or drag anywhere',width/2,(height/2)+10);
+		// text('Tap or drag anywhere',width/2,(height/2)+10);
 			
 		// }
 
@@ -298,11 +305,24 @@ function draw(){
 		}else{
 		// Normal operations
 			background(255);
+			
+			if(!started){
+				push();
+				textSize(48);
+				text('Tap or drag anywhere',width/2-10,(height/2)+10);
+				pop();
+			}
+
 			tempIsSet = false;
 			totalKE = 0;
 			totalP.set(0,0);
-			for(var i = 0; i < spheres.length; i++){
+
+			if(spheres.length == 0){
+				totalKE = 0;
+			}else{
+				for(var i = 0; i < spheres.length; i++){
 				totalKE += spheres[i].kineticEnergy;
+			}
 			}
 
 			for(var i = 0; i < spheres.length; i++){
@@ -434,51 +454,60 @@ function draw(){
 			// Get time for intervals
 			currentTime = millis();
 
-				// Display framerate
+
+			// On-screen data
+
+			// Display framerate
 			push();
-			textSize(24);
+			textSize(dataFontSize);
 			if(round(currentTime) % 10 == 0){
 				fps = round(frameRate());
 			}
-			text(fps + ' fps',90, 60);
+			text(fps + ' fps',70, height-35);
 			pop();
 			
-			// Display total kinetic energy
+
 			push();
-			textSize(28);
+			fill(0);
+			textSize(dataFontSize);
 			textAlign(CENTER);
-
-			// var totalKE = 0;
-			// for(var i = 0; i < spheres.length; i++){
-			// 	totalKE += spheres[i].kineticEnergy;
-			// }
-
-			text('Energy',width/4+100,42);999
-			if(totalKE > 1000 && totalKE < 999999){	
-				text('KE = ' + round(totalKE/1000) + ' J',width/4+100,82);
-			}else if(totalKE > 999999 && totalKE < 999999999){
-				text('KE = ' + (totalKE/1000000).toFixed(3) + ' KJ',width/4+100,82);
+			text('Kinetic energy',width/4+50,50);
+			if(totalKE == 0){
+				text(totalKE.toFixed(1) + ' J',width/4+50,95);
+			}else if(totalKE > 0 && totalKE < 1000){
+				// console.log(totalKE);
+				text(totalKE.toFixed(1) + ' mJ',width/4+50,95);
+			}else if(totalKE >= 1000 && totalKE < 1000000){	
+				text((totalKE/1000).toFixed(1) + ' J',width/4+50,95);
+			}else if(totalKE >= 1000000 && totalKE < 1000000000){
+				text((totalKE/1000000).toFixed(1) + ' KJ',width/4+50,95);
 			}else{
-				text('KE = ' + round(totalKE/1000000000) + ' MJ',width/4+100,82);
+				text((totalKE/1000000000).toFixed(1) + ' MJ',width/4+50,95);
 			}
 			pop();
 
 			// display momentum
 			push();
-			textSize(28);
+			fill(0);
+			textSize(dataFontSize);
 			textAlign(CENTER);
-			text('Net momentum',3*width/4-100,42);
-			text(round(totalP.mag()/60) + ' g/mm/frame',3*width/4-100,82);
-			netMomentumArrow.origin = p5.Vector.sub(createVector(3*width/4-100,120),totalP.normalize().mult(20));
-			netMomentumArrow.target = p5.Vector.add(createVector(3*width/4-100,120),totalP.normalize().mult(20));
-			netMomentumArrow.update();
-			netMomentumArrow.display();
+			text('Net momentum',3*width/4-50,48);
+			if(totalP.mag() == 0){
+				text((totalP.mag()/60).toFixed(1) + ' g cm/s',3*width/4-50,95);
+			}else{
+				text((totalP.mag()/60).toFixed(1) + ' g cm/s',3*width/4-75,95);
+			}
+			netMomentumArrow.origin = p5.Vector.sub(createVector(3*width/4+60,85),totalP.normalize().mult(20));
+			netMomentumArrow.target = p5.Vector.add(createVector(3*width/4+60,85),totalP.normalize().mult(20));
+			if(totalP.mag() != 0){
+				netMomentumArrow.display();
+			}
 
-			// Display number used
+			// Display number of spheres created
 			push();
-			textSize(24);
+			textSize(dataFontSize);
 			textAlign(CENTER);
-			text(spheres.length + "/" + maxSpheres,width-90,60);
+			text(spheres.length + "/" + maxSpheres,width-70,height-35);
 			pop();
 
 		}
@@ -518,7 +547,7 @@ function touchStarted(){
 }
 
 function touchEnded(){
-		// Only do this once per touch (in case touchEnded is called multiple times accidentally)
+		// Only do this once per touch (in case touchEnded is called multiple times for the same event)
 		
 		if(touchEndedCount == 0){
 
@@ -526,29 +555,6 @@ function touchEnded(){
 			launchNewSphere();
 
 		}
-
-}
-
-function windowResized(){
-	resizeCanvas(windowWidth,windowHeight);
-}
-
-// Is device mobile?
-function deviceMoved(){
-	deviceHasMoved = true;
-}
-
-// Pause button
-function keyPressed(){
-
-	//  flip stopAll on and off
-	if(keyCode == 32 && !stopAll){
-		stopAll = true;
-		frameRate(16);
-	}else if(keyCode == 32 && stopAll){
-		stopAll = false;
-		frameRate(60);
-	}
 
 }
 
@@ -565,7 +571,7 @@ function launchNewSphere(){
 	var newPosition = createVector(mouseX, mouseY);
 	var newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(newPosition,beginDist),4),map(interval,0,1000,0,1500)/4);
 	var newAcceleration = globalAccel;
-	var newMass = constrain(map(interval,0,500,25,75),75,400); // This may get reduced
+	var newMass = constrain(map(interval,0,500,25,125),75,400); // This may get reduced
 	var randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
 	// console.log(newMass);
 
@@ -606,10 +612,10 @@ function launchNewSphere(){
 
 			//Create a new sphere
 			spheres[spheres.length] = new Sphere(newPosition,newVelocity,newAcceleration,newMass,randColor);
-			
+
 			// Report new 
-			totalKE += (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
-			console.log(round(totalKE/1000)  +" J at launch");
+			var launchKE = (Math.pow(p5.Vector.mag(newVelocity),2) * newMass * 0.5);
+			// console.log(round(launchKE/1000)  +" J added");
 
 			sphereCreated = true;
 			// Break out of loop once one sphere has been created
@@ -623,7 +629,33 @@ function launchNewSphere(){
 				attemptToFix = false;
 			}
 		} 
-		count++; // count iterations of do-while to ensure no infinite looping
-	}while(invalidSize && !sphereCreated && attemptToFix && count<25);
+		count++; // count iterations of the do-while to ensure no infinite looping
+	}while(invalidSize && !sphereCreated && attemptToFix && count<50);
 	// console.log(touchEndedCount);		
 }
+
+
+// Pause button
+function keyPressed(){
+
+	//  flip stopAll on and off
+	if(keyCode == 32 && !stopAll){
+		stopAll = true;
+		frameRate(16);
+	}else if(keyCode == 32 && stopAll){
+		stopAll = false;
+		frameRate(60);
+	}
+
+}
+
+function windowResized(){
+	resizeCanvas(windowWidth,windowHeight);
+}
+
+// Is device mobile?
+function deviceMoved(){
+	deviceHasMoved = true;
+}
+
+
