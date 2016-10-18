@@ -633,6 +633,7 @@ function launchNewSphere(){
 			}else{
 				// ok[i] = false;
 				inTheWay++;
+				// console.log('in the way');
 			}
 
 			// See if every element of ok is true. If they are, let allOk remain true
@@ -645,7 +646,7 @@ function launchNewSphere(){
 
 		// console.log(inTheWay + ' overlapping');
 
-		if(!invalidSize && inTheWay == 0 && !sphereCreated && attemptToFix){
+		if(inTheWay == 0 && !sphereCreated && attemptToFix){
 		// All checks have been passed
 
 			//Create a new sphere
