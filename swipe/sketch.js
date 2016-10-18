@@ -50,8 +50,8 @@ function setup(){
 	spheres = [];
 
 	initialSpheres = 1;
-	// globalAccel = createVector(0,0);
 	globalAccelOn = false;
+	globalAccel = createVector(0,0);
 	collisionsOn = true;
 	wallDissipation = 0.995;
 	collisionDissipation = 0.995;
@@ -70,6 +70,7 @@ function setup(){
 
 	dataFontSize = (width+height)/80;
 	textStyle(BOLD);
+	textAlign(CENTER);
 
 	netMomentumArrow = new Arrow(createVector(3*width/4-100,120),p5.Vector.add(createVector(3*width/4-100,120),totalP));
 	netMomentumArrow.draggable = false;
@@ -313,6 +314,35 @@ function draw(){
 				textSize(48);
 				text('Tap or drag anywhere',width/2,(height/2)+10);
 				pop();
+
+				push();
+				textSize(34);
+				if(Math.abs(wallDissipation - 1.0) < 0.001 && Math.abs(collisionDissipation - 1.0) < 0.001){
+					text('Dissipation OFF', width/2, (height/2)+200);
+				}else{
+					text('Dissipation ON', width/2, (height/2)+200);
+				}
+				pop();
+
+				push();
+				textSize(34);
+				if(globalAccelOn){
+					text('Gravity ON', width/2, (height/2)+250);
+				}else{
+					text('Gravity OFF', width/2, (height/2)+250);
+				}
+				pop();
+
+				push();
+				textSize(34);
+				if(collisionsOn){
+					text('Collisions ON', width/2, (height/2)+300);
+				}else{
+					text('Collisions OFF', width/2, (height/2)+300);
+				}
+				pop();
+
+
 			}
 
 			// Unused
