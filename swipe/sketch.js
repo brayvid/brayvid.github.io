@@ -49,13 +49,13 @@ function setup(){
 	fps = frameRate();
 	spheres = [];
 
-	initialSpheres = 0;
+	initialSpheres = 1;
 	// globalAccel = createVector(0,0);
 	globalAccelOn = false;
 	collisionsOn = true;
-	wallDissipation = 0.950;
+	wallDissipation = 0.995;
+	collisionDissipation = 0.995;
 
-	collisionDissipation = 0.990;
 	started = false;
 	// currentTime = millis();
 	setMoveThreshold(0.001);
@@ -306,6 +306,8 @@ function draw(){
 		// Normal operations
 			background(255);
 			
+
+			// Intro screen
 			if(!started){
 				push();
 				textSize(48);
@@ -313,13 +315,14 @@ function draw(){
 				pop();
 			}
 
+			// Unused
 			tempIsSet = false;
 
 
 			// Recalculate total kinetic energy
 			totalKE = 0;
 			if(spheres.length == 0){
-				
+				// Just stay at 0
 			}else{
 				for(var i = 0; i < spheres.length; i++){
 				totalKE += spheres[i].kineticEnergy;
