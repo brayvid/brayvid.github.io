@@ -697,4 +697,3 @@ function deviceMoved(){
 	deviceHasMoved = true;
 }
 
-
