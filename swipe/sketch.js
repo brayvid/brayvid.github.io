@@ -8,7 +8,6 @@
 
 
 var spheres = [];	// Primary object storage
-
 var initialSpheres;
 var maxSpheres;
 
