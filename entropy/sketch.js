@@ -75,7 +75,7 @@ function setup(){
 	netMomentumArrow.color = color(0,0,0,255);
 	netMomentumArrow.width = 20;
 
-	gasBox = new Box(100,createVector(0,0));
+	gasBox = new Box(100,createVector(2,-2));
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
