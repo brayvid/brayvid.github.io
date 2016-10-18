@@ -8,6 +8,7 @@
 
 
 var spheres = [];	// Primary object storage
+
 var initialSpheres;
 var maxSpheres;
 
@@ -615,7 +616,7 @@ function launchNewSphere(){
 	do{
 		
 		var d = 0;
-		var ok = [];
+		// var ok = [];
 		var inTheWay = 0;
 
 		/*	Check the distance to each sphere. If the distance from the mouse to 
@@ -628,22 +629,23 @@ function launchNewSphere(){
 			d = dist(newPosition.x,newPosition.y,spheres[i].position.x,spheres[i].position.y);
 
 			if (d > spheres[i].mass/2 + newMass/2 && d > spheres[i].mass/2) {
-				ok[i] = true;	
+				// ok[i] = true;	
 			}else{
-				ok[i] = false;
+				// ok[i] = false;
+				inTheWay++;
 			}
 
 			// See if every element of ok is true. If they are, let allOk remain true
-			for(var i = 0; i < ok.length; i++){
-				if(ok[i] == false){
-					inTheWay++;
-				}
-			}
+			// for(var i = 0; i < ok.length; i++){
+			// 	if(ok[i] == false){
+			// 		inTheWay++;
+			// 	}
+			// }
 		}
 
 		// console.log(inTheWay + ' overlapping');
 
-		if(invalidSize && inTheWay == 0 && !sphereCreated && attemptToFix){
+		if(!invalidSize && inTheWay == 0 && !sphereCreated && attemptToFix){
 		// All checks have been passed
 
 			//Create a new sphere
