@@ -309,7 +309,7 @@ function draw(){
 			if(!started){
 				push();
 				textSize(48);
-				text('Tap or drag anywhere',width/2-10,(height/2)+10);
+				text('Tap or drag anywhere',width/2,(height/2)+10);
 				pop();
 			}
 
