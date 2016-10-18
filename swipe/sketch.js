@@ -1,64 +1,66 @@
-/* 2D Particle Collision Simulator in p5.js
+/* 2D Collision Simulator in p5.js
    @author Blake Rayvid <https://github.com/brayvid>
    @author CCNY Science Sims <http://sciencesims.com>
-   @version 10.16.2016	*/
+   @version 10.17.2016
+	
+   @file 
+   	*/
 
-var spheres;
 
-var globalAccel;
-var collisionCount;
-var wallDissipation;
-var collisionDissipation;
-var maxSpheres;
-
-var fps;
-var started;
-var globalAccelOn;
-var collisionsOn;
-var deviceHasMoved = false;
-var stopAll;
-
-var beginDist;
-var beginTime;
-var endTime;
-var currentTime;
+var spheres = [];	// Primary object storage
 
 var initialSpheres;
+var maxSpheres;
 
-var pausedSpheres;
+var globalAccel;
+var globalAccelOn;
+var wallDissipation;
+var collisionDissipation;
 
-var wasPaused = false;
-
-var tempIsSet = false;
-
+var collisionsOn;
+var collisionCount;
 var totalKE;
 var totalP;
 
-var invalidSize;
-
-var touchEndedCount = 0;
-
+var started;
+var stopAll;
+var deviceHasMoved = false;
+var wasPaused = false;
+var tempIsSet = false;
 var invalidSize;
 var sphereCreated;
+var touchEndedCount = 0;
+
+var fps;
+
+var beginDist;	//  when touch started
+var beginTime;	//	when touch started
+var endTime;	// when touch stops
+var currentTime;	//	to update fps slower than normal rate
+
 var netMomentumArrow;
+
+var pausedSpheres;
+
 var dataFontSize;
 
 function setup(){
 	createCanvas(windowWidth,windowHeight);
 	frameRate(60);
-	fps = frameRate();
-	spheres = [];
+	setMoveThreshold(0.001);
+	textStyle(BOLD);
+	textAlign(CENTER);
 
+	fps = frameRate();
 	initialSpheres = 1;
 	globalAccelOn = false;
 	globalAccel = createVector(0,0);
 	collisionsOn = true;
-	wallDissipation = 0.995;
-	collisionDissipation = 0.995;
+	wallDissipation = 1;
+	collisionDissipation = 1;
 
 	started = false;
 	// currentTime = millis();
-	setMoveThreshold(0.001);
 	collisionCount = 0;
 	stopAll = false;
 	maxSpheres = 50;
@@ -69,8 +71,6 @@ function setup(){
 	sphereCreated = false;
 
 	dataFontSize = (width+height)/80;
-	textStyle(BOLD);
-	textAlign(CENTER);
 
 	netMomentumArrow = new Arrow(createVector(3*width/4-100,120),p5.Vector.add(createVector(3*width/4-100,120),totalP));
 	netMomentumArrow.draggable = false;
@@ -84,7 +84,7 @@ function setup(){
 					createVector(random(-25,25),random(-25,25)), // velocity
 					createVector(random(-1,1),random(-1,1)), // acceleration
 					random(75,90),	// mass
-					color(random(0,255),random(0,255),random(0,255),random(100,200))); // color
+					color(random(0,255),random(0,255),random(0,255),random(25,75))); // color
 	}
 }
 
@@ -348,23 +348,6 @@ function draw(){
 			// Unused
 			tempIsSet = false;
 
-
-			// Recalculate total kinetic energy
-			totalKE = 0;
-			if(spheres.length == 0){
-				// Just stay at 0
-			}else{
-				for(var i = 0; i < spheres.length; i++){
-				totalKE += spheres[i].kineticEnergy;
-				}
-			}
-
-			// Recalculate net momentum
-			totalP.set(0,0);
-			for(var i = 0; i < spheres.length; i++){
-				totalP = p5.Vector.add(totalP,spheres[i].momentum);
-			}
-
 			//Get acceleration from device rotation data
 			if(globalAccelOn && !stopAll){
 				globalAccel.x = map(constrain(rotationY,-45,45),-45,45,-2,2);
@@ -403,14 +386,15 @@ function draw(){
 								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
 								// Update positions to prevent sticking
-								spheres[i].position.x = spheres[i].position.x + 1.2*newVelX1;
-								spheres[j].position.x = spheres[j].position.x + 1.2*newVelX2;
-								spheres[i].position.y = spheres[i].position.y + 1.2*newVelY1;
-								spheres[j].position.y = spheres[j].position.y + 1.2*newVelY2;
+								spheres[i].position.x = spheres[i].position.x + newVelX1;
+								spheres[j].position.x = spheres[j].position.x + newVelX2;
+								spheres[i].position.y = spheres[i].position.y + newVelY1;
+								spheres[j].position.y = spheres[j].position.y + newVelY2;
 
 								// Update velocities with calculated ones
 								spheres[i].velocity.set(0.98*newVelX1,0.98*newVelY1);
 								spheres[j].velocity.set(0.98*newVelX2,0.98*newVelY2);
+
 
 								// Unused
 								// var collisionPoint = createVector(
@@ -486,6 +470,24 @@ function draw(){
 			// if(spheres.length > 0){
 			// 	console.log(spheres[0].acceleration);
 			// }
+
+						// Recalculate total kinetic energy
+			totalKE = 0;
+			if(spheres.length == 0){
+				// Just stay at 0
+			}else{
+				for(var i = 0; i < spheres.length; i++){
+				totalKE += spheres[i].kineticEnergy;
+				}
+			}
+
+			// Recalculate net momentum
+			totalP.set(0,0);
+			for(var i = 0; i < spheres.length; i++){
+				// totalP = p5.Vector.add(totalP,spheres[i].momentum);
+				totalP.x += spheres[i].momentum.x;
+				totalP.y += spheres[i].momentum.y;
+			}
 
 			// Get time for intervals
 			currentTime = millis();
@@ -602,7 +604,7 @@ function launchNewSphere(){
 	endTime = millis();
 	var interval = endTime - beginTime;
 
-	// Calculate new parameters
+	// New sphere parameters
 	var newPosition = createVector(mouseX, mouseY);
 	var newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(newPosition,beginDist),4),map(interval,0,1000,0,1500)/4);
 	var newAcceleration = globalAccel;
@@ -626,7 +628,7 @@ function launchNewSphere(){
 
 			d = dist(newPosition.x,newPosition.y,spheres[i].position.x,spheres[i].position.y);
 
-			if (d > spheres[i].mass + newMass && d > spheres[i].mass/2) {
+			if (d > spheres[i].mass/2 + newMass/2 && d > spheres[i].mass/2) {
 				ok[i] = true;	
 			}else{
 				ok[i] = false;
