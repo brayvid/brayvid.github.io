@@ -390,7 +390,7 @@ function draw(){
 								spheres[j].position.x = spheres[j].position.x + newVelX2;
 								spheres[i].position.y = spheres[i].position.y + newVelY1;
 								spheres[j].position.y = spheres[j].position.y + newVelY2;
-
+								
 								// Update velocities with calculated ones
 								spheres[i].velocity.set(newVelX1,newVelY1);
 								spheres[j].velocity.set(newVelX2,newVelY2);
@@ -485,8 +485,8 @@ function draw(){
 			totalP.set(0,0);
 			for(var i = 0; i < spheres.length; i++){
 				// totalP = p5.Vector.add(totalP,spheres[i].momentum);
-				totalP.x += spheres[i].momentum.x;
-				totalP.y += spheres[i].momentum.y;
+				totalP.x += abs(spheres[i].momentum.x);
+				totalP.y += abs(spheres[i].momentum.y);
 			}
 
 			// Get time for intervals
