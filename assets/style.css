@@ -1,69 +1,109 @@
-body{
-	padding-top:1%;
-	text-align: center;
-	font-family:"Helvetica";
-	font-size: 2em;
-}
-
-#title{
-	width: 40%;
-	margin: 0 auto;
-}
-
-a{
-	text-decoration: none;
-	color: black;
-}
-
-a:hover{
-	text-decoration: underline;
-}
-
-h2{
-
-	text-decoration:none;
-}
 
 
-ul{
+	html	{
+		margin: none;
+		padding: none;
+		border: none;
+	}
 
-	list-style: none;
-	/*margin-right: 50px;*/
-	padding: 50px;
-	text-transform: uppercase;
+	body	{
+		padding-top:0px;
+		text-align: center;
+		font-family:"Times";
+		font-size: 2em;
+	}
 
-}
+	a	{
+		text-decoration: none;
+		color: black;
+	}
 
-#phys-demos{
-	font-size: 34px;
-	text-transform: uppercase;
-}
+	a:hover	{
+		text-decoration: underline;
+	}
 
-#by{
-	font-size: 28px;
+	h2	{
 
-}
-#p5-link{
-	color: #ff0066;
-}
+		text-decoration:none;
+	}
 
-#name-link{
-	color: #000;
-	font-size:24px;
-	text-transform: uppercase;
-}
 
-#github-link{
-	color: #000;
-}
+	li	{
+		padding-top:0.5em;
+		padding-bottom:0.5em;
+	}
+	ul	{
 
-.sketch-link{
-	font-size: 36px;
-}
-.sketch-link:hover{
-	color: red;
-}
+		list-style: none;
+		/*margin-right: 50px;*/
+		padding: 50px;
+		text-transform: capitalize;
 
-footer{
-	padding-top: 35%;
-}
+	}
+
+	#header {
+		padding-top: 0.8em;
+		padding-bottom: 0.8em;
+		border-bottom: 1px solid black;
+	}
+
+	#title	{
+		width: 40%;
+		margin: 0 auto;
+		padding-top: none;
+	}
+
+	#primary-list	{
+		width: 18em;
+		margin: 0 auto;
+	}
+
+	#secondary-list{
+		width: 18em;
+		margin: 0 auto;
+	}
+
+	#practice-title{
+		font-size: 0.7em;
+	}
+	.practice	{
+		font-size: 0.8em;
+		text-transform: none;
+	}
+	#phys-demos	{
+		font-size: 34px;
+		text-transform: uppercase;
+	}
+
+	#by	{
+		font-size: 28px;
+
+	}
+	#p5-link	{
+		color: #ff0066;
+	}
+	#name	{
+		padding-top:1.5em;
+	}
+	#name-link	{
+		color: #000;
+		font-size:1.2em;
+		text-transform: uppercase;
+		margin-top: 2em;
+	}
+
+	#github-link	{
+		color: #000;
+	}
+
+	/*.sketch-link	{
+		font-size: 36px;
+		text-transform: capitalize;
+	}*/
+	.sketch-link:hover	{
+		color: red;
+	}
+
+	footer	{
+		padding-top: 35%;
+	}
