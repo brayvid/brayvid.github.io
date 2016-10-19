@@ -29,6 +29,7 @@ function setup() {
     var sliderPx = (round(0.15*(width+height/2))+20).toString()+"px";
     console.log(sliderPx);
     focalSlider.style('width', sliderPx);
+    focalSlider.class("sim-slider blue");
 
     focalSlider.touchStarted(function(){
         if(focusChanging == false){focusChanging = true;}
