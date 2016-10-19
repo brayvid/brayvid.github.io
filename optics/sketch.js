@@ -190,7 +190,7 @@ function displayValues() {
         textSize(16);
         fill(0);
         // text('F = ', lensCenter.x+focalLength.x-15, lensCenter.y + 40);
-        text("f = " + focalLength.x, constrain(lensCenter.x+focalLength.x,leftBorder,rightBorder-20), lensCenter.y + 40);
+        text("f = " + focalLength.x + " m", constrain(lensCenter.x+focalLength.x,leftBorder,rightBorder-20), lensCenter.y + 40);
         // text("f", lensCenter.x-focalLength.x, lensCenter.y + 40);
         // text(focalLength.x, focalSlider.position.x, lensCenter.y);
         pop();
@@ -222,14 +222,14 @@ function displayValues() {
         if (imageArrow.target.y < lensCenter.y && abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6) {
             // on top
             text('Image height', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y - 50, topBorder, bottomBorder));
-            text(round(lensCenter.y - imageArrow.target.y), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y - 30, topBorder + 20, bottomBorder));
-            text('Image distance', constrain(imageArrow.target.x, leftBorder, rightBorder), lensCenter.y+20);
-            text(-1*abs(round(lensCenter.x - imageArrow.target.x)), constrain(imageArrow.target.x, leftBorder, rightBorder), lensCenter.y+40);
+            text(round(lensCenter.y - imageArrow.target.y) + " m", constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y - 30, topBorder + 20, bottomBorder));
+            text('Image distance', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y+20,lensCenter.y+60,bottomBorder));
+            text(-1*abs(round(lensCenter.x - imageArrow.target.x))+" m", constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y+40,lensCenter.y+80,bottomBorder));
         } else if(imageArrow.target.y > lensCenter.y && abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6){// on bottom
-                text('Image height', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 30, lensCenter.y+30, bottomBorder - 20));
-                text(round(lensCenter.y - imageArrow.target.y), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 50, lensCenter.y+50, bottomBorder));
-                text('Image distance', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y, topBorder, bottomBorder)-30);
-                text(-1*round(lensCenter.x - imageArrow.target.x), constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y - 25, topBorder + 20, bottomBorder - 20)-30);
+                text('Image height', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 30, lensCenter.y+60, bottomBorder - 20));
+                text(round(lensCenter.y - imageArrow.target.y) +" m", constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(imageArrow.target.y + 50, lensCenter.y+80, bottomBorder));
+                text('Image distance', constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y-25, topBorder, bottomBorder)-30);
+                text(-1*round(lensCenter.x - imageArrow.target.x) + " m", constrain(imageArrow.target.x, leftBorder, rightBorder), constrain(lensCenter.y, topBorder + 20, bottomBorder - 20)-30);
 
         }else{
             pop();
@@ -245,6 +245,8 @@ function displayValues() {
         
         // Compare object dist and focal length: greater, less or equal
         push();
+        stroke(255);
+        strokeWeight(3);
         textAlign(CENTER);
           text('Object distance',lensCenter.x-55,height-50);
           text('Focal length',lensCenter.x+48,height-50);
@@ -259,9 +261,9 @@ function displayValues() {
 
         text('Magnification: ', lensCenter.x-20, height - 30);
         if(abs(lensCenter.x-objectArrow.target.x-focalLength.x)>0.6){
-            text(round(10*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/10,lensCenter.x+40,height-30);
+            text(round(10*(abs(imageArrow.target.y-imageArrow.origin.y)/abs(objectArrow.origin.y-objectArrow.target.y)))/10 + " x",lensCenter.x+40,height-30);
         }else{
-            text('> 9000',lensCenter.x+40,height-30);
+            text('  > 9000',lensCenter.x+40,height-30);
         }
 
         if(abs(lensCenter.x-focalLength.x-objectArrow.target.x) < 0.6){
