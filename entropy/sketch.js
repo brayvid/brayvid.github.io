@@ -74,20 +74,22 @@ function setup(){
 	netMomentumArrow.color = color(0,0,0,255);
 	netMomentumArrow.width = 20;
 	
-	var randomVel = createVector(0,0);
-	// if(floor(random(0,2)) == 0){
-	// 	randomVel = createVector(random(-2,-1),random(-2,-1));
-	// }else{
-	// 	randomVel = createVector(random(1,2),random(1,2));
-	// }
-	gasBox = new Box(1000,randomVel);
+	
+	gasBox = new Box(1000,createVector(0,0));
+
+	var randomVel;
+	if(floor(random(0,1)) == 0){
+		randomVel = createVector(random(-10,-1),random(-10,-1));
+	}else{
+		randomVel = createVector(random(1,10),random(1,10));
+	}
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
 					createVector(gasBox.center.x,gasBox.center.y),  // position
-					createVector(random(-10,10),random(-10,10)), // velocity
-					createVector(random(-1,1),random(-1,1)), // acceleration
-					random(50,50),	// mass
+					randomVel, // velocity
+					createVector(0,0), // acceleration
+					random(25,75),	// mass
 					color(random(0,255),random(0,255),random(0,255),random(25,75))); // color
 	}
 }
@@ -671,7 +673,7 @@ function launchNewSphere(){
 	var newPosition = createVector(mouseX, mouseY);
 	var newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(newPosition,beginDist),4),map(interval,0,1000,0,1500)/4);
 	var newAcceleration = globalAccel;
-	var newMass = constrain(map(interval,0,500,25,125),25,25); // This may get reduced
+	var newMass = constrain(map(interval,0,500,25,125),25,50); // This may get reduced
 	var randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
 	// console.log(newMass);
 
