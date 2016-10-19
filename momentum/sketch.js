@@ -305,8 +305,8 @@ function Sphere(p, v, a, m, c){
 function Box(m, v){
 	this.center = createVector(width/2,height/2); // p5 Vector
 	
-	this.length = width/2;	// number	
-	this.height = height/2;	// number
+	this.length = 3*width/4;	// number	
+	this.height = 3*height/4;	// number
 	this.mass = m;
 	this.velocity = v;
 	this.acceleration = createVector(0,0);
@@ -394,8 +394,8 @@ function Box(m, v){
 
 	this.resized = function(){
 		this.center.set(width/2,height/2);
-		this.length = width/2;
-		this.height = height/2;
+		this.length = 3*width/4;
+		this.height = 3*height/4;
 	}
 }
 
@@ -822,7 +822,7 @@ function wallCollisions(){
 
 
 			newBallVelocity = p5.Vector.mult(createVector(((spheres[i].velocity.x * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.x)) / (spheres[i].mass + gasBox.mass)),((spheres[i].velocity.y * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.y)) / (spheres[i].mass + gasBox.mass))),-1);
-			newWallVelocity = createVector(((gasBox.velocity.x * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + gasBox.mass)),((gasBox.velocity.y * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + gasBox.mass)));
+			newWallVelocity = ((gasBox.velocity.x * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + gasBox.mass)),((gasBox.velocity.y * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + gasBox.mass));
 			
 
 			// console.log("ball x: "+ newBallVelocity.x.toFixed(2) + ", y: "+newBallVelocity.y.toFixed(2));
