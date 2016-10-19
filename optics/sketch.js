@@ -1,3 +1,6 @@
+/*  @file Ray Diagram for a Thin Convex Lens in p5.js
+    @author Blake Rayvid https://github.com/brayvid */
+    
 var lensCenter;
 var focalLength;
 
