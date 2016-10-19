@@ -75,7 +75,7 @@ function setup(){
 	netMomentumArrow.width = 20;
 	
 	
-	gasBox = new Box(3000,createVector(0,0));
+	gasBox = new Box(10000,createVector(0,0));
 
 	var randomVel;
 	if(floor(random(0,2)) == 0){
@@ -86,7 +86,7 @@ function setup(){
 
 	for(var i = 0; i < initialSpheres; i++){
 		spheres[i] = new Sphere(
-					createVector(gasBox.center.x,gasBox.center.y),  // position
+					createVector(random(gasBox.center.x-gasBox.length/2,gasBox.center.x+gasBox.length/2),random(gasBox.center.y-gasBox.height/2,gasBox.center.y+gasBox.height/2)),  // position
 					randomVel, // velocity
 					createVector(0,0), // acceleration
 					random(25,75),	// mass
@@ -189,7 +189,7 @@ function Sphere(p, v, a, m, c){
 		// }
 
 		if(hit){
-			console.log(hit);
+			// console.log(hit);
 		}
 
 		return hit;
@@ -305,8 +305,8 @@ function Sphere(p, v, a, m, c){
 function Box(m, v){
 	this.center = createVector(width/2,height/2); // p5 Vector
 	
-	this.length = 3*width/4;	// number	
-	this.height = 3*height/4;	// number
+	this.length = width/3;	// number	
+	this.height = width/3;	// number
 	this.mass = m;
 	this.velocity = v;
 	this.acceleration = createVector(0,0);
@@ -317,6 +317,14 @@ function Box(m, v){
 	this.cornerTR = createVector(this.center.x + this.length/2, this.center.y - this.height/2);
 	this.cornerBL = createVector(this.center.x - this.length/2, this.center.y + this.height/2);
 	this.cornerBR = createVector(this.center.x + this.length/2, this.center.y + this.height/2);
+
+
+	this.momentum = p5.Vector.mult(this.velocity,this.mass);
+	this.momentumArrow = new Arrow(this.center,p5.Vector.add(this.center,this.momentum));
+	this.momentumArrow.draggable = false;
+	this.momentumArrow.grab = false;
+	this.momentumArrow.color = color(0,0,0,255);
+	this.momentumArrow.width = 10;
 	// this.leftX;
 	// this.rightX;
 	// this.topY;
@@ -338,11 +346,16 @@ function Box(m, v){
 		this.cornerBL.set(this.center.x - this.length/2, this.center.y + this.height/2);
 		this.cornerBR.set(this.center.x + this.length/2, this.center.y + this.height/2);
 
+		this.momentum = p5.Vector.mult(this.velocity,this.mass);
+
 		var netF = createVector(0,0);
 		for(var i = 0; i < this.actingForces.length; i++){
 			netF.add(netF,this.actingForces[i]);
 		}
 
+		this.momentumArrow.origin = this.center;
+		this.momentumArrow.target.x = this.center.x + map(this.momentum.x,-10000,10000,-500,500);
+		this.momentumArrow.target.y = this.center.y + map(this.momentum.y,-10000,10000,-500,500);
 	}
 	this.display = function(){
 
@@ -352,6 +365,15 @@ function Box(m, v){
 		rectMode(CORNER);
 		rect(this.cornerTL.x,this.cornerTL.y,this.length,this.height);
 		pop();
+
+		if(this.momentum.mag() > 20){
+			this.momentumArrow.display();
+		}else{
+			push();
+			fill(0);
+			ellipse(this.center.x,this.center.y,6,6);
+			pop();
+		}
 	}
 
 	// Bounce off window edges
@@ -393,7 +415,6 @@ function Box(m, v){
 
 
 	this.resized = function(){
-		this.center.set(width/2,height/2);
 		this.length = 3*width/4;
 		this.height = 3*height/4;
 	}
@@ -812,7 +833,7 @@ function wallCollisions(){
 
 	for(var i = 0; i < spheres.length; i++){
 		// console.log(spheres[i].hitWall(gasBox));
-
+		console.log(spheres[i].hitWall(gasBox));
 		if(spheres[i].hitWall(gasBox)){
 
 			var newBallVelocity;
@@ -822,9 +843,8 @@ function wallCollisions(){
 
 
 			newBallVelocity = p5.Vector.mult(createVector(((spheres[i].velocity.x * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.x)) / (spheres[i].mass + gasBox.mass)),((spheres[i].velocity.y * (spheres[i].mass - gasBox.mass) + (2 * gasBox.mass * gasBox.velocity.y)) / (spheres[i].mass + gasBox.mass))),-1);
-			newWallVelocity = ((gasBox.velocity.x * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + gasBox.mass)),((gasBox.velocity.y * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + gasBox.mass));
+			newWallVelocity = createVector(((gasBox.velocity.x * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + gasBox.mass)),((gasBox.velocity.y * (gasBox.mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + gasBox.mass)));
 			
-
 			// console.log("ball x: "+ newBallVelocity.x.toFixed(2) + ", y: "+newBallVelocity.y.toFixed(2));
 			// console.log("wall x: "+ newWallVelocity.x.toFixed(2) + ", y: "+newWallVelocity.y.toFixed(2));
 			// // Update positions to prevent sticking
@@ -833,6 +853,8 @@ function wallCollisions(){
 			// spheres[i].position.y = spheres[i].position.y + newBallVelocity.y;
 			// gasBox.position.y = gasBox.position.y + newWallVelocity.y;
 			
+			// gasBox.position.(newWallVelocity);
+			// spheres[i].position.(newBallVelocity);
 			// Update velocities with calculated ones
 			gasBox.velocity.set(newWallVelocity.x,newWallVelocity.y);
 
@@ -851,7 +873,7 @@ function keyPressed(){
 	//  flip stopAll on and off
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
-		frameRate(1);
+		frameRate(0.001);
 	}else if(keyCode == 32 && stopAll){
 		stopAll = false;
 		frameRate(60);
