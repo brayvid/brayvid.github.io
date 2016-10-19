@@ -75,7 +75,7 @@ function setup(){
 	netMomentumArrow.width = 20;
 	
 	
-	gasBox = new Box(1000,createVector(0,0));
+	gasBox = new Box(3000,createVector(0,0));
 
 	var randomVel;
 	if(floor(random(0,2)) == 0){
