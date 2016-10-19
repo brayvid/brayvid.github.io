@@ -78,10 +78,10 @@ function setup(){
 	gasBox = new Box(1000,createVector(0,0));
 
 	var randomVel;
-	if(floor(random(0,1)) == 0){
-		randomVel = createVector(random(-10,-1),random(-10,-1));
+	if(floor(random(0,2)) == 0){
+		randomVel = createVector(random(-10,-4),random(-10,-4));
 	}else{
-		randomVel = createVector(random(1,10),random(1,10));
+		randomVel = createVector(random(4,10),random(4,10));
 	}
 
 	for(var i = 0; i < initialSpheres; i++){
@@ -146,7 +146,9 @@ function Sphere(p, v, a, m, c){
 		}else if(distBottom < this.mass/2){
 			hit = true;
 		}else{
+			hit = false;
 		}
+
 
 		// if(distLeft < distRight && distTop < distBottom){
 		// 	// on top left
@@ -809,7 +811,7 @@ function wallCollisions(){
 
 
 	for(var i = 0; i < spheres.length; i++){
-		console.log(spheres[i].hitWall(gasBox));
+		// console.log(spheres[i].hitWall(gasBox));
 
 		if(spheres[i].hitWall(gasBox)){
 
