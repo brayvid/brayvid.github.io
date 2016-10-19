@@ -105,5 +105,10 @@
 	}
 
 	footer	{
-		padding-top: 35%;
+		padding-top: 24em;
+		font-size: 0.6em;
+	}
+
+	footer a:hover{
+		text-decoration: underline 1px black;
 	}
