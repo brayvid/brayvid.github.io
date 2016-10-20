@@ -610,7 +610,7 @@ function launchNewSphere(){
 	var newVelocity = p5.Vector.div(p5.Vector.mult(p5.Vector.sub(newPosition,beginDist),4),map(interval,0,1000,0,1500)/4);
 	var newAcceleration = globalAccel;
 	var newMass = constrain(map(interval,0,500,25,125),75,400); // This may get reduced
-	var randColor = color(floor(random(0,255)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
+	var randColor = color(floor(random(0,256)),floor(random(0,256)),floor(random(0,256)),floor(random(100,200)));
 	// console.log(newMass);
 
 	var count = 0;

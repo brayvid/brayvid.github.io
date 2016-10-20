@@ -2,6 +2,8 @@ var spheres = [];	// Primary object storage
 
 var gasBox;
 
+var boxHistory = [];
+
 var initialSpheres;
 var maxSpheres;
 
@@ -76,6 +78,8 @@ function setup(){
 	
 	
 	gasBox = new Box(10000,createVector(0,0));
+
+	boxHistory[0] = createVector(gasBox.center.x,gasBox.center.y);
 
 	var randomVel;
 	if(floor(random(0,2)) == 0){
@@ -325,6 +329,7 @@ function Box(m, v){
 	this.momentumArrow.grab = false;
 	this.momentumArrow.color = color(0,0,0,255);
 	this.momentumArrow.width = 10;
+
 	// this.leftX;
 	// this.rightX;
 	// this.topY;
@@ -494,6 +499,13 @@ function draw(){
 		// Normal operations
 			background(255);
 
+			boxHistory.push(createVector(gasBox.center.x,gasBox.center.y));
+			push();
+			fill(0,0,0,50);
+			for(var i = 0; i < boxHistory.length; i++){
+				ellipse(boxHistory[i].x,boxHistory[i].y,2,2);
+			}
+			pop();
 			// rect(0,0,width,height);
 
 			// Intro screen
