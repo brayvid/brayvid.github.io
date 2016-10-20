@@ -48,7 +48,7 @@
 	}
 
 	#title	{
-		width: 40%;
+		width: 50%;
 		margin: 0 auto;
 		padding-top: none;
 	}
@@ -70,7 +70,7 @@
 		font-size: 0.8em;
 		text-transform: none;
 	}
-	#phys-demos	{
+	#phys-demos, #physical-principles{
 		font-size: 34px;
 		text-transform: uppercase;
 	}
@@ -78,6 +78,9 @@
 	#by	{
 		font-size: 28px;
 
+	}
+	#in {
+		font-size: 0.8em;
 	}
 	#p5-link	{
 		color: #ff0066;
