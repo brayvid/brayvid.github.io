@@ -137,6 +137,11 @@
 	#p5-link	{
 		color: #ff0066;
 		font-family: "Helvetica";
+		font-weight: 500;
+	}
+
+	#p5-link:hover{
+		font-weight: 800;
 	}
 	#name	{
 		padding-top:1.5em;
