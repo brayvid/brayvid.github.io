@@ -23,7 +23,7 @@ var totalKE;
 var totalP;
 
 var started;
-var stopAll;
+var stopAll = false;
 var deviceHasMoved = false;
 var wasPaused = false;
 var tempIsSet = false;
@@ -375,8 +375,12 @@ function draw(){
 
 								// console.log(spheres[i] + ' intersects ' + spheres[j]);
 
-								// var heading1 = degrees(spheres[i].velocity.heading());
-								// var heading2 = degrees(spheres[j].velocity.heading());
+								var heading1 = degrees(spheres[i].velocity.heading());
+								var heading2 = degrees(spheres[j].velocity.heading());
+
+								var collisionAngle = heading2 - heading1;
+
+								console.log(round(collisionAngle));
 
 								// console.log('heading 1: '+ heading1 + ', heading 2: '+ heading2);
 
@@ -680,7 +684,7 @@ function keyPressed(){
 	//  flip stopAll on and off
 	if(keyCode == 32 && !stopAll){
 		stopAll = true;
-		frameRate(16);
+		frameRate(0.01);
 	}else if(keyCode == 32 && stopAll){
 		stopAll = false;
 		frameRate(60);
