@@ -90,10 +90,21 @@
 		font-weight: 600;
 		/*background-color: rgb(190,190,190);*/
 	}
-
-	#secondary-list{
-		width: 18em;
+	#secondary-list	{
+		
 		margin: 0 auto;
+		padding-top: 2em;
+	}
+
+	#secondary-list td {
+		height: 3em;
+		font-size: 0.8em;
+		font-style: italic;
+	}
+
+	#secondary-list td:hover	{
+		font-weight: 600;
+		/*background-color: rgb(190,190,190);*/
 	}
 
 	#practice-title{
