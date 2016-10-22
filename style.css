@@ -106,6 +106,7 @@
 	.dev-link{
 		font-style: italic;
 		background-color: red;
+		padding: 3px;
 	}
 	.dev-link:hover{
 		color: red;
