@@ -10,10 +10,10 @@
 	<section id="content">
 		<table id="primary-list">
 			<tr>
-				<td><a class="sketch-link" href="ray-diagram">Convex Lens Ray Diagram</a></td>
+				<td><a class="sketch-link" href="https://brayvid.github.io/ray-diagram">Convex Lens Ray Diagram</a></td>
 			</tr>
 			<tr>
-				<td><a class="sketch-link" href="ball-collider">2D Collision Resolution</a></td>
+				<td><a class="sketch-link" href="https://brayvid.github.io/ball-collider">2D Collision Resolution</a></td>
 			</tr>
 		</table>
 	</section>
