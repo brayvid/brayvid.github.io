@@ -102,6 +102,17 @@
 		font-style: italic;
 	}
 
+
+	.dev-link{
+		font-style: italic;
+		background-color: red;
+	}
+	.dev-link:hover{
+		color: red;
+		background-color: black;
+		font-style: italic;
+	}
+
 	#secondary-list td:hover	{
 		font-weight: 600;
 		/*background-color: rgb(190,190,190);*/
@@ -163,10 +174,10 @@
 		padding-top:1.5em;
 	}
 	#name-link	{
-		color: #000;
-		font-size:1.2em;
-		text-transform: uppercase;
 		margin-top: 2em;
+	}
+	#name-link:hover{
+		text-decoration: underline;
 	}
 
 	#github-link	{
