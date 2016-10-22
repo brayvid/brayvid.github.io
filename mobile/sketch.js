@@ -42,12 +42,7 @@ function edgePoints(){
 }
 
 function centerPoint(){
-	d = dist(mouseX,mouseY,pos.x,pos.y);
-	if(d < 10){
-		fill(255);
-	}else{
-		fill(128);
-	}
+	
 	ellipse(pos.x,pos.y,20,20);
 }
 
@@ -62,3 +57,4 @@ function windowResized(){
 function mouseDragged(){
 	pos.set(mouseX,mouseY);
 }
+
