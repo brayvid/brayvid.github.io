@@ -105,12 +105,13 @@
 
 	.dev-link{
 		font-style: italic;
-		background-color: red;
+		background-color: black;
+		color: red;
 		padding: 3px;
 	}
 	.dev-link:hover{
-		color: red;
-		background-color: black;
+		color: black;
+		background-color: red;
 		font-style: italic;
 	}
 
