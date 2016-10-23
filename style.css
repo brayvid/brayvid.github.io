@@ -22,6 +22,7 @@
 		text-align: center;
 		font-family:"Times New Roman";
 		font-size: 2em;
+		background-color: #fefefe;
 	}
 
 	a	{
@@ -56,13 +57,15 @@
 		padding-top: 0.4em;
 		padding-bottom: 0.4em;
 		/*border-bottom: 1px solid black;*/
-		background-color: #C7C2D8;
+		/*background-color: #C7C2D8;*/
+		background-color: #000;
 	}
 
 	#title	{
 		
 		margin: 0 auto;
 		padding-top: none;
+		color: #fefefe;
 	}
 
 	#content {
@@ -83,7 +86,7 @@
 
 	#primary-list td {
 		height: 3em;
-		font-size: 0.8em;
+		font-size: 75%;
 	}
 
 	#primary-list td:hover	{
@@ -106,12 +109,15 @@
 	.dev-link{
 		font-style: italic;
 		background-color: black;
-		color: red;
-		padding: 3px;
+		color: #ff0066;
+		padding-left: 8px;
+		padding-right: 8px;
+		padding-top: 3px;
+		padding-bottom: 3px;
 	}
 	.dev-link:hover{
 		color: black;
-		background-color: red;
+		background-color: #ff0066;
 		font-style: italic;
 	}
 
@@ -194,6 +200,10 @@
 	#bottom-space	{
 		
 		padding-top:12em;
+	}
+
+	#footer {
+		padding-bottom: 2%;
 	}
 
 	#copy {
