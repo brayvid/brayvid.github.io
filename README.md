@@ -18,6 +18,6 @@
 			</tr>
 		</table>
 	</section>
-	<section><h5><a href="http://sciencesims.com">http://sciencesims.com</a></h5></section>
+	<section><h5>full catalog: <a href="http://sciencesims.com">http://sciencesims.com</a></h5></section>
 </body>
 </html>
