@@ -5,7 +5,8 @@
 			<span id="physical-principles">principles of physics</span>
 			<span id="in">in</span> 
 			<a id="p5-link" href="http://p5js.org">p5.js</a>
-		</h2>		
+		</h2>
+		<h5><a href="https://brayvid.github.io">https://brayvid.github.io</a></h5>	
 	</section>
 	<section id="content">
 		<table id="primary-list">
