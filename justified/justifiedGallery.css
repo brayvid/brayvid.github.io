@@ -44,7 +44,7 @@
   color: white;
   font-size: 18px;
   font-weight: 300;
-  font-family: sans-serif;
+  font-family: "Times New Roman";
 }
 .justified-gallery > a > .caption.caption-visible,
 .justified-gallery > div > .caption.caption-visible {
