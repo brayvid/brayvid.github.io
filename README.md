@@ -6,7 +6,7 @@
 			<span id="in">in</span> 
 			<a id="p5-link" href="http://p5js.org">p5.js</a>
 		</h2>
-		<h5><a href="https://brayvid.github.io">https://brayvid.github.io</a></h5>	
+		<h5>Link: <a href="https://brayvid.github.io">https://brayvid.github.io</a></h5>	
 	</section>
 	<section id="content">
 		<table id="primary-list">
@@ -18,6 +18,6 @@
 			</tr>
 		</table>
 	</section>
-	<section><h5>In collaboration with <a href="http://sciencesims.com">http://sciencesims.com</a></h5></section>
+	<section><h5>In collaboration with <a href="http://sciencesims.com">CCNY Science Sims</a></h5></section>
 </body>
 </html>
