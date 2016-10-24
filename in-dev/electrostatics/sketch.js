@@ -3,6 +3,7 @@ charges = [];
 function setup(){
 	createCanvas(windowWidth,windowHeight);
 	charges[0] = new Particle(createVector(width/2,height/2),30);
+	charges[1] = new Particle(createVector(width/4,height/4),-30);
 }
 
 
@@ -13,6 +14,10 @@ function draw(){
 			charges[i].display();
 		}
 	}
+	var arr = new Arrow(charges[0].position,charges[0].getForce(charges[1]));
+	arr.color = color(0);
+	arr.update();
+	arr.display();
 }
 
 
@@ -40,7 +45,7 @@ function Particle(p,c){
 		push();
 		fill(this.color);
 		noStroke();
-		ellipse(this.position.x,this.position.y,10,10);
+		ellipse(this.position.x,this.position.y,50,50);
 		pop();
 	}
 }
