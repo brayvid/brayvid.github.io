@@ -1,54 +1,70 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>p5 sims by github/brayvid</title>
+	<title>p5 sketches by github/brayvid</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<meta charset="utf-8" name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+	<meta charset="utf-8" name="viewport" sketch="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"
+		integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+		crossorigin="anonymous"></script>
+	<script src="justified/jquery.justifiedGallery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="justified/justifiedGallery.css">
 </head>
 <body>
 	<div id="container">
+
 		<section id="header">
 			<h2 id="title">
-				<!-- <span id="phys-demos">demonstrations of</span><br> --><span id="physical-principles">principles of physics</span><br>
+				<span id="physical-principles">principles of physics</span><br>
 				<span id="in">in</span> 
 				<a id="p5-link" href="http://p5js.org">p5.js</a>
 			</h2>
-			
-				<!-- <p id="name"><a id="name-link" href="http://bbr.nyc">blake rayvid</a></p> -->
 		</section>
+
 		<section id="content">
-		
-			<!-- <ul id="primary-list">
-				<li><a class="sketch-link" href="/swipe">2D Collision Resolution</a></li>
-				<li><a class="sketch-link" href="/optics">Convex Lens Ray Diagram</a></li>
-			</ul> -->
+			<div id="sketch-list">
+				<a class="sketch-link" href="https://ccny-physics-sims.github.io/sims/ray-diagram/">
+			        <img src="img/ray-screenshot.png"/>
+			        <div class="caption">
+				        <strong>Converging lens ray diagram</strong>
+				        <div>Published in the CCNY Science Sims catalog</div>
+				    
+    				</div>
+			    </a>
+			    <a class="sketch-link" href="ball-collider">
+			        <img src="img/ball-screenshot.png"/>
+			        <div class="caption">
+				        <strong>Circle-circle collision simulator</strong>
+				        <div>Demonstrates momentum conservation</div>
+    				</div>
+			    </a>
+			</div>
+		</section>
 
-			<table id="primary-list">
-				<tr>
-					<td><a class="sketch-link" href="ray-diagram">Convex Lens Ray Diagram</a></td>
-				</tr>
+		<section id="bottom-space">
+		</section>
 
+		<section id="footer">
+			<table id="footer-content">
 				<tr>
-					<td><a class="sketch-link" href="ball-collider">2D Collision Resolution</a></td>
-				</tr>
-				
+					<td class="footer-link"><a id="name-link" class="footer-link-inner" href="https://github.com/brayvid">github &#187; brayvid</a></td>
+					<td class="footer-link"><a id="dev-link" class="footer-link-inner" href="in-dev">in development</a></td>
+				</tr>	
 			</table>
-
-			<!-- <span id="list-separator"></span>
-			<ul id="secondary-list"><span id="practice-title">(Practice)</span>
-				<li><a class="sketch-link" href="/mover">Mover Object</a></li>
-				<li><a class="sketch-link" href="/walker">Random Walker</a></li>
-				<li><a class="sketch-link" href="/cannon">Parabolic Flight</a></li>
-				<li><a class="sketch-link" href="/comps">Vector Projection</a></li>
-				<li><a class="sketch-link" href="/random">Random Colors</a></li>
-			</ul> -->
-		
 		</section>
 
-		<section id="bottom-space"></section>
-		<section id="footer"><span id="copy">&copy;</span> <span id="year">2016 <a id="name-link" href="https://github.com/brayvid">Blake Rayvid</a><br><a class="dev-link" href="in-dev">in development</a></span>
-		</section>
 	</div>
-</body>
 
+	<script type="text/javascript">
+		$("#sketch-list").justifiedGallery({
+			rowHeight:260,
+			maxRowHeight: false,
+			captions: true,
+			border: -1,
+			margins: 40,
+			lastRow: "center"
+		});
+	</script>
+
+</body>
 </html>

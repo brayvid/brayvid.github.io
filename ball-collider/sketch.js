@@ -83,7 +83,7 @@ function setup(){
 					createVector(random(width/4,3*width/4),random(height/4,3*height/4)),  // position
 					createVector(random(-25,25),random(-25,25)), // velocity
 					createVector(random(-1,1),random(-1,1)), // acceleration
-					random(75,90),	// mass
+					random(height/20,height/18),	// mass
 					color(random(0,255),random(0,255),random(0,255),random(25,75))); // color
 	}
 }
