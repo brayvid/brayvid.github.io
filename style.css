@@ -8,11 +8,9 @@
 	}
 
 
-	*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
+	*,	*:before,	*:after {
+  		box-sizing: inherit;
+	}
 
 	body	{
 		padding: 0px;
@@ -66,14 +64,14 @@
 		padding-bottom: 0.6em;
 		/*border-bottom: 1px solid black;*/
 		/*background-color: #C7C2D8;*/
-		background-color: #000;
+		
 	}
 
 	#title	{
 		
 		margin: 0 auto;
 		padding-top: none;
-		color: #fefefe;
+		color: #000;
 	}
 
 	#by	{
@@ -127,21 +125,6 @@
 		padding-bottom: 10px;
 	}
 
-
-	.screenshot {
-		height: 42px;
-		width: 42px;
-
-	}
-
-	.screenshot #ball{
-		background-image: url(img/ball-screenshot.png);
-	}
-
-	.screenshot #ray{
-		background-image: url(img/ray-screenshot.png);
-	}
-
 	
 	@media only screen and (max-width: 400px) {
 		#phys-demos, #physical-principles {
@@ -162,20 +145,39 @@
 
 	#footer {
 		padding-bottom: 1.5em;
+		padding-top:1.5em;
 		position: absolute;
 		bottom: 0;
 		width: 100%;
+		
 	}
 
 	#footer-content {
-		font-size: 24px;
-		
 		display:inline-block;
+		font-size: 0.8em;
 	}
 
+/*	@media only screen and (max-width: 1000px) {
+		#footer-content {
+			font-size: 1.4em;
+		}
+	}
+
+	@media only screen and (min-width: 1000px) {
+		#footer-content {
+			font-size: 14px;
+		}
+	}*/
+
+
+
 	.footer-link {
-		width: 33.33%;
+		width: 25%;
+		font-style: italic;
 		
+	}
+	.footer-link:hover{
+		text-decoration: underline;
 	}
 
 	.footer-link-inner {
@@ -183,27 +185,6 @@
 		padding-bottom: 10px;
 		padding-left: 15px;
 		padding-right: 15px;
-	}
-
-	#name-link{
-		font-style: italic;
-		color: #000;
-		}
-	#name-link:hover{
-		color: #000;
-		font-style: italic;
-		text-decoration: underline;
-	}
-	#dev-link{
-		font-style: italic;
-	
-		color: #000;
-	
-	}
-	#dev-link:hover{
-		color: #000;
-		text-decoration: underline;
-		font-style: italic;
 	}
 
 
