@@ -6,7 +6,7 @@
 	<section>
 		<table>
 			<tr>
-				<td><a href="https://brayvid.github.io/ray-diagram">Convex lens ray diagram</a></td>
+				<td><a href="http://sciencesims.com/sims/ray-diagram">Convex lens ray diagram</a></td>
 			</tr>
 			<tr>
 				<td><a href="https://brayvid.github.io/ball-collider">Circle-circle collisions</a></td>
