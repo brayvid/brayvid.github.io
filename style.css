@@ -50,10 +50,6 @@ a	{
 	font-weight: 600;
 }
 
-.p5-link:hover{
-	text-decoration: underline;
-}
-
 #asterisk{
 	/* align star with bottom of line */
 	position: absolute;
@@ -92,7 +88,7 @@ a	{
 	display:inline-block;
 }
 
-#name-link:hover, #ccny-link:hover, #dev-link:hover{
+.footer-link:active{
 	text-decoration: underline;
 }
 
@@ -105,23 +101,6 @@ a	{
 /* 	Device-specific	*/
 
 
-@media only screen and (max-width: 400px) and (max-height: 240px){
-	#header {
-		line-height: 1em;
-	}
-
-	#physical-principles {
-		font-size: 0.7em;
-	}
-
-	#in{
-		font-size: 0.5em;
-	}
-
-	.p5-link {
-		font-size: 0.7em;
-	}
-}
 
 /* Smartphones (portrait and landscape) */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
@@ -234,26 +213,6 @@ a	{
 }
 
 
-@media only screen and (min-width : 500px){
-	#header {
-		padding-top: 1em;
-		padding-bottom: 0em;
-	}
-
-	#physical-principles {
-		font-size: 1.2em;
-	}
-
-	.p5-link {
-		font-size: 1.4em;
-	}
-
-
-	#content {
-		width: 75%;
-	}
-}
-
 /* Desktops and laptops */
 @media only screen and (min-width : 1224px) {
 	#header {
@@ -280,5 +239,43 @@ a	{
 
 	#footer-content {
 		font-size: 1.2em;
+	}
+}
+/* Misc small screens 1 */ 
+@media only screen and (max-width: 400px) and (max-height: 240px){
+	#header {
+		line-height: 1em;
+	}
+
+	#physical-principles {
+		font-size: 0.7em;
+	}
+
+	#in{
+		font-size: 0.5em;
+	}
+
+	.p5-link {
+		font-size: 0.7em;
+	}
+}
+/* Misc small screens 2	*/
+@media only screen and (min-width : 500px){
+	#header {
+		padding-top: 1em;
+		padding-bottom: 0em;
+	}
+
+	#physical-principles {
+		font-size: 1.2em;
+	}
+
+	.p5-link {
+		font-size: 1.4em;
+	}
+
+
+	#content {
+		width: 75%;
 	}
 }
