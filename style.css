@@ -45,10 +45,24 @@ a	{
 	text-transform: uppercase;
 }
 
-#p5-link	{
+.p5-link	{
 	color: #ff0066;
 	font-family: "Helvetica";
-	font-weight: 800;
+	font-weight: 600;
+}
+
+.p5-link:hover{
+	text-decoration: underline;
+}
+
+#asterisk{
+	position: absolute;
+	font-size: 0.8em;
+	 transform:  translate(-1px, 60%);
+	 -webkit-transform:  translate(-1px, 60%);
+	 -moz-transform: translate(-1px, 60%);
+	 -o-transform:  translate(-1px, 60%);
+	 -ms-transform:  translate(-1px, 60%);
 }
 
 #content {
@@ -78,6 +92,10 @@ a	{
 	display:inline-block;
 }
 
+#name-link:hover, #ccny-link:hover, #dev-link:hover{
+	text-decoration: underline;
+}
+
 .footer-link	{
 	width: 20%;
 	font-style: italic;
@@ -97,6 +115,10 @@ a	{
 
 	#footer {
 		padding-bottom: 1.5em;
+	}
+
+	#footer-content {
+		font-size: 1.3em;
 	}
 }
 
@@ -147,6 +169,10 @@ a	{
 		font-size: 1.2em;
 		margin-right: 5px;
 	}
+
+	#footer-content {
+		font-size: 1.1em;
+	}
 }
 
 /* iPads (landscape) ----------- */
@@ -161,7 +187,7 @@ a	{
 		font-size: 1.6em;
 	}
 
-	#p5-link {
+	.p5-link {
 		font-size: 1.6em;
 	}
 
@@ -182,7 +208,7 @@ a	{
 		font-size: 1.6em;
 	}
 
-	#p5-link {
+	.p5-link {
 		font-size: 1.6em;
 	}
 
@@ -203,7 +229,7 @@ a	{
 		font-size: 1.6em;
 	}
 
-	#p5-link {
+	.p5-link {
 		font-size: 1.6em;
 	}
 
@@ -230,12 +256,16 @@ a	{
 		margin-right: 5px;
 	}
 
-	#p5-link {
+	.p5-link {
 		font-size: 1.6em;
 	}
 
 	#content {
 		width: 50%;
+	}
+
+	#footer-content {
+		font-size: 1.2em;
 	}
 }
 
