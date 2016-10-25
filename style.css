@@ -4,11 +4,11 @@ html	{
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
-	background-color: #fff;
 	height: 100%;
 	box-sizing: border-box;
-	text-align: center;
+	background-color: #fff;
 	font-family:"Times New Roman";
+	text-align: center;
 }
 
 *,	*:before,	*:after {
@@ -25,9 +25,8 @@ body	{
 
 a	{
 	text-decoration: none;
-	color: black;
+	color: #000;
 }
-
 
 #container {
 	position:relative; /* needed for footer positioning*/
@@ -46,7 +45,7 @@ a	{
 }
 
 .p5-link	{
-	color: #ff0066;
+	color: #ff0066; /* p5 pink */
 	font-family: "Helvetica";
 	font-weight: 600;
 }
@@ -56,6 +55,7 @@ a	{
 }
 
 #asterisk{
+	/* align star with bottom of line */
 	position: absolute;
 	font-size: 0.8em;
 	 transform:  translate(-0.5px, 60%);
@@ -72,8 +72,8 @@ a	{
 .sketch-link	{
 	border-top: 1px solid #222;
 	border-right: 1px solid #222;
-	border-left: 1px solid black;
-	border-bottom: 1px solid black;
+	border-left: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 #bottom-space {
@@ -101,6 +101,10 @@ a	{
 	font-style: italic;
 }
 
+
+/* 	Device-specific	*/
+
+
 @media only screen and (max-width: 400px) and (max-height: 240px){
 	#header {
 		line-height: 1em;
@@ -119,9 +123,8 @@ a	{
 	}
 }
 
-/* Smartphones (portrait and landscape) ----------- */
+/* Smartphones (portrait and landscape) */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-/* Styles */
 	#header {
 		padding-top: 1.5em;
 		padding-bottom: 1.5em;
@@ -140,9 +143,8 @@ a	{
 	}
 }
 
-/* Smartphones (landscape) ----------- */
+/* Smartphones (landscape) */
 @media only screen and (min-width : 321px) {
-/* Styles */
 	#header {
 		padding-top: 2.5em;
 		padding-bottom: 1em;
@@ -161,9 +163,8 @@ a	{
 	}
 }
 
-/* Smartphones (portrait) ----------- */
+/* Smartphones (portrait) */
 @media only screen and (max-width : 375px) {
-/* Styles */
 	#header {
 		padding-top: 1.5em;
 		padding-bottom: 0em;
@@ -180,9 +181,8 @@ a	{
 	}
 }
 
-/* iPads (portrait and landscape) ----------- */
+/* iPads (portrait and landscape) */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
-/* Styles */
 	#in {
 		font-size: 1.2em;
 		margin-right: 5px;
@@ -193,9 +193,8 @@ a	{
 	}
 }
 
-/* iPads (landscape) ----------- */
+/* iPads (landscape) */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-/* Styles */
 	#header {
 		padding-top: 2em;
 		padding-bottom: 2em;
@@ -214,9 +213,8 @@ a	{
 	}
 }
 
-/* iPads (portrait) ----------- */
+/* iPads (portrait) */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-/* Styles */
 	#header {
 		padding-top: 3em;
 		padding-bottom: 2em;
@@ -237,7 +235,6 @@ a	{
 
 
 @media only screen and (min-width : 500px){
-/* Styles */
 	#header {
 		padding-top: 1em;
 		padding-bottom: 0em;
@@ -257,9 +254,8 @@ a	{
 	}
 }
 
-/* Desktops and laptops ----------- */
+/* Desktops and laptops */
 @media only screen and (min-width : 1224px) {
-/* Styles */
 	#header {
 		padding-top: 2.5em;
 		padding-bottom: 2.5em;
@@ -285,16 +281,4 @@ a	{
 	#footer-content {
 		font-size: 1.2em;
 	}
-}
-
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-/* Styles */
-	
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
-/* Styles */
-	
 }
