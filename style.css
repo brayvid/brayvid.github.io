@@ -58,11 +58,11 @@ a	{
 #asterisk{
 	position: absolute;
 	font-size: 0.8em;
-	 transform:  translate(-1px, 60%);
-	 -webkit-transform:  translate(-1px, 60%);
-	 -moz-transform: translate(-1px, 60%);
-	 -o-transform:  translate(-1px, 60%);
-	 -ms-transform:  translate(-1px, 60%);
+	 transform:  translate(-0.5px, 60%);
+	 -webkit-transform:  translate(-0.5px, 60%);
+	 -moz-transform: translate(-0.5px, 60%);
+	 -o-transform:  translate(-0.5px, 60%);
+	 -ms-transform:  translate(-0.5px, 60%);
 }
 
 #content {
@@ -99,6 +99,24 @@ a	{
 .footer-link	{
 	width: 20%;
 	font-style: italic;
+}
+
+@media only screen and (max-width: 400px) and (max-height: 240px){
+	#header {
+		line-height: 1em;
+	}
+
+	#physical-principles {
+		font-size: 0.7em;
+	}
+
+	#in{
+		font-size: 0.5em;
+	}
+
+	.p5-link {
+		font-size: 0.7em;
+	}
 }
 
 /* Smartphones (portrait and landscape) ----------- */
@@ -218,24 +236,24 @@ a	{
 }
 
 
-@media only screen and (min-width : 1024px){
+@media only screen and (min-width : 500px){
 /* Styles */
 	#header {
-		padding-top: 3em;
-		padding-bottom: 2em;
+		padding-top: 1em;
+		padding-bottom: 0em;
 	}
 
 	#physical-principles {
-		font-size: 1.6em;
+		font-size: 1.2em;
 	}
 
 	.p5-link {
-		font-size: 1.6em;
+		font-size: 1.4em;
 	}
 
 
 	#content {
-		width: 900px;
+		width: 75%;
 	}
 }
 
@@ -261,7 +279,7 @@ a	{
 	}
 
 	#content {
-		width: 50%;
+		width: 70%;
 	}
 
 	#footer-content {
