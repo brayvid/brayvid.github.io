@@ -1,212 +1,252 @@
-	html	{
-		margin: 0px;
-		padding: 0px;
-		border: 0px;
-		background-color: #fff;
-		height: 100%;
-  		box-sizing: border-box;
-	}
+/* All devices */
+
+html	{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	background-color: #fff;
+	height: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	font-family:"Times New Roman";
+}
+
+*,	*:before,	*:after {
+	box-sizing: inherit;
+}
+
+body	{
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	background-color: #fff;
+	height: 100%;
+}
+
+a	{
+	text-decoration: none;
+	color: black;
+}
 
 
-	*,	*:before,	*:after {
-  		box-sizing: inherit;
-	}
+#container {
+	position:relative; /* needed for footer positioning*/
+	height:auto !important; /* real browsers */
+	min-height:100%; /* real browsers */
+}
 
-	body	{
-		padding: 0px;
-		margin-left: 10px;
-		margin-right: 10px;
-		border: 0px;
-		text-align: center;
-		font-family:"Times New Roman";
-		font-size: 2em;
-		background-color: #fff;
-		height: 100%;
-	}
+#title	{
+	margin: 0 auto;
+	padding-top: none;
+	color: #000;
+}
 
+#physical-principles {
+	text-transform: uppercase;
+}
 
-	#container {
-		position:relative; /* needed for footer positioning*/
-		height:auto !important; /* real browsers */
-		min-height:100%; /* real browsers */
-	}
+#p5-link	{
+	color: #ff0066;
+	font-family: "Helvetica";
+	font-weight: 800;
+}
 
-	a	{
-		text-decoration: none;
-		color: black;
-	}
+#content {
+	margin: 0 auto;
+}
 
-	/*a:hover	{
-		text-decoration: underline;
-	}*/
+.sketch-link	{
+	border-top: 1px solid #222;
+	border-right: 1px solid #222;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+}
 
-	h2	{
+#bottom-space {
+	position: relative;
+	width: 100%;
+	min-height: 100px;
+}
 
-		text-decoration:none;
-	}
+#footer	{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
 
+#footer-content	{
+	display:inline-block;
+}
 
-	li	{
-		padding-top:0.5em;
-		padding-bottom:0.5em;
-	}
-	ul	{
+.footer-link	{
+	width: 20%;
+	font-style: italic;
+}
 
-		list-style: none;
-		/*margin-right: 50px;*/
-		padding: 50px;
-		text-transform: capitalize;
-
-	}
-
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+/* Styles */
 	#header {
-		padding-top: 0.4em;
-		padding-bottom: 0.6em;
-		/*border-bottom: 1px solid black;*/
-		/*background-color: #C7C2D8;*/
-		
+		padding-top: 1.5em;
+		padding-bottom: 1.5em;
 	}
 
-	#title	{
-		
-		margin: 0 auto;
-		padding-top: none;
-		color: #000;
+	#bottom-space {
+		height: 2em;
 	}
 
-	#by	{
-		font-size: 28px;
+	#footer {
+		padding-bottom: 1.5em;
+	}
+}
 
-	}
-	#in {
-		font-size: 0.7em;
-	}
-	#p5-link	{
-		color: #ff0066;
-		font-family: "Helvetica";
-		font-weight: 500;
-	}
-
-	#p5-link:hover{
-		font-weight: 800;
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width : 321px) {
+/* Styles */
+	#header {
+		padding-top: 2.5em;
+		padding-bottom: 1em;
 	}
 
 	#content {
-		max-width: 850px;
-		margin: 0 auto;
+		width: 90%;
 	}
 
-	/*@media only screen and (max-width: 400px) {
-		#primary-list	{
-			font-size: 1em;
-		}
-
-	}*/
-
-/*	#primary-list	{
-		
-		margin: 0 auto;
+	#bottom-space {
+		height: 2em;
 	}
 
-	#primary-list td {
-		height: 3em;
-		font-size: 75%;
-	}
-*/
-	#sketch-list {
-		font-size: 75%;
-	}
-
-	#sketch-list a:hover {
-		font-weight: 600;
-	}
-
-	.sketch-box {
-		padding-top: 10px;
-		padding-bottom: 10px;
-	}
-
-	
-	@media only screen and (max-width: 400px) {
-		#phys-demos, #physical-principles {
-			font-size: 10px;
-			text-transform: uppercase;
-			border-spacing: 0px;
-
-		}
-
-	}
-
-	#phys-demos, #physical-principles {
-			font-size: 32px;
-			text-transform: uppercase;
-			border-spacing: 0px;
-
-		}
-
-	#coming-soon{
-		font-size: 0.7em;
-	}
-	
 	#footer {
-		padding-bottom: 1.4em;
-		padding-top:1.3em;
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		border-top: 1px solid black;
-		
+		padding-bottom: 1.5em;
+	}
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 375px) {
+/* Styles */
+	#header {
+		padding-top: 1.5em;
+		padding-bottom: 0em;
+		width: 48%;
+		margin: 0 auto;
 	}
 
-	#footer-content {
-		display:inline-block;
-		font-size: 0.8em;
+	#bottom-space {
+		height: 6em;
 	}
 
-/*	@media only screen and (max-width: 1000px) {
-		#footer-content {
-			font-size: 1.4em;
-		}
+	#footer {
+		padding-bottom: 1.5em;
+	}
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+/* Styles */
+	#in {
+		font-size: 1.2em;
+		margin-right: 5px;
+	}
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+/* Styles */
+	#header {
+		padding-top: 2em;
+		padding-bottom: 2em;
 	}
 
-	@media only screen and (min-width: 1000px) {
-		#footer-content {
-			font-size: 14px;
-		}
-	}*/
-
-
-
-	.footer-link {
-		width: 25%;
-		font-style: italic;
-		
-	}
-	.footer-link:hover{
-		text-decoration: underline;
+	#physical-principles {
+		font-size: 1.6em;
 	}
 
-	.footer-link-inner {
-		padding-top: 10px;
-		padding-bottom: 10px;
-		padding-left: 15px;
-		padding-right: 15px;
+	#p5-link {
+		font-size: 1.6em;
+	}
+
+	#content {
+		max-width: 65%;
+	}
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+/* Styles */
+	#header {
+		padding-top: 3em;
+		padding-bottom: 2em;
+	}
+
+	#physical-principles {
+		font-size: 1.6em;
+	}
+
+	#p5-link {
+		font-size: 1.6em;
+	}
+
+	#content {
+		max-width: 75%;
+	}
+}
+
+
+@media only screen and (min-width : 1024px){
+/* Styles */
+	#header {
+		padding-top: 3em;
+		padding-bottom: 2em;
+	}
+
+	#physical-principles {
+		font-size: 1.6em;
+	}
+
+	#p5-link {
+		font-size: 1.6em;
 	}
 
 
-	#github-link	{
-		color: #000;
+	#content {
+		width: 900px;
+	}
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+/* Styles */
+	#header {
+		padding-top: 2.5em;
+		padding-bottom: 2.5em;
 	}
 
-	.sketch-link	{
-		border-top: 0.1em solid #222;
-		border-right: 0.1em solid #222;
-		border-left: 0.1em solid black;
-		border-bottom: 0.1em solid black;
+	#physical-principles {
+		font-size: 1.6em;
 	}
 
-	#bottom-space	{
-		padding-top:4em;
+	#in {
+		font-size: 1.3em;
+		margin-right: 5px;
 	}
 
+	#p5-link {
+		font-size: 1.6em;
+	}
 
+	#content {
+		width: 50%;
+	}
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+/* Styles */
+	
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+	
+}

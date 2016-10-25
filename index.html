@@ -3,11 +3,11 @@
 <head>
 	<title>p5 physics sims</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
-	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"
 		integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 		crossorigin="anonymous"></script>
-	<script src="justified/jquery.justifiedGallery.min.js" type="text/javascript"></script>
+	<script src="justified/jquery.justifiedGallery.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="justified/justifiedGallery.css">
 </head>
 <body>
@@ -46,8 +46,8 @@
 		<section id="footer">
 			<table id="footer-content">
 				<tr>
-					<td class="footer-link"><a id="ccny-link" href="http://sciencesims.com">science sims</a></td>
 					<td class="footer-link"><a id="name-link" class="footer-link-inner" href="https://github.com/brayvid">github</a></td>
+					<td class="footer-link"><a id="ccny-link" href="http://sciencesims.com">science sims</a></td>
 					<td class="footer-link"><a id="dev-link" class="footer-link-inner" href="in-dev">dev area</a></td>
 				</tr>	
 			</table>
@@ -57,11 +57,10 @@
 
 	<script type="text/javascript">
 		$("#sketch-list").justifiedGallery({
-			rowHeight:260,
-			maxRowHeight: false,
+			rowHeight:300,
 			captions: true,
 			border: -1,
-			margins: 40,
+			margins: 15,
 			lastRow: "center"
 		});
 	</script>

@@ -57,7 +57,7 @@ function setup(){
 	globalAccel = createVector(0,0);
 	collisionsOn = true;
 	wallDissipation = 1;
-	collisionDissipation = 1;
+	collisionDissipation = 0.998;
 
 	started = false;
 	// currentTime = millis();
@@ -99,7 +99,7 @@ function Sphere(p, v, a, m, c){
 	this.mass = m;
 	this.color = c;
 
-	this.momentum = p5.Vector.mult(this.velocity,this.mass);
+	this.momentum = p5.Vector.mult(this.velocity,this.mass); 
 	this.kineticEnergy = 0.5 * this.mass * Math.pow(p5.Vector.mag(this.velocity),2);
 
 	this.forceArrow = new Arrow(this.position,p5.Vector.add(this.position,this.appliedForce));
@@ -401,6 +401,8 @@ function draw(){
 								var newVelX2 = collisionDissipation*((spheres[j].velocity.x * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.x)) / (spheres[i].mass + spheres[j].mass));
 								var newVelY2 = collisionDissipation*((spheres[j].velocity.y * (spheres[j].mass - spheres[i].mass) + (2 * spheres[i].mass * spheres[i].velocity.y)) / (spheres[i].mass + spheres[j].mass));
 
+
+
 								// Update positions to prevent sticking
 								spheres[i].position.x = spheres[i].position.x + newVelX1;
 								spheres[j].position.x = spheres[j].position.x + newVelX2;
@@ -409,7 +411,11 @@ function draw(){
 								
 								// Update velocities with calculated ones
 								spheres[i].velocity.set(newVelX1,newVelY1);
+								spheres[i].momentum.set(p5.Vector.mult(spheres[i].velocity,spheres[i].mass));
+
 								spheres[j].velocity.set(newVelX2,newVelY2);
+								spheres[j].momentum.set(p5.Vector.mult(spheres[j].velocity,spheres[j].mass));
+
 
 								// // Draw collision points
 								// push();
@@ -490,8 +496,7 @@ function draw(){
 			totalP.set(0,0);
 			for(var i = 0; i < spheres.length; i++){
 				// totalP = p5.Vector.add(totalP,spheres[i].momentum);
-				totalP.x += spheres[i].momentum.x;
-				totalP.y += spheres[i].momentum.y;
+				totalP.add(spheres[i].momentum);
 			}
 
 			// Get time for intervals
