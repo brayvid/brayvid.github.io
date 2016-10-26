@@ -13,7 +13,7 @@
 			</tr>
 		</table>
 	</section>
-	<section>With guidance from <a href="http://sciencesims.com">CCNY Science Sims</a></h5>
+	<section>With guidance and support from <a href="http://sciencesims.com">CCNY Science Sims</a></h5>
 	</section>
 </body>
 </html>
