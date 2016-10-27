@@ -45,7 +45,7 @@ a	{
 }
 
 .p5-link	{
-	color: #ff0066; /* p5 pink */
+	color: rgb(240,27,91); /* p5 pink */
 	font-family: "Helvetica";
 	font-weight: 600;
 }
