@@ -8,10 +8,10 @@ var qora = 0;
 
 function preload() {
   var ansButton = select('#answer');
-  ansButton.mouseClicked(showAnswer);
+  ansButton.input(showAnswer);
 
   var nextButton = select('#next');
-  nextButton.mouseClicked(advance)
+  nextButton.input(advance)
 
   for(var i = 1; i < count+1; i++){
     prompts.push(new Array(loadImage("questions/"+i+".jpg"),loadImage("answers/"+i+".jpg")));
