@@ -1,6 +1,6 @@
 var prompts = [];
 var count = 9;
-var current = 0;
+var current = 1;
 var asked = [];
 var qora = 0;
 
@@ -15,6 +15,7 @@ function preload() {
 
   for(var i = 1; i < count+1; i++){
     prompts.push(new Array(loadImage("questions/"+i+".jpg"),loadImage("answers/"+i+".jpg")));
+    prompts = shuffle(prompts);
   }
 }
 
@@ -25,12 +26,12 @@ function setup(){
 
 
 function draw(){
-  // var current = getRandomIntInclusive(1,9);
+  // var current-1 = getRandomIntInclusive(1,9);
   background(255);
   if(qora === 0){
-    image(prompts[current][qora],0,0,width,prompts[current][qora].height*width/prompts[current][qora].width);
+    image(prompts[current-1][qora],0,0,width,prompts[current-1][qora].height*width/prompts[current-1][qora].width);
   }else{
-    image(prompts[current][qora],0,0,width,prompts[current][qora].height*width/prompts[current][qora].width);
+    image(prompts[current-1][qora],0,0,width,prompts[current-1][qora].height*width/prompts[current-1][qora].width);
   }
 
 }
@@ -45,7 +46,7 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function shuffle (array) {
+function shuffle(array) {
   var i = 0
     , j = 0
     , temp = null
@@ -69,7 +70,7 @@ function showAnswer(){
 
 
 function advance(){
-  if(current < count-1){
+  if(current-1 < count-1){
     current++;
     qora = 0;
   }
