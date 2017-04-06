@@ -1,5 +1,5 @@
 var prompts = [];
-var count = 9;
+var count = 15;
 var current = 1;
 var asked = [];
 var qora = 0;
@@ -7,7 +7,7 @@ var qora = 0;
 
 function preload() {
   for(var i = 1; i < count+1; i++){
-    prompts.push(new Array(loadImage("questions/"+i+".jpg"),loadImage("answers/"+i+".jpg")));
+    prompts.push(new Array(loadImage('questions/'+i+'.jpg'),loadImage('answers/'+i+'.jpg')));
     prompts = shuffle(prompts);
   }
 }
