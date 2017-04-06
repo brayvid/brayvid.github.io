@@ -17,7 +17,7 @@ function setup(){
   var ansButton = select('#answer');
   ansButton.mouseClicked(showAnswer);
   var nextButton = select('#next');
-  nextButton.mouseClicked(advance)
+  nextButton.mouseClicked(advance);
   frameRate(15);
 }
 
