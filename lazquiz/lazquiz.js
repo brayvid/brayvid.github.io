@@ -26,7 +26,6 @@ function setup(){
 
 
 function draw(){
-  // var current-1 = getRandomIntInclusive(1,9);
   background(255);
   if(qora === 0){
     image(prompts[current-1][qora],0,0,width,prompts[current-1][qora].height*width/prompts[current-1][qora].width);
@@ -40,24 +39,18 @@ function windowResized(){
   resizeCanvas(windowWidth,windowHeight);
 }
 
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function shuffle(array) {
+function shuffle(arr) {
   var i = 0
     , j = 0
     , temp = null
-
-  for (var i = array.length - 1; i > 0; i -= 1) {
+  for (var i = arr.length - 1; i > 0; i -= 1) {
     j = Math.floor(Math.random() * (i + 1))
-    temp = array[i]
-    array[i] = array[j]
-    array[j] = temp
+    temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
   }
-  return array;
+  return arr;
+  // https://www.frankmitchell.org/2015/01/fisher-yates/>
 }
 
 function showAnswer(){
@@ -74,4 +67,5 @@ function advance(){
     current++;
     qora = 0;
   }
+
 }
