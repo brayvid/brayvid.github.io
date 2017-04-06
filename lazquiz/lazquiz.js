@@ -23,10 +23,11 @@ function setup(){
 
 function draw(){
   background(255);
+  var ht = prompts[current-1][qora].height*width/prompts[current-1][qora].width;
   if(qora === 0){
-    image(prompts[current-1][qora],0,0,width,prompts[current-1][qora].height*width/prompts[current-1][qora].width);
+    image(prompts[current-1][qora],0,0,width,ht);
   }else{
-    image(prompts[current-1][qora],0,0,width,prompts[current-1][qora].height*width/prompts[current-1][qora].width);
+    image(prompts[current-1][qora],0,0,width,ht);
   }
 }
 
