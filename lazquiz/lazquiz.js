@@ -52,7 +52,11 @@ function showAnswer(){
 }
 
 function advance(){
-  if(current-1 < count-1){
+  if(current >= count){
+    prompts = shuffle(prompts);
+    qora=0;
+    current = 1;
+  }else if(current < count){
     current++;
     qora = 0;
   }
