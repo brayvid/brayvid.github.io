@@ -14,10 +14,10 @@ function preload() {
 
 function setup(){
   createCanvas(windowWidth,windowHeight);
-  var ansButton = select('#answer');
-  ansButton.mouseClicked(showAnswer);
-  var nextButton = select('#next');
-  nextButton.mouseClicked(advance);
+  // var ansButton = select('#answer');
+  // ansButton.mouseClicked(showAnswer);
+  // var nextButton = select('#next');
+  // nextButton.mouseClicked(advance);
   frameRate(15);
 }
 
@@ -29,6 +29,8 @@ function draw(){
   }else{
     image(prompts[current-1][qora],0,0,width,ht);
   }
+
+  drawButtons();
 }
 
 // https://www.frankmitchell.org/2015/01/fisher-yates/>
@@ -64,4 +66,29 @@ function advance(){
 
 function windowResized(){
   resizeCanvas(windowWidth,windowHeight);
+}
+
+function drawButtons(){
+  push();
+  fill(200);
+  rect(0,height-(height/6),width/2,height/6);
+  rect(width/2,height-(height/6),width/2,height/6);
+  pop();
+  push();
+  textAlign(CENTER);
+  textSize(20);
+  stroke(0);
+  text('Answer',width/4,height-(height/14));
+  text('Next',3*width/4,height-(height/14));
+  pop();
+ 
+}
+
+function touchStarted(){
+  if(mouseX<width/2 && mouseY>(height-(height/6))){
+    showAnswer();
+  }
+  if(mouseX>width/2 && mouseY>(height-(height/6))){
+    advance();
+  }
 }
