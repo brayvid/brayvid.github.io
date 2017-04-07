@@ -1,5 +1,5 @@
 var prompts = [];
-var count = 15;
+var count = 32;
 var current = 1;
 var asked = [];
 var qora = 0;
