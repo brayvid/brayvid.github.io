@@ -8,29 +8,34 @@
   <script type="text/javascript" src="lazquiz.js"></script>
   <style type="text/css">
     
-    body, canvas{
+    html, body, canvas{
       margin: 0px;
+    }
+
+    body{
+      display: flex;
+
+      /* This centers our sketch horizontally. */
+      justify-content: center;
+
+      /* This centers our sketch vertically. */
+      align-items: center;
     }
     .nav{
       position: absolute;
-      bottom: 2%;
+      bottom: 0px;
       width: 50%;
       height: 10%;
     }
-
     #answer {
-      left: 0;
+      left: 0px;
     }
-
     #next{
       left: 50%;
     }
+    
   </style>
 </head>
 <body>
-<!-- <button class="nav" id="answer">Answer</button>
-<button class="nav" id="next">Next</button> -->
-
-
 </body>
 </html>
