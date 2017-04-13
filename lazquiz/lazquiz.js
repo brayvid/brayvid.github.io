@@ -1,7 +1,5 @@
 // *Final exam not ready*
-// *Equations/add'l info not ready*
 
-// Structure: JPEG } p5.image }} Array }} exams
 var exams = {
   one: [],
   two: [],
