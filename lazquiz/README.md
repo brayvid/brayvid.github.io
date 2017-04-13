@@ -1,4 +1,4 @@
-Chemistry 10401 Exams - Interactive Prompt
+Chemistry 10401 Exams - Interactive Prompter
 
 [https://brayvid.github.io/lazquiz/](https://brayvid.github.io/lazquiz/)
 
