@@ -1,7 +1,7 @@
 // *Final exam not ready*
 // *Equations/add'l info not ready*
 
-// Structure: JPEG } p5.image }} Array }} Object-exams
+// Structure: JPEG } p5.image }} Array }} exams
 var exams = {
   one: [],
   two: [],
@@ -17,6 +17,8 @@ var qora = 0;
 
 //  Increments until reset or halt
 var currentQuestion = 1;
+
+var dataButton;
 
 function preload(){
   // Number of images per exam *hard-coded*
@@ -38,7 +40,6 @@ function preload(){
   // for (var i = 1; i<=finalExamLength; i++){
   //   exams.final.push([loadImage("final/questions/"+i+".jpg"),loadImage("final/answers/"+i+".jpg")]);
   // }
-
 
   // Combine all questions for final
   exams.final = exams.one.concat(exams.two,exams.three,exams.final);
@@ -68,6 +69,8 @@ function setup(){
   exams.two = shuffle(exams.two);
   exams.three = shuffle(exams.three);
   exams.final = shuffle(exams.final);
+
+  dataButton = select('#data-button');
 }
 
 function draw(){
@@ -93,8 +96,6 @@ function draw(){
   drawButtons();
 }
 
-
-
 function selectEvent(){
   var val = examChooser.value(); 
   if(val === "Exam 1"){
@@ -117,24 +118,22 @@ function selectEvent(){
   currentQuestion = 1;
 }
 
-
 function drawButtons(){
   buttonHeight = height/10;
   buttonWidth = width/2.5;
   push();
   strokeWeight(1);
   fill(200);
-  rect(0,height-buttonHeight-15,buttonWidth,buttonHeight-1);
-  rect(width-buttonWidth-1,height-buttonHeight-15,buttonWidth,buttonHeight-1);
+  rect(0,height-buttonHeight,buttonWidth,buttonHeight-1);
+  rect(width-buttonWidth-1,height-buttonHeight,buttonWidth,buttonHeight-1);
   pop();
   push();
   textAlign(CENTER);
   textSize(15);
-  text("Answer",buttonWidth/2,height-(buttonHeight/1.6));
-  text("Next",2*buttonWidth,height-(buttonHeight/1.6));
+  text("Answer",buttonWidth/2,height-(buttonHeight/2));
+  text("Next",2*buttonWidth,height-(buttonHeight/2));
   pop();
 }
-
 
 // Fisher-Yates Shuffle
 function shuffle(arr) {
@@ -149,26 +148,22 @@ function shuffle(arr) {
 }
 
 function touchStarted(){
-  if(mouseX < width/2 && mouseY > height-height/8){
-    toggleAnswer();
+  if(mouseX < width/2.5 && mouseX > 0 && mouseY > height-height/10 && mouseY < height){
+    if(qora === 0){
+      qora = 1;
+    }else{
+      qora = 0
+    }
   }
-
-  if(mouseX > width/2 && mouseY > height-height/8){
+  if(mouseX > width-width/2.5 && mouseX < width && mouseY > height-height/10 && mouseY < height){
     advance();
   }
 }
 
-function toggleAnswer(){
-  if(qora === 0){
-    qora = 1;
-  }else{
-    qora = 0
-  }
-}
-
-
 function advance(){
   var currentExamLength;
+
+  // Get the current exam length
   switch(activeExam){
     case 1:
       currentExamLength = exams.one.length;
@@ -182,6 +177,8 @@ function advance(){
     case 4:
       currentExamLength = exams.final.length;
   }
+
+  // Only advance if more questions are available
   if(currentQuestion < currentExamLength-1){
     currentQuestion++;
     qora = 0;
