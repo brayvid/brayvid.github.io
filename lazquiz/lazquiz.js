@@ -24,7 +24,7 @@ var leftButtonCenter;
 var rightButtonCenter;
 var buttonDims;
 
-var onLastQuestion;
+var finished;
 
 function preload(){
   // Number of images per exam *hard-coded*
@@ -87,7 +87,7 @@ function setup(){
 }
 
 function draw(){
-  if(onLastQuestion){
+  if(finished){
     background(0,220,0);
     push();
     noStroke();
@@ -150,7 +150,7 @@ function selectEvent(){
   }
   // Reset count
   currentQuestion = 1;
-  onLastQuestion = false;
+  finished = false;
 }
 
 function drawButtons(){
@@ -226,7 +226,7 @@ function advance(){
     currentQuestion++;
     qora = 0;
   }else{
-    onLastQuestion = true;
+    finished = true;
   }
 }
 
