@@ -24,6 +24,8 @@ var buttonDims;
 
 var finished;
 
+var chooserBox;
+
 function preload(){
   // Number of images per exam *hard-coded*
   var examOneLength = 15;
@@ -63,7 +65,9 @@ function setup(){
   rectMode(CENTER);
   imageMode(CENTER);
   textAlign(CENTER);
+  chooserBox = select('.sel','body');
   examChooser = createSelect();
+  chooserBox.child(examChooser);
   examChooser.changed(selectEvent);
   examChooser.position(20, 20);
   examChooser.option('Exam 1');
@@ -120,7 +124,7 @@ function draw(){
   drawButtons();
   push();
   textSize(12);
-  text("CHEM 104 LAZARIDIS EXAMS",width/2,25);
+  text("PROFESSOR LAZARIDIS' CHEM 104 EXAMS",width/2,25);
 }
 
 function selectEvent(){
