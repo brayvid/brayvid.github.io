@@ -31,7 +31,7 @@ function preload(){
   var examOneLength = 15;
   var examTwoLength = 17;
   var examThreeLength = 15;
-  var finalExamLength = 17;
+  var finalExamLength = 28;
 
   // Load carefully named and ordered JPEGs
   for (var i = 1; i<=examOneLength; i++){
@@ -43,12 +43,12 @@ function preload(){
   for (var i = 1; i<=examThreeLength; i++){
     exams.three.push([loadImage("three/questions/"+i+".jpg"),loadImage("three/answers/"+i+".jpg")]);
   }
-  // for (var i = 1; i<=finalExamLength; i++){
-  //   exams.final.push([loadImage("final/questions/"+i+".jpg"),loadImage("final/answers/"+i+".jpg")]);
-  // }
+  for (var i = 1; i<=finalExamLength; i++){
+    exams.final.push([loadImage("final/questions/"+i+".jpg"),loadImage("final/answers/"+i+".jpg")]);
+  }
 
   // Load data sheets *missing final*
-  for (var i = 1; i < 4; i++){
+  for (var i = 1; i <= 4; i++){
     data.push(loadImage("data/"+i+".jpg"));
   }
 
@@ -73,7 +73,7 @@ function setup(){
   examChooser.option('Exam 1');
   examChooser.option('Exam 2');
   examChooser.option('Exam 3');
-  // examChooser.option('Final');
+  examChooser.option('Final');
 
   // Fisher-Yates shuffle
   exams.one = shuffle(exams.one);
