@@ -1,5 +1,9 @@
-// *Final exam not ready*
+/*  Exam Question Prompter for Chemistry 10401 at CCNY using p5.js
+    (https://github.com/brayvid/brayvid.github.io/tree/master/lazquiz)
+    Author: Blake Rayvid (https://github.com/brayvid)
+    Questions by Professor Themis Lazaridis (http://www.sci.ccny.cuny.edu/~themis/) */
 
+// Stores images of questions and answers
 var exams = {
   one: [],
   two: [],
@@ -7,22 +11,25 @@ var exams = {
   final: []
 };
 
+
+// Stores images of exam data
 var data = [];
 
-//  Selected through drop-down (1, 2, 3 or 4)
+//  Selected through drop-down
 var activeExam = 1;
-
-//  Display question or answer (0, 1)
-var qora = 0;
 
 //  Increments until reset or halt
 var currentQuestion = 1;
 
+// Question or answer
+var qora = 0;
+
+var finished;
+
+// Button positions and size (p5 Vectors) 
 var leftButtonCenter;
 var rightButtonCenter;
 var buttonDims;
-
-var finished;
 
 var chooserBox;
 
@@ -53,7 +60,7 @@ function preload(){
   }
 
   // Combine all questions for final
-  exams.final = exams.one.concat(exams.two,exams.three,exams.final);
+  // exams.final = exams.one.concat(exams.two,exams.three,exams.final);
 }
 
 
@@ -74,8 +81,8 @@ function setup(){
   examChooser.option('Exam 2');
   examChooser.option('Exam 3');
   examChooser.option('Final');
+  // examChooser.option('All');
 
-  // Fisher-Yates shuffle
   exams.one = shuffle(exams.one);
   exams.two = shuffle(exams.two);
   exams.three = shuffle(exams.three);
@@ -114,17 +121,24 @@ function draw(){
       break;
     case 4:
       examWord = "final";
+      break;
+    case 5:
+    // Combined
   }
+
   var imgWidth = width/2;
   var imgHeight = exams[examWord][currentQuestion][qora].height * imgWidth / exams[examWord][currentQuestion][qora].width;
   image(exams[examWord][currentQuestion][qora],width/4+(.05*width),(height/2)-(0.1*height),imgWidth,imgHeight);
+
   var dataWidth = width/3;
   var dataHeight = data[activeExam-1].height * dataWidth / data[activeExam-1].width;
   image(data[activeExam-1],width-(dataWidth/2)-50,(height/2)-(0.1*height),dataWidth,dataHeight);
+
   drawButtons();
   push();
   textSize(12);
   text("PROFESSOR LAZARIDIS' CHEM 104 EXAMS",width/2,25);
+  pop();
 }
 
 function selectEvent(){
@@ -149,6 +163,10 @@ function selectEvent(){
       exams.final = shuffle(exams.final);
       qora = 0;
       activeExam = 4;
+      break;
+    case "All":
+      qora = 0;
+      // Combined
   }
   // Reset count
   currentQuestion = 1;
@@ -191,8 +209,10 @@ function touchStarted(){
   var rightButtonLeftBound = rightButtonCenter.x - buttonDims.x/2;
   var rightButtonRightBound = rightButtonCenter.x + buttonDims.x/2;
 
+  // True or false
   var insideLeftButton = mouseX > leftButtonLeftBound && mouseX < leftButtonRightBound && mouseY > topBound && mouseY < bottomBound;
   var insideRightButton = mouseX > rightButtonLeftBound && mouseX < rightButtonRightBound && mouseY > topBound && mouseY < bottomBound;
+ 
   if(insideLeftButton){
     if(qora === 0){
       qora = 1;
