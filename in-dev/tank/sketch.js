@@ -12,6 +12,7 @@ var poundsSaltInTank,
 
 var saltAmountHistory = [];
 
+
 function setup(){
   createCanvas(windowWidth,windowHeight);
   frameRate(60);
@@ -19,20 +20,21 @@ function setup(){
   textAlign(CENTER);
   textSize(24);
   fill(0);
-  
+
+  concentrationInSlider = createSlider(0,0.5,0,0.01);
+  concentrationInSlider.position(width/2-150,height-50);
+  concentrationInSlider.size(300);
 
   /* Edit to change scale */ 
-  maxTime = 1000;
-  maxSaltAmount = 25;
+  maxTime = 2000;
+  maxSaltAmount = 30;
 
-
-  /* Edit initial conditions */
+  
   poundsSaltInTank = 25;
-  concentrationIn = 0.1;
-  waterFlowRate = 0.25;
+  waterFlowRate = 0.2;
   tankVolume = 100;
 
-
+  concentrationIn = concentrationInSlider.value();
   timeCounter = 1;
   beginSwitch = 1;
   console.log("amt salt in tank: "+poundsSaltInTank);
@@ -42,8 +44,17 @@ function draw(){
 
   background(255);
 
-  text("Pounds of salt in tank vs. time",width/2,50);
+  text("Pounds of salt in " + tankVolume+" gal tank",width/2,50);
+  text(round(poundsSaltInTank,2) + " lbs",width/2,80);
 
+  if(timeCounter < maxTime/15){
+    text("Spacebar to pause", width/2,height/2);
+  }
+
+  push();
+  textSize(14);
+  text("Concentration of salt flowing in (0 - 0.5 lbs/gal)",width/2,height-20);
+  pop();
   if(beginSwitch==1){
     tick();
     timeCounter++;
@@ -53,18 +64,17 @@ function draw(){
   }
 
   for(var i = 0; i < saltAmountHistory.length;i++){
-      ellipse(map(saltAmountHistory[i].time,1,1000,1,width), height-map(saltAmountHistory[i].amount,0,25,0,height),2,2);
+      ellipse(map(saltAmountHistory[i].time,1,maxTime,1,width), height-map(saltAmountHistory[i].amount,0,maxSaltAmount,50,height),2,2);
     }
 
-  if(timeCounter >= 1000){
+  if(timeCounter >= maxTime){
     noLoop();
   }
 
 }
 
-
 function tick(){
-   saltRateIn = concentrationIn * waterFlowRate;
+   saltRateIn = concentrationInSlider.value() * waterFlowRate;
    saltRateOut = (poundsSaltInTank / tankVolume) * waterFlowRate;
    overallSaltRate = saltRateIn - saltRateOut;
    poundsSaltInTank+=overallSaltRate;
@@ -74,23 +84,15 @@ function tick(){
    });
 }
 
-
-function touchStarted(){
-  if(beginSwitch == 0){
+function keyTyped(){
+  if(keyCode == 32){
+    if(beginSwitch == 0){
     beginSwitch = 1;
   }else{
     beginSwitch = 0;
   }
+  }
 }
-
-
-// function touchStarted(){
-//   if(beginSwitch == 0){
-//     beginSwitch = 1;
-//   }else{
-//     beginSwitch = 0;
-//   }
-// }
 
 function widowResized(){
   resizeCanvas();
