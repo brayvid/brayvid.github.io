@@ -1,7 +1,5 @@
-var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, scaleSlider;
+var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider;
 var balances = [];
-
-var graph, timeScale;
 
 
 function setup() {
@@ -28,19 +26,6 @@ function setup() {
   annualDepositSlider.position(30,350);
   annualDepositSlider.input(updateAnnualDepositTitle);
 
-  scaleTitle = createElement('h3', 'Timescale: 50 years');
-  scaleTitle.position(width-200, 395);
-  scaleSlider = createSlider(20,80,50,5);
-  scaleSlider.size(200);
-  scaleSlider.position(width-220,380);
-  scaleSlider.input(updateScaleTitle);
-
-  graph = {
-    top: 20,
-    bottom: 375,
-    left: 350,
-    right: width
-  }
 
 
   newCurve();
@@ -48,37 +33,30 @@ function setup() {
 
 function draw(){
   background(255);
-  line(graph.left,0,graph.left,graph.bottom);
-  line(graph.left,graph.bottom,width,graph.bottom);
+  line(350,0,350,400);
+  line(350,400,width,400);
   push();
-  textAlign(RIGHT);
   textSize(14);
   textFont("Georgia");
-  text(round((balances.length)) + ' years',graph.right-5,graph.bottom-5);
-  text('$' + round(balances[balances.length-1]),graph.right-5,graph.top-8);
+  text(round((balances.length / 4)) + ' years',width-60,395);
+  text('$' + round(balances[balances.length-1]),355,15);
   pop();
-
-  var linePosition;
-  for(var i = 0; i < round(balances[balances.length-1]/1000); i++){
-    linePosition = 
-    line(graph.left,linePosition,graph.right,linePosition);
-  }
 
   push();
   noStroke();
   fill(50);
-  for(var i = 0; i < balances.length; i++){
-    if(i % 10 == 0){
+  for(var i = 0; i < balances.length; i+=4){
+    if(i % 40 == 0){
       push();
-      translate(map(i,0,scaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],graph.bottom,graph.top));
+      translate(map(i,0,400,350,width),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],400,0));
       fill(50);
       ellipse(0,0,8,8);
       textAlign(CENTER);
-      text(i + ' years',-10,-20);
+      text(i/4 + ' years',-10,-20);
       text('$'+round(balances[i]),-10,-10);
       pop();
     }else{
-      ellipse(map(i,0,scaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],graph.bottom,graph.top),4,4);
+      ellipse(map(i,0,400,350,width),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],400,0),4,4);
     }
   }
   pop();
@@ -88,12 +66,6 @@ function draw(){
 
 function windowResized(){
   resizeCanvas(windowWidth,windowHeight);
-  graph = {
-    top: 20,
-    bottom: 375,
-    left: 350,
-    right: width
-  }
 }
 
 function updateInitialAmountTitle(){
@@ -111,17 +83,12 @@ function updateAnnualDepositTitle(){
   newCurve();
 }
 
-function updateScaleTitle(){
-  scaleTitle.html('Timescale: '+scaleSlider.value() + ' years');
-  newCurve();
-}
-
 function newCurve(){
   balances = [];
   var tempBalance = 0;
   var year = 0;
-  for(var t = 0; t < scaleSlider.value(); t++){
-    year = t;
+  for(var t = 0; t < 400; t++){
+    year = t/4;
     tempBalance = ((Math.exp((interestRateSlider.value()/100)*year)*(initialAmountSlider.value()*(interestRateSlider.value()/100)+annualDepositSlider.value()))-annualDepositSlider.value())/(interestRateSlider.value()/100);
     balances.push(tempBalance);
   }
