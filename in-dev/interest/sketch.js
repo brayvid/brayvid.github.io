@@ -1,10 +1,12 @@
-var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, scaleSlider;
+var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, timeScaleTitle, timeScaleSlider, maxBalanceSlider, maxBalanceTitle;
+var autoScaleButton, maxBalance;
 var balances = [];
 
-var graph, timeScale;
+var graph;
 
 
 function setup() {
+
   createCanvas(windowWidth, windowHeight);
 
   initialAmountTitle = createElement('h2', 'Initial deposit: $1000');
@@ -28,58 +30,78 @@ function setup() {
   annualDepositSlider.position(30,350);
   annualDepositSlider.input(updateAnnualDepositTitle);
 
-  scaleTitle = createElement('h3', 'Timescale: 50 years');
-  scaleTitle.position(width-200, 395);
-  scaleSlider = createSlider(20,80,50,5);
-  scaleSlider.size(200);
-  scaleSlider.position(width-220,380);
-  scaleSlider.input(updateScaleTitle);
+  timeScaleTitle = createElement('h3', 'Timescale: 50 years');
+  timeScaleTitle.position(395, 100);
+  timeScaleSlider = createSlider(20,90,50,5);
+  timeScaleSlider.size(200);
+  timeScaleSlider.position(375,85);
+  timeScaleSlider.input(updatetimeScaleTitle);
+  maxBalance = 1000000;
+  autoScaleButton = createButton('Scale');
+  autoScaleButton.position(375,20);
+  autoScaleButton.size(100,40);
+  autoScaleButton.mousePressed(reScale);
+
+  // maxBalanceTitle = createElement('h3', 'Max balance: 5000000');
+  // maxBalanceTitle.position(400, 395);
+  // maxBalanceSlider = createSlider(100000,10000000,5000000,100000);
+  // maxBalanceSlider.size(200);
+  // maxBalanceSlider.position(400,380);
+  // maxBalanceSlider.input(updateMaxBalanceTitle);
+
 
   graph = {
     top: 20,
-    bottom: 375,
+    bottom: height-25,
     left: 350,
     right: width
   }
 
 
   newCurve();
+  textFont("Georgia");
 }
 
 function draw(){
+
   background(255);
   line(graph.left,0,graph.left,graph.bottom);
   line(graph.left,graph.bottom,width,graph.bottom);
   push();
   textAlign(RIGHT);
   textSize(14);
-  textFont("Georgia");
   text(round((balances.length)) + ' years',graph.right-5,graph.bottom-5);
-  text('$' + round(balances[balances.length-1]),graph.right-5,graph.top-8);
+  textSize(22);
+  text('End balance: $' + round(balances[balances.length-1]),(graph.left+graph.right)/2 + 100,graph.top+25);
   pop();
 
-  var linePosition;
-  for(var i = 0; i < round(balances[balances.length-1]/1000); i++){
-    linePosition = 
-    line(graph.left,linePosition,graph.right,linePosition);
-  }
 
   push();
   noStroke();
   fill(50);
+
   for(var i = 0; i < balances.length; i++){
-    if(i % 10 == 0){
+    if(i == 0){
       push();
-      translate(map(i,0,scaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],graph.bottom,graph.top));
+      translate(map(i,0,timeScaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),maxBalance,graph.bottom,graph.top));
       fill(50);
-      ellipse(0,0,8,8);
-      textAlign(CENTER);
-      text(i + ' years',-10,-20);
-      text('$'+round(balances[i]),-10,-10);
+      ellipse(0,0,4,4);
+      
       pop();
     }else{
-      ellipse(map(i,0,scaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),balances[balances.length-1],graph.bottom,graph.top),4,4);
-    }
+      if(i % 10 == 0){
+        push();
+        translate(map(i,0,timeScaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),maxBalance,graph.bottom,graph.top));
+        fill(50);
+        ellipse(0,0,8,8);
+        textAlign(CENTER);
+        text(i + ' years',-10,-20);
+        text('$'+round(balances[i]),-10,-10);
+        pop();
+      }else{
+        ellipse(map(i,0,timeScaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),maxBalance,graph.bottom,graph.top),4,4);
+      }
+    } 
   }
   pop();
 
@@ -90,7 +112,7 @@ function windowResized(){
   resizeCanvas(windowWidth,windowHeight);
   graph = {
     top: 20,
-    bottom: 375,
+    bottom: height-25,
     left: 350,
     right: width
   }
@@ -111,16 +133,24 @@ function updateAnnualDepositTitle(){
   newCurve();
 }
 
-function updateScaleTitle(){
-  scaleTitle.html('Timescale: '+scaleSlider.value() + ' years');
+function updatetimeScaleTitle(){
+  timeScaleTitle.html('Timescale: '+timeScaleSlider.value() + ' years');
   newCurve();
 }
+
+
+function reScale(){
+  maxBalance = balances[balances.length - 1];
+}
+// function updateMaxBalanceTitle(){
+//   maxBalanceTitle.html('Balance scale: $'+ maxBalanceSlider.value());
+// }
 
 function newCurve(){
   balances = [];
   var tempBalance = 0;
   var year = 0;
-  for(var t = 0; t < scaleSlider.value(); t++){
+  for(var t = 0; t < timeScaleSlider.value(); t++){
     year = t;
     tempBalance = ((Math.exp((interestRateSlider.value()/100)*year)*(initialAmountSlider.value()*(interestRateSlider.value()/100)+annualDepositSlider.value()))-annualDepositSlider.value())/(interestRateSlider.value()/100);
     balances.push(tempBalance);
