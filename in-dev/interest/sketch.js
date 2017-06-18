@@ -8,10 +8,11 @@ var graph;
 function setup() {
 
   createCanvas(windowWidth, windowHeight);
+  frameRate(60);
 
   initialAmountTitle = createElement('h2', 'Initial deposit: $1000');
   initialAmountTitle.position(30, 10);
-  initialAmountSlider = createSlider(0,5000,1000,500);
+  initialAmountSlider = createSlider(0,5000,1000,100);
   initialAmountSlider.size(300);
   initialAmountSlider.position(30,60);
   initialAmountSlider.input(updateInitialAmountTitle);
@@ -25,14 +26,14 @@ function setup() {
 
   annualDepositTitle = createElement('h2', 'Annual deposit: $1500');
   annualDepositTitle.position(30, 300);
-  annualDepositSlider = createSlider(0,5000,1500,500);
+  annualDepositSlider = createSlider(0,5000,1500,100);
   annualDepositSlider.size(300);
   annualDepositSlider.position(30,350);
   annualDepositSlider.input(updateAnnualDepositTitle);
 
   timeScaleTitle = createElement('h3', 'Timescale: 50 years');
   timeScaleTitle.position(395, 100);
-  timeScaleSlider = createSlider(20,90,50,5);
+  timeScaleSlider = createSlider(20,90,50,1);
   timeScaleSlider.size(200);
   timeScaleSlider.position(375,85);
   timeScaleSlider.input(updatetimeScaleTitle);
