@@ -1,9 +1,7 @@
-var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, timeScaleTitle, timeScaleSlider, maxBalanceSlider, maxBalanceTitle;
+var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, timeScaleTitle, timeScaleSlider;
 var autoScaleButton, maxBalance;
 var balances = [];
-
 var graph;
-
 
 function setup() {
 
