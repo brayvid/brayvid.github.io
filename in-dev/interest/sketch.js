@@ -1,13 +1,24 @@
-var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, timeScaleTitle, timeScaleSlider;
-var autoScaleButton, maxBalance;
+// HTML elements
+var initialAmountTitle, initialAmountSlider, interestRateTitle, interestRateSlider, annualDepositTitle, annualDepositSlider, timeScaleTitle, timeScaleSlider, autoScaleButton;
+
+// Stores balances for each timestep
 var balances = [];
+
+// Initial vertical scale of the graph
+var maxBalance  = 1000000;
+
+// Holds graph dimensions 
 var graph;
 
+// p5 function - runs once on start
 function setup() {
 
+  // 
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
+  textFont("Georgia");
 
+  // Set up HTML elements
   initialAmountTitle = createElement('h2', 'Initial deposit: $1000');
   initialAmountTitle.position(30, 10);
   initialAmountSlider = createSlider(0,5000,1000,100);
@@ -35,20 +46,13 @@ function setup() {
   timeScaleSlider.size(200);
   timeScaleSlider.position(375,85);
   timeScaleSlider.input(updatetimeScaleTitle);
-  maxBalance = 1000000;
+
   autoScaleButton = createButton('Scale');
   autoScaleButton.position(375,20);
   autoScaleButton.size(100,40);
   autoScaleButton.mousePressed(reScale);
 
-  // maxBalanceTitle = createElement('h3', 'Max balance: 5000000');
-  // maxBalanceTitle.position(400, 395);
-  // maxBalanceSlider = createSlider(100000,10000000,5000000,100000);
-  // maxBalanceSlider.size(200);
-  // maxBalanceSlider.position(400,380);
-  // maxBalanceSlider.input(updateMaxBalanceTitle);
-
-
+  // Graph size tied to window size
   graph = {
     top: 20,
     bottom: height-25,
@@ -56,16 +60,21 @@ function setup() {
     right: width
   }
 
-
+  // Calculate initial balances
   newCurve();
-  textFont("Georgia");
 }
 
+// p5 function - runs x times per second based on frameRate()
 function draw(){
 
+  // Wipe canvas
   background(255);
+
+  // Graph borders
   line(graph.left,0,graph.left,graph.bottom);
   line(graph.left,graph.bottom,width,graph.bottom);
+
+  // Graph labels
   push();
   textAlign(RIGHT);
   textSize(14);
@@ -74,26 +83,22 @@ function draw(){
   text('End balance: $' + round(balances[balances.length-1]),(graph.left+graph.right)/2 + 100,graph.top+25);
   pop();
 
-
+  // Draw circles at locations within the graph dimensions, mapped from the 'balances' data
   push();
   noStroke();
   fill(50);
-
+  textAlign(CENTER);
   for(var i = 0; i < balances.length; i++){
     if(i == 0){
       push();
       translate(map(i,0,timeScaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),maxBalance,graph.bottom,graph.top));
-      fill(50);
       ellipse(0,0,4,4);
-      
       pop();
     }else{
       if(i % 10 == 0){
         push();
         translate(map(i,0,timeScaleSlider.value(),graph.left,graph.right),map(balances[i],initialAmountSlider.value(),maxBalance,graph.bottom,graph.top));
-        fill(50);
         ellipse(0,0,8,8);
-        textAlign(CENTER);
         text(i + ' years',-10,-20);
         text('$'+round(balances[i]),-10,-10);
         pop();
@@ -103,20 +108,21 @@ function draw(){
     } 
   }
   pop();
-
 }
 
-
-function windowResized(){
-  resizeCanvas(windowWidth,windowHeight);
-  graph = {
-    top: 20,
-    bottom: height-25,
-    left: 350,
-    right: width
+// Calculate balances for each timestep and overwrite old balances array
+function newCurve(){
+  balances = [];
+  var tempBalance = 0;
+  var year = 0;
+  for(var t = 0; t < timeScaleSlider.value(); t++){
+    year = t;
+    tempBalance = ((Math.exp((interestRateSlider.value()/100)*year)*(initialAmountSlider.value()*(interestRateSlider.value()/100)+annualDepositSlider.value()))-annualDepositSlider.value())/(interestRateSlider.value()/100);
+    balances.push(tempBalance);
   }
 }
 
+// 'update' functions run whenever there is slider input
 function updateInitialAmountTitle(){
   initialAmountTitle.html('Initial deposit: $'+initialAmountSlider.value());
   newCurve();
@@ -137,21 +143,19 @@ function updatetimeScaleTitle(){
   newCurve();
 }
 
-
+// Make the final data point lie at the top right corner of the graph
 function reScale(){
   maxBalance = balances[balances.length - 1];
 }
-// function updateMaxBalanceTitle(){
-//   maxBalanceTitle.html('Balance scale: $'+ maxBalanceSlider.value());
-// }
 
-function newCurve(){
-  balances = [];
-  var tempBalance = 0;
-  var year = 0;
-  for(var t = 0; t < timeScaleSlider.value(); t++){
-    year = t;
-    tempBalance = ((Math.exp((interestRateSlider.value()/100)*year)*(initialAmountSlider.value()*(interestRateSlider.value()/100)+annualDepositSlider.value()))-annualDepositSlider.value())/(interestRateSlider.value()/100);
-    balances.push(tempBalance);
+
+// p5 function - adjust canvas size and graph size based on the window
+function windowResized(){
+  resizeCanvas(windowWidth,windowHeight);
+  graph = {
+    top: 20,
+    bottom: height-25,
+    left: 350,
+    right: width
   }
 }
