@@ -1,30 +1,47 @@
-var massSlider, frictionSlider, springSlider;
+var dampingSlider, dampingTitle, frictionSlider, springSlider;
 var histories, paused;
 var spring;
 var eqPos;
+var reset;
+var tempFrameCount;
 
 function preload(){
   spring = loadImage('spring.jpg');
 }
 
 function setup(){
+  tempFrameCount = 1;
   noLoop();
   createCanvas(3*windowWidth/4-25,windowHeight/2);
 
-  frameRate(26);
+  frameRate(30);
 
-  massSlider = createSlider(1,10,5,0.5);
-  massSlider.position(25,windowHeight/4+50);
-  massSlider.style('width', (windowWidth/4-50)+'px');
+  dampingSlider = createSlider(0.1,25,10,0.1);
+  dampingSlider.position(25,windowHeight/4+50);
+  dampingSlider.style('width', (windowWidth/4-50)+'px');
+  dampingSlider.input(function(){
+    tempFrameCount = frameCount;
+    histories = [];
+    reset = true;
+  });
   histories = [];
   paused = true;
+  reset = false;
   eqPos = createVector(0.045*width,0.5*height);
+  dampingTitle = createElement('h3','Damping Force');
+  dampingTitle.position(140,windowHeight/4+20);
 }
 
 
 
 function draw(){
-  var temp;
+  var disp;
+  if(reset){
+    disp = 12;
+    reset = false;
+    }else{
+      disp = displ();
+    }
   background(255);
   push();
   fill(255);
@@ -35,8 +52,7 @@ function draw(){
   push();
   imageMode(CORNER);
   fill(100);
-  temp = displ();
-  image(spring,eqPos.x-20,61,40,eqPos.y+temp-78);
+  image(spring,eqPos.x-20,61,40,eqPos.y+disp-78);
   pop();
 
   push();
@@ -48,7 +64,7 @@ function draw(){
   push();
   ellipseMode(CENTER);
   fill(100,100,255);
-  ellipse(eqPos.x,eqPos.y+temp,40);
+  ellipse(eqPos.x,eqPos.y+disp,40);
   pop();
 
   push();
@@ -62,18 +78,26 @@ function draw(){
 }
 
 function displ(){
-  var pos = 2*(height/6)*exp(-frameCount/16)*cos((frameCount/1.5));
+  var pos = 1.6*(height/6)*exp(-((frameCount - tempFrameCount))/(33-dampingSlider.value()))*cos(0.4*(frameCount - tempFrameCount));
   histories.push(pos);
   return pos;
 }
 function windowResized(){
-  resizeCanvas(windowWidth/2,windowHeight/2);
-  massSlider.position(25,windowHeight/4+50);
-  massSlider.style('width', (windowWidth/4-50)+'px');
+  resizeCanvas(3*windowWidth/4-25,windowHeight/2);
+  dampingSlider.position(25,windowHeight/4+50);
+  dampingTitle.position(140,windowHeight/4+20);
+  dampingSlider.style('width', (windowWidth/4-50)+'px');
   eqPos.set(0.1*width,0.5*height);
 }
 
 function keyPressed(){
+  if(keyCode == 82){
+    histories = [];
+    reset = true;
+    tempFrameCount = frameCount;
+    loop();
+    paused = false;
+  }
   if(keyCode == 32 && !paused){
     noLoop();
     paused = true;
@@ -82,3 +106,4 @@ function keyPressed(){
     paused = false;
   }
 }
+
