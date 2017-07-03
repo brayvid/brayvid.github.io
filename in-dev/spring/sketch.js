@@ -1,4 +1,4 @@
-var dampingSlider, dampingTitle, frictionSlider, springSlider;
+var dampingSlider, dampingTitle, frictionSlider, springSlider, mainTitle;
 var histories, paused;
 var spring;
 var eqPos;
@@ -6,7 +6,7 @@ var reset;
 var tempFrameCount;
 
 function preload(){
-  spring = loadImage('spring.jpg');
+  spring = loadImage('spring.png');
 }
 
 function setup(){
@@ -29,7 +29,9 @@ function setup(){
   reset = false;
   eqPos = createVector(0.045*width,0.5*height);
   dampingTitle = createElement('h3','Damping Force');
-  dampingTitle.position(140,windowHeight/4+20);
+  dampingTitle.position(width/8,windowHeight/4+20);
+  mainTitle = createElement('h1','Spacebar to run/pause, R to reset');
+  mainTitle.position(windowWidth/3.2,windowHeight/10);
 }
 
 
@@ -47,6 +49,11 @@ function draw(){
   fill(255);
   stroke(0);
   rect(0,0,width-1,height-1); // border
+  pop();
+
+  push();
+  stroke(255,0,0);
+  line(0,height/2,width,height/2);
   pop();
 
   push();
@@ -85,9 +92,10 @@ function displ(){
 function windowResized(){
   resizeCanvas(3*windowWidth/4-25,windowHeight/2);
   dampingSlider.position(25,windowHeight/4+50);
-  dampingTitle.position(140,windowHeight/4+20);
+  dampingTitle.position(width/8,windowHeight/4+20);
   dampingSlider.style('width', (windowWidth/4-50)+'px');
   eqPos.set(0.1*width,0.5*height);
+  mainTitle.position(windowWidth/3.2,windowHeight/10);
 }
 
 function keyPressed(){
