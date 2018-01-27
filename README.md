@@ -14,7 +14,5 @@
 			</tr>
 		</table>
 	</section>
-	<section>Built with support from <a href="http://sciencesims.com">CCNY Science Sims</a></h5>
-	</section>
 </body>
 </html>
