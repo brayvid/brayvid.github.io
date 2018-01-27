@@ -2,7 +2,7 @@
 <body>
 	<section>
 		<h2><span><a href="https://brayvid.github.io">brayvid.github.io</a></span></h2>
-		<h3><span>Scientific principles animated in </span><a href="http://p5js.org">p5.js</a></h2>
+		<h3><span>Science animated in </span><a href="http://p5js.org">p5.js</a></h2>
 	</section>
 	<section>
 		<table>
