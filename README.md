@@ -7,7 +7,7 @@
 	<section>
 		<table>
 			<tr>
-				<td><a href="optics">Convex lens ray diagram</a></td>
+				<td><a href="https://brayvid.github.io/optics">Convex lens ray diagram</a></td>
 			</tr>
 			<tr>
 				<td><a href="https://brayvid.github.io/ball-collider">Circle-circle collisions</a></td>
