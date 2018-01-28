@@ -24,8 +24,12 @@ body	{
 }
 
 a	{
-	text-decoration: none;
 	color: #000;
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration:underline;
 }
 
 #container {
@@ -38,6 +42,15 @@ a	{
 	margin: 0 auto;
 	padding-top: none;
 	color: #000;
+	font-size: 1.8em;
+}
+
+#title-line-break {
+	display: none;
+}
+
+#title-space {
+	display: inline;
 }
 
 h2 {
@@ -50,6 +63,11 @@ h2 {
 	font-family: "Helvetica";
 	font-weight: 600;
 }
+
+.p5-link:hover {
+	text-decoration: none;
+}
+
 
 #asterisk{
 	/* align star with bottom of line */
@@ -122,6 +140,15 @@ h2 {
 	.p5-link {
 		font-size: 0.7em;
 	}
+
+	#title-line-break {
+	display: inline;
+	}
+
+	#title-space {
+	display: none;
+	}
+
 	#footer-content{
 		font-size: 0.5em;
 	}
@@ -132,6 +159,14 @@ h2 {
 	#header {
 		padding-top: 1.5em;
 		padding-bottom: 1.5em;
+	}
+	
+	#title-line-break {
+	display: inline;
+	}
+
+	#title-space {
+	display: none;
 	}
 
 	#bottom-space {
@@ -153,7 +188,14 @@ h2 {
 		padding-top: 2.5em;
 		padding-bottom: 1em;
 	}
+	
+	#title-line-break {
+	display: none;
+	}
 
+	#title-space {
+	display: inline;
+	}
 
 	#content {
 		width: 90%;
@@ -168,7 +210,7 @@ h2 {
 	}
 
 	#footer-content{
-		font-size: 0.5em;
+		font-size: 1em;
 	}
 }
 
@@ -177,8 +219,16 @@ h2 {
 	#header {
 		padding-top: 1.5em;
 		padding-bottom: 0em;
-		width: 48%;
+		/*width: 48%;*/
 		margin: 0 auto;
+	}
+	
+	#title-line-break {
+	display: inline;
+	}
+
+	#title-space {
+	display: none;
 	}
 
 	#top-line{
@@ -212,6 +262,15 @@ h2 {
 		font-size: 0.5em;
 	}
 
+	#title-line-break {
+	display: none;
+	}
+
+	#title-space {
+	display: inline;
+	}
+
+
 
 }
 
@@ -233,6 +292,15 @@ h2 {
 	#content {
 		max-width: 65%;
 	}
+
+	#title-line-break {
+	display: none;
+	}
+
+	#title-space {
+	display: inline;
+	}
+
 }
 
 /* iPads (portrait) */
@@ -253,6 +321,15 @@ h2 {
 	#content {
 		max-width: 75%;
 	}
+	
+	#title-line-break {
+	display: none;
+	}
+
+	#title-space {
+	display: inline;
+	}
+
 }
 
 /* Desktops and laptops */
@@ -283,5 +360,14 @@ h2 {
 	#footer-content {
 		font-size: 1.2em;
 	}
+	
+	#title-line-break {
+	display: none;
+	}
+
+	#title-space {
+	display: inline;
+	}
+
 }
 
