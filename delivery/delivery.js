@@ -75,6 +75,7 @@ function removeField() {
 
 function compute() {
 
+    
     googleCallCounter = 0;
 
     $(window).scrollTop(0);
@@ -96,6 +97,8 @@ function compute() {
     if (orders.length == 0) {
         return;
     }
+
+    document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
 
     // Get X-Y LatLng coordinates from addresses
     coords = [];
