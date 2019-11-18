@@ -2,7 +2,7 @@
 // @author: https//github.com/brayvid
 
 
-var storeAddress = '116 Macdougal St';
+
 
 var defaultFields = 3;
 var currentFields = 0;
@@ -15,7 +15,8 @@ var numDrivers;
 var orders;
 var coords;
 
-var nyCoords = [40.730610, -73.935242];
+var storeCoords = [40.729670, -74.000450];
+var storeAddress = '116 Macdougal St';
 
 var googleCallCounter;
 class Order {
@@ -105,7 +106,7 @@ function compute() {
             // console.log(status);
             if (status == 'OK') {
                 // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
-                coords.push([Math.exp((results[0].geometry.location.lat() - nyCoords[0])), Math.exp((results[0].geometry.location.lng() - nyCoords[1]))])
+                coords.push([Math.exp((results[0].geometry.location.lat() - storeCoords[0])), Math.exp((results[0].geometry.location.lng() - storeCoords[1]))])
             } else {
                 alert('Geocode was not successful geocoding address "' + address + '" for the following reason: ' + status);
             }
