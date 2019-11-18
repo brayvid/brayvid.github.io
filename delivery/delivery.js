@@ -1,5 +1,6 @@
 // Fair division of orders to drivers
-// @author: https//github.com/brayvid
+// Author: https//github.com/brayvid
+// (c) 2019 Blake Rayvid. Licensed for non-commerical use only.
 
 
 
