@@ -17,6 +17,7 @@
     </script>
     <script src="kmeans.js"></script>
     <link rel="stylesheet" href="style.css">
+    <!-- <script src="test.js"></script> -->
     <script src="delivery.js"></script>
 </head>
 
@@ -32,11 +33,15 @@
 
     <div id="go" class="collapse">
 
-        Enter some orders, buddy.
+        
 
     </div>
     <div class="form-group col-md-4">
-        <label for="sel1">Drivers:</label>
+        <label for="sel1">
+
+            Drivers:
+
+        </label>
         <select class="form-control" id="sel1">
             <option>2</option>
             <option>3</option>
@@ -59,13 +64,7 @@
     </div>
 
 
-    <form id="fields">
-
-
-    </form>
-
-
-
+    <form id="fields"></form>
 
     <div class="buttonrow">
         <button class="btn btn-primary" onclick="compute()">
@@ -87,7 +86,9 @@
             addField();
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1DGqEQPnRtp4TTk6wMs9t44gUHQHbGjs&callback=googleReady" async defer></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1DGqEQPnRtp4TTk6wMs9t44gUHQHbGjs&callback=googleReady"
+        async defer></script>
 
 </body>
 

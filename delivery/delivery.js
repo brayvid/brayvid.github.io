@@ -1,33 +1,32 @@
 // Efficient division of orders to drivers
-// (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-// Author: <https//github.com/brayvid>
+// (c) 2019 Blake Rayvid. License is granted only for non-commerical use.
+// Author: https//github.com/brayvid
+
+var version = "1.0";
 
 var defaultFields = 3;
 var currentFields = 0;
 
-var geocoder;
-
-var data;
-
-var kmeanCount = 11;
+// Additional functionality
+// var geocoder;
+// var data;
+// var kmeanCount = 11;
+// var coords;
+// var indices;
+// var geocodeCounter;
+// var geocodingComplete = false;
+// var matrixComplete = false;
+// var filteredFinalGroups;
 
 var numDrivers;
 var orders;
-var coords;
 var addresses;
 var dMatrix;
-var indices;
 var groups;
 
-var storeCoords = [40.729670, -74.000450];
+// var storeCoords = [40.729670, -74.000450];
 var storeAddress = '116 Macdougal St';
 var cityState = "NY NY";
-
-var geocodeCounter;
-var geocodingComplete = false;
-var matrixComplete = false;
-
-var filteredFinalGroups;
 
 class Order {
     constructor(name, address) {
@@ -36,42 +35,8 @@ class Order {
     }
 }
 
-function addField() {
-    let i = currentFields;
-    let d = document.createElement("div");
-    d.setAttribute("class", "form-row");
-    d.setAttribute("id", "row" + (i + 1));
-    for (let j = 0; j < 2; j++) {
-        let din = document.createElement("div");
-        din.setAttribute("class", "col col-md-" + (4 * (j + 1)));
-        let inp = document.createElement("input");
-        inp.setAttribute("class", "form-control");
-        inp.setAttribute("type", "text");
-        if (j == 0) {
-            inp.setAttribute("placeholder", "Order ID");
-            inp.setAttribute("id", "n" + (i + 1));
-        } else {
-            inp.setAttribute("placeholder", "Address");
-            inp.setAttribute("id", "a" + (i + 1));
-        }
-        din.appendChild(inp);
-        d.appendChild(din)
-    }
-
-    document.getElementById("fields").appendChild(d);
-    currentFields++;
-}
-
-function removeField() {
-    if (currentFields > 1) {
-        let select = document.getElementById('fields');
-        select.removeChild(select.lastChild);
-        currentFields -= 1;
-    }
-}
-
 function compute() {
-    geocodeCounter = 0;
+    // geocodeCounter = 0;
 
     $(window).scrollTop(0);
 
@@ -82,129 +47,148 @@ function compute() {
     for (let i = 1; i < (currentFields + 1); i++) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
-        // let tTemp = document.getElementById("t" + i).value;
         if (nTemp.match(/\S/) && aTemp.match(/\S/)) {
             orders.push(new Order(nTemp, aTemp));
         }
     }
 
+    // Testing only
+    // for (let i = 0; i < testAddresses.length; i++) {
+    //     let nTemp = testNames[i];
+    //     let aTemp = testAddresses[i];
+    //     orders.push(new Order(nTemp, aTemp));
+    // }
+
     // Don't process when all empty
-    if (orders.length == 0) {
+    if (orders.length == 0 || orders.length == 1) {
+        document.getElementById("go").innerHTML = "Enter at least two orders.";
         return;
     }
 
-    document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
+    // document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
 
+    // // console.log("Address: " + orders[i].address);
+    // document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + (i + 1) * 10 + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
 
-    // Get LatLng coordinates from addresses
-    coords = [];
+    addresses = [storeAddress + " " + cityState];
     for (let i = 0; i < orders.length; i++) {
-        // console.log("Address: " + orders[i].address);
-        document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + (i + 1) * 10 + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
-        geocoder.geocode({
-            'address': orders[i].address
-        }, function (results, status) {
-            // console.log(status);
-            if (status == 'OK') {
-                // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
-                // coords.push([Math.exp((results[0].geometry.location.lat() - storeCoords[0])), Math.exp((results[0].geometry.location.lng() - storeCoords[1]))]);
-                coords.push([(results[0].geometry.location.lat() - storeCoords[0]), (results[0].geometry.location.lng() - storeCoords[1])]);
-
-            } else {
-                alert('Geocode was not successful geocoding address "' + address + '" for the following reason: ' + status);
-            }
-            geocodeCounter++;
-            if (geocodeCounter == orders.length) {
-                geocodingComplete = true;
-
-                // Get Distance Matrix from addresses
-                addresses = [storeAddress];
-                for (let i = 0; i < orders.length; i++) {
-                    addresses.push(orders[i].address + " " + cityState);
-                }
-                matrixService.getDistanceMatrix({
-                    origins: addresses,
-                    destinations: addresses,
-                    travelMode: 'BICYCLING',
-                    // unitSystem: google.maps.UnitSystem.IMPERIAL
-                }, function (response, status) {
-                    // console.log(status);
-                    if (status == 'OK') {
-                        // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
-                        dMatrix = response.rows;
-                        matrixComplete = true;
-                        analyzeResults();
-                    } else {
-                        alert('Distance Matrix call was not successful for the following reason: ' + status);
-                    }
-                });
-                // console.log(coords);
-            }
-        });
+        addresses.push(orders[i].address + " " + cityState);
+        document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow=' + 10 * (i + 1) + ' aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
     }
+
+    // For testing only
+    // for (let i = 0; i < testAddresses.length; i++) {
+    //     addresses.push(testAddresses[i] + " " + cityState);
+    //     document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + 10 * (i + 1) + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
+    // }
+
+    // Get distance matrix
+    matrixService.getDistanceMatrix({
+        origins: addresses,
+        destinations: addresses,
+        travelMode: 'BICYCLING',
+        // unitSystem: google.maps.UnitSystem.IMPERIAL
+    }, function (response, status) {
+        // console.log(status);
+        if (status == 'OK') {
+            // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
+            dMatrix = response.rows;
+            // console.log(dMatrix);
+            // matrixComplete = true;
+            analyzeResults();
+        } else {
+            alert('Distance Matrix call was not successful for the following reason: ' + status);
+        }
+    });
+
+    analyzeResults();
+
+    // // Get LatLng coordinates
+    // coords = [];
+    // for (let i = 0; i < orders.length; i++) {
+    //     geocoder.geocode({
+    //         'address': orders[i].address
+    //     }, function (results, status) {
+    //         // console.log(status);
+    //         if (status == 'OK') {
+    //             // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
+    //             // coords.push([Math.exp((results[0].geometry.location.lat() - storeCoords[0])), Math.exp((results[0].geometry.location.lng() - storeCoords[1]))]);
+    //             coords.push([(results[0].geometry.location.lat() - storeCoords[0]), (results[0].geometry.location.lng() - storeCoords[1])]);
+
+    //         } else {
+    //             alert('Geocode was not successful geocoding address "' + address + '" for the following reason: ' + status);
+    //         }
+    //         geocodeCounter++;
+    //         if (geocodeCounter == orders.length) {
+    //             geocodingComplete = true;
+    //             // console.log(coords);
+    //         }
+    //     });
+    // }
 }
 
 function analyzeResults() {
 
-    document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
+    // // Frequency rank k-mean clustering results
 
-    allKMeans = new Array(kmeanCount);
-    for (let i = 0; i < kmeanCount; i++) {
-        allKMeans[i] = new KMeans({
-            data: coords,
-            k: numDrivers
-        });
-    }
-
-    // console.log(coords);
-    // console.log("allKMeans.assignments:\n");
+    // allKMeans = new Array(kmeanCount);
     // for (let i = 0; i < kmeanCount; i++) {
-    //     console.log(allKMeans[i].assignments);
-
+    //     allKMeans[i] = new KMeans({
+    //         data: coords,
+    //         k: numDrivers
+    //     });
     // }
 
-    let uniques = [];
-    let freqs = [];
-    for (let i = 0; i < kmeanCount; i++) {
-        let activeArray = allKMeans[i].assignments;
-        let pos = uniques.indexOf(activeArray);
-        if (pos != -1) {
-            uniques[pos] = activeArray;
-            freqs[pos]++;
-        } else {
-            uniques.push(activeArray);
-            freqs.push(1);
-        }
-    }
+    // // console.log(coords);
+    // // console.log("allKMeans.assignments:\n");
+    // // for (let i = 0; i < kmeanCount; i++) {
+    // //     console.log(allKMeans[i].assignments);
 
-    let mostFrequentKmean;
-    let max = 0;
-    for (let i = 0; i < uniques.length; i++) {
-        if (freqs[i] >= max) {
-            max = freqs[i];
-            mostFrequentKmean = uniques[i];
-        }
-    }
+    // // }
 
-    console.log("mostFrequentKmean:\n");
-    console.log(mostFrequentKmean);
+    // let uniques = [];
+    // let freqs = [];
+    // for (let i = 0; i < kmeanCount; i++) {
+    //     let activeArray = allKMeans[i].assignments;
+    //     let pos = uniques.indexOf(activeArray);
+    //     if (pos != -1) {
+    //         uniques[pos] = activeArray;
+    //         freqs[pos]++;
+    //     } else {
+    //         uniques.push(activeArray);
+    //         freqs.push(1);
+    //     }
+    // }
+
+    // let mostFrequentKmean;
+    // let max = 0;
+    // for (let i = 0; i < uniques.length; i++) {
+    //     if (freqs[i] >= max) {
+    //         max = freqs[i];
+    //         mostFrequentKmean = uniques[i];
+    //     }
+    // }
+
+    // console.log("mostFrequentKmean:\n");
+    // console.log(mostFrequentKmean);
 
 
-    indices = [];
-    for (let i = 0; i < numDrivers; i++) {
-        indices[i] = [];
-        for (let j = 0; j < orders.length; j++) {
-            if (allKMeans[j].assignments[j] == i) {
-                indices[i].push(j);
-            }
-        }
-    }
+    // indices = [];
+    // for (let i = 0; i < numDrivers; i++) {
+    //     indices[i] = [];
+    //     for (let j = 0; j < orders.length; j++) {
+    //         if (allKMeans[j].assignments[j] == i) {
+    //             indices[i].push(j);
+    //         }
+    //     }
+    // }
 
     // console.log("indices:\n");
     // console.log(indices);
 
     let matrixTimes = [],
         averageTimes = [];
+
     for (let i = 0; i < orders.length + 1; i++) {
         matrixTimes.push([]);
         averageTimes.push([]);
@@ -216,8 +200,6 @@ function analyzeResults() {
 
     // console.log("matrixTimes:\n");
     // console.log(matrixTimes);
-
-    // let averageTimes = matrixTimes;
 
     for (let i = 0; i < matrixTimes.length; i++) {
         for (let j = 0; j < matrixTimes.length; j++) {
@@ -237,18 +219,18 @@ function analyzeResults() {
     let avgMax = 0;
     let bigNum = 999999999;
     let avgMin = bigNum;
-    let maxIndex;
-    let minIndex;
+    // let maxIndex;
+    // let minIndex;
 
     for (let i = 1; i < averageTimes.length; i++) {
         for (let j = 1; j < i; j++) {
             if (averageTimes[i][j] >= avgMax) {
                 avgMax = averageTimes[i][j];
-                maxIndex = [i, j];
+                // maxIndex = [i, j];
             }
             if (averageTimes[i][j] <= avgMin) {
                 avgMin = averageTimes[i][j];
-                minIndex = [i, j];
+                // minIndex = [i, j];
             }
         }
     }
@@ -261,15 +243,19 @@ function analyzeResults() {
 
     // Origin and destination are same group for element with minimum nonzero average time.
 
+
+
     let matrixGroupIndices = new Array(numDrivers);
     for (let i = 0; i < numDrivers; i++) {
         matrixGroupIndices[i] = -1;
     }
 
-    let matrixMidrange = (avgMax + avgMin) / 2;
+    // let matrixMidrange = (avgMax + avgMin) / 2;
+
+    let matrixMidrange = avgMin + (avgMax - avgMin) / numDrivers;
 
     if (orders.length == 1) {
-        matrixGroupIndices[getRandomChoice(numDrivers)] = 0;
+        matrixGroupIndices[randomChoice(numDrivers)] = 0;
     } else {
         groups = [];
         for (let i = 1; i < averageTimes.length; i++) {
@@ -309,7 +295,7 @@ function analyzeResults() {
             }
         }
 
-        for(let i = 0; i < groups.length; i++){
+        for (let i = 0; i < groups.length; i++) {
             groups[i].sort();
         }
 
@@ -352,6 +338,8 @@ function drawTable() {
     for (let i = 0; i < numDrivers; i++) {
         counter.push(0);
     }
+    document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
+
 
     // Table header
     document.getElementById("go").innerHTML = '<table class="table table-condensed"><tbody id="tablebody"></tbody></table>';
@@ -381,7 +369,8 @@ function drawTable() {
 function googleReady() {
     geocoder = new google.maps.Geocoder();
     matrixService = new google.maps.DistanceMatrixService();
-    console.log("Google Maps API ready");
+    console.log("Driver Order Assignment v" + version);
+    console.log("Google Maps JavaScript API ready.");
 }
 
 function arraysMatch(arr1, arr2) {
@@ -399,6 +388,40 @@ function arraysMatch(arr1, arr2) {
 
 }
 
-function getRandomChoice(a) {
+function randomChoice(a) {
     return Math.floor(Math.random() * (a + 1));
+}
+
+function addField() {
+    let i = currentFields;
+    let d = document.createElement("div");
+    d.setAttribute("class", "form-row");
+    d.setAttribute("id", "row" + (i + 1));
+    for (let j = 0; j < 2; j++) {
+        let din = document.createElement("div");
+        din.setAttribute("class", "col col-md-" + (4 * (j + 1)));
+        let inp = document.createElement("input");
+        inp.setAttribute("class", "form-control");
+        inp.setAttribute("type", "text");
+        if (j == 0) {
+            inp.setAttribute("placeholder", "Order ID");
+            inp.setAttribute("id", "n" + (i + 1));
+        } else {
+            inp.setAttribute("placeholder", "Address");
+            inp.setAttribute("id", "a" + (i + 1));
+        }
+        din.appendChild(inp);
+        d.appendChild(din)
+    }
+
+    document.getElementById("fields").appendChild(d);
+    currentFields++;
+}
+
+function removeField() {
+    if (currentFields > 1) {
+        let select = document.getElementById('fields');
+        select.removeChild(select.lastChild);
+        currentFields -= 1;
+    }
 }
