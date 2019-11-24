@@ -2,7 +2,7 @@
 // (c) 2019 Blake Rayvid. License is granted only for non-commerical use.
 // Author: https//github.com/brayvid
 
-var version = "1.0";
+var version = "1.1";
 
 var defaultFields = 3;
 var currentFields = 0;
@@ -76,7 +76,7 @@ function compute() {
         document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow=' + 10 * (i + 1) + ' aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
     }
 
-    // For testing only
+    // Testing only
     // for (let i = 0; i < testAddresses.length; i++) {
     //     addresses.push(testAddresses[i] + " " + cityState);
     //     document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + 10 * (i + 1) + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
@@ -101,7 +101,7 @@ function compute() {
         }
     });
 
-    analyzeResults();
+    // analyzeResults();
 
     // // Get LatLng coordinates
     // coords = [];
@@ -129,7 +129,9 @@ function compute() {
 
 function analyzeResults() {
 
-    // // Frequency rank k-mean clustering results
+    console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
+
+    // // Aggregate k-means clustering results
 
     // allKMeans = new Array(kmeanCount);
     // for (let i = 0; i < kmeanCount; i++) {
@@ -193,6 +195,7 @@ function analyzeResults() {
         matrixTimes.push([]);
         averageTimes.push([]);
         for (let j = 0; j < orders.length + 1; j++) {
+            // console.log("[" + i + ", " + j + "]");
             matrixTimes[i].push(dMatrix[i].elements[j].duration.value);
             averageTimes[i].push(0);
         }
@@ -211,105 +214,90 @@ function analyzeResults() {
         }
     }
 
-    console.log("averageTimes:\n");
-    console.log(averageTimes);
+    // console.log("averageTimes:\n");
+    // console.log(averageTimes);
 
-
-    // Determine global min and max
+    // Determine global min and max of AverageTimes elements
     let avgMax = 0;
     let bigNum = 999999999;
     let avgMin = bigNum;
-    // let maxIndex;
-    // let minIndex;
-
     for (let i = 1; i < averageTimes.length; i++) {
         for (let j = 1; j < i; j++) {
             if (averageTimes[i][j] >= avgMax) {
                 avgMax = averageTimes[i][j];
-                // maxIndex = [i, j];
             }
             if (averageTimes[i][j] <= avgMin) {
                 avgMin = averageTimes[i][j];
-                // minIndex = [i, j];
             }
         }
     }
 
-    // console.log("avgMax: " + avgMax);
-    // console.log("maxIndex: " + maxIndex);
-    // console.log("avgMin: " + avgMin);
-    // console.log("minIndex: " + minIndex);
-
-
-    // Origin and destination are same group for element with minimum nonzero average time.
-
-
-
-    let matrixGroupIndices = new Array(numDrivers);
-    for (let i = 0; i < numDrivers; i++) {
-        matrixGroupIndices[i] = -1;
-    }
-
-    // let matrixMidrange = (avgMax + avgMin) / 2;
-
-    let matrixMidrange = avgMin + (avgMax - avgMin) / numDrivers;
-
-    if (orders.length == 1) {
-        matrixGroupIndices[randomChoice(numDrivers)] = 0;
+    // Determine the maximum duration to consider two addresses in the same group
+    let matrixMidrange;
+    if (numDrivers == 2) {
+        matrixMidrange = avgMin + (avgMax - avgMin) / numDrivers;
     } else {
-        groups = [];
-        for (let i = 1; i < averageTimes.length; i++) {
-            for (let j = 1; j < i; j++) {
-                if (averageTimes[i][j] < matrixMidrange) {
-                    // Small time -> same group
-                    if (groups.length != 0) {
-                        for (let k = 0; k < groups.length; k++) {
-                            if (groups[k].includes(i) && groups[k].includes(j)) {
+        matrixMidrange = avgMin + (avgMax - avgMin) / 3;
 
-                            } else if (groups[k].includes(i)) {
-                                groups[k].push(j);
-                            } else if (groups[k].includes(j)) {
-                                groups[k].push(i);
-                            } else {
-                                groups.push([i, j]);
-                            }
+    }
+
+    // Go through comparison process to determine groups
+    groups = [];
+    for (let i = 1; i < averageTimes.length; i++) {
+        for (let j = 1; j < i; j++) {
+            if (averageTimes[i][j] < matrixMidrange) {
+                // Small time -> same group
+                if (groups.length != 0) {
+                    // not first pair checked
+                    for (let k = 0; k < groups.length; k++) {
+                        if (groups[k].includes(i) && groups[k].includes(j)) {
+                            // if both i and j are already in the group, do nothing
+                        } else if (groups[k].includes(i)) {
+                            groups[k].push(j);
+                        } else if (groups[k].includes(j)) {
+                            groups[k].push(i);
+                        } else {
+                            groups.push([i, j]);
                         }
-                    } else {
-                        groups.push([i, j]);
                     }
+                } else {
+                    // first pair checked
+                    groups.push([i, j]);
                 }
             }
-            // console.log("groups " + i + "\n");
-            // console.log(groups);
         }
-        // 
-        for (let i = 0; i < orders.length; i++) {
-            let contained = false;
-            for (let j = 0; j < groups.length; j++) {
-                if (groups[j].includes(i + 1)) {
-                    contained = true;
-                }
-            }
-            if (!contained) {
-                groups.push([i + 1]);
-            }
-        }
-
-        for (let i = 0; i < groups.length; i++) {
-            groups[i].sort();
-        }
-
-        // console.log("\n");
-        // console.log("groups:\n");
+        // console.log("groups " + i + "\n");
         // console.log(groups);
     }
+
+    // 
+    for (let i = 0; i < orders.length; i++) {
+        let contained = false;
+        for (let j = 0; j < groups.length; j++) {
+            if (groups[j].includes(i + 1)) {
+                contained = true;
+            }
+        }
+        if (!contained) {
+            groups.push([i + 1]);
+        }
+    }
+
+    // 
+    for (let i = 0; i < groups.length; i++) {
+        groups[i].sort();
+    }
+
+    // console.log("\n");
+    // console.log("groups:\n");
+    // console.log(groups);
 
     drawTable();
 }
 
 function drawTable() {
 
-    // Find max orders one driver is taking
+    // Find max orders per driver over all drivers
     let maxToOneDriver = 0;
     let ordersPerDriver = [];
     for (let i = 0; i < groups.length; i++) {
@@ -322,6 +310,7 @@ function drawTable() {
         ordersPerDriver.push(0);
     }
 
+    // For each table element, determine if text will be placed there
     let assignMap = [];
     for (let i = 0; i < maxToOneDriver; i++) {
         assignMap.push([]);
@@ -334,10 +323,12 @@ function drawTable() {
         }
     }
 
-    let counter = [];
-    for (let i = 0; i < numDrivers; i++) {
-        counter.push(0);
-    }
+    // 
+    // let counter = [];
+    // for (let i = 0; i < numDrivers; i++) {
+    //     counter.push(0);
+    // }
+
     document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
 
 
@@ -357,7 +348,7 @@ function drawTable() {
             let bodyData = document.createElement("TD");
             if (assignMap[i][j] == 1) {
                 let bodyText = document.createTextNode(orders[groups[j][i] - 1].name);
-                counter[j]++;
+                // counter[j]++;
                 bodyData.appendChild(bodyText);
             }
             bodyNode.appendChild(bodyData);
@@ -367,25 +358,23 @@ function drawTable() {
 }
 
 function googleReady() {
-    geocoder = new google.maps.Geocoder();
+    // geocoder = new google.maps.Geocoder();
     matrixService = new google.maps.DistanceMatrixService();
     console.log("Driver Order Assignment v" + version);
-    console.log("Google Maps JavaScript API ready.");
+    console.log("Distance Matrix service ready.");
 }
 
 function arraysMatch(arr1, arr2) {
-
     // Check if the arrays are the same length
     if (arr1.length !== arr2.length) return false;
 
     // Check if all items exist and are in the same order
-    for (var i = 0; i < arr1.length; i++) {
+    for (let i = 0; i < arr1.length; i++) {
         if (arr1[i] !== arr2[i]) return false;
     }
 
     // Otherwise, return true
     return true;
-
 }
 
 function randomChoice(a) {
@@ -410,6 +399,12 @@ function addField() {
             inp.setAttribute("placeholder", "Address");
             inp.setAttribute("id", "a" + (i + 1));
         }
+        inp.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+             event.preventDefault();
+             document.getElementById("assign").click();
+            }
+          });
         din.appendChild(inp);
         d.appendChild(din)
     }
