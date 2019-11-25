@@ -1,11 +1,11 @@
 /*  Title: Driver Order Assignment
-    Purpose: Assigns deliveries that are close together to the same driver if possible.
+    Purpose: Assign deliveries that are close together to the same driver if possible.
     Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = n*(n+1)/2 where n is # orders)
     Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
     Author: Blake Rayvid (https//github.com/brayvid)
 */
 
-var version = "1.2";
+var version = "0.2 (beta)";
 
 var defaultFields = 3;
 var currentFields = 0;
@@ -70,7 +70,7 @@ function compute() {
             // Report api usage
             console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
             // Proceed to next step
-            analyzeResults();
+            makeGroups();
         } else {
             document.getElementById("display").innerHTML = "Distance matrix call unsuccessful: " + status;
             return;
@@ -79,7 +79,7 @@ function compute() {
 }
 
 // Step 2 after button click
-function analyzeResults() {
+function makeGroups() {
 
     // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
     let matrixTimes = [],
@@ -178,11 +178,11 @@ function analyzeResults() {
     groups = shuffle(groups);
 
     // Proceed to next step
-    drawTable();
+    showTable();
 }
 
 // Step 3 after button click
-function drawTable() {
+function showTable() {
     // Find max orders per driver over all drivers, aka number of rows of table to generate
     let maxToOneDriver = 0;
     let ordersPerDriver = [];
@@ -242,7 +242,7 @@ function drawTable() {
 function googleReady() {
     // geocoder = new google.maps.Geocoder();
     matrixService = new google.maps.DistanceMatrixService();
-    console.log("Driver Order Assignment v" + version);
+    console.log("Delivery Assignment v" + version);
     console.log("Distance Matrix service ready.");
 }
 
@@ -282,7 +282,6 @@ function shuffle(arr) {
         arr[currentIndex] = arr[randomIndex];
         arr[randomIndex] = temporaryValue;
     }
-
     return arr;
 }
 
