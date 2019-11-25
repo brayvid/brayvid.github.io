@@ -1,17 +1,3 @@
-/* #go {
-    font-size: 160%;
-    text-align: center;
-    width: 100%;
-    height: 70px;
-    margin: 0 auto;
-    padding: 8px;
-    border: solid 3px black;
-    border-radius: 20px;
-    background-color: black;
-    color: white;
-} */
-
-
 .navbar {
     height: 80px;
 }
@@ -26,12 +12,11 @@
 }
 
 .fieldbuttonrow{
-    /* padding: 12px; */
     text-align: center;
 }
 
-#go {
-    padding: 12px;
+#display {
+    padding: 16px;
 }
 
 .btn {
@@ -40,4 +25,9 @@
 
 #tablebody {
     padding: 10px;
+}
+
+#assign {
+    background-color: #2d096b;
+    border-color: #2d096b;
 }

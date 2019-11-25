@@ -1,22 +1,14 @@
-// Efficient division of orders to drivers
-// (c) 2019 Blake Rayvid. License is granted only for non-commerical use.
-// Author: https//github.com/brayvid
+/*  Title: Driver Order Assignment
+    Purpose: Assigns deliveries that are close together to the same driver if possible.
+    Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = n*(n+1)/2 where n is # orders)
+    Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
+    Author: Blake Rayvid (https//github.com/brayvid)
+*/
 
-var version = "1.1";
+var version = "1.2";
 
 var defaultFields = 3;
 var currentFields = 0;
-
-// Additional functionality
-// var geocoder;
-// var data;
-// var kmeanCount = 11;
-// var coords;
-// var indices;
-// var geocodeCounter;
-// var geocodingComplete = false;
-// var matrixComplete = false;
-// var filteredFinalGroups;
 
 var numDrivers;
 var orders;
@@ -24,10 +16,11 @@ var addresses;
 var dMatrix;
 var groups;
 
-// var storeCoords = [40.729670, -74.000450];
+// Set for each store
 var storeAddress = '116 Macdougal St';
 var cityState = "NY NY";
 
+// Stores info from inputted orders
 class Order {
     constructor(name, address) {
         this.name = name;
@@ -35,15 +28,16 @@ class Order {
     }
 }
 
+// Step 1 after button clicked
 function compute() {
-    // geocodeCounter = 0;
-
+    // Make table visible
     $(window).scrollTop(0);
 
+    // get number of drivers from input
     numDrivers = document.getElementById("sel1").value;
 
+    // get order IDs and addresses from fields
     orders = [];
-
     for (let i = 1; i < (currentFields + 1); i++) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
@@ -52,158 +46,54 @@ function compute() {
         }
     }
 
-    // Testing only
-    // for (let i = 0; i < testAddresses.length; i++) {
-    //     let nTemp = testNames[i];
-    //     let aTemp = testAddresses[i];
-    //     orders.push(new Order(nTemp, aTemp));
-    // }
-
-    // Don't process when all empty
+    // Don't process when all fields are empty or only one order present
     if (orders.length == 0 || orders.length == 1) {
-        document.getElementById("go").innerHTML = "Enter at least two orders.";
+        document.getElementById("display").innerHTML = "Enter at least two orders.";
         return;
     }
 
-    // document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
-
-    // // console.log("Address: " + orders[i].address);
-    // document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + (i + 1) * 10 + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
-
+    // Extract all addresses into a single array (include store address as first entry) for Google
     addresses = [storeAddress + " " + cityState];
     for (let i = 0; i < orders.length; i++) {
         addresses.push(orders[i].address + " " + cityState);
-        document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow=' + 10 * (i + 1) + ' aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
     }
 
-    // Testing only
-    // for (let i = 0; i < testAddresses.length; i++) {
-    //     addresses.push(testAddresses[i] + " " + cityState);
-    //     document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + 10 * (i + 1) + '" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
-    // }
-
-    // Get distance matrix
+    // Get distance matrix (call Google Maps JS API - each table element is a call for billing purposes)
     matrixService.getDistanceMatrix({
+        // origins same as destinations
         origins: addresses,
         destinations: addresses,
         travelMode: 'BICYCLING',
-        // unitSystem: google.maps.UnitSystem.IMPERIAL
     }, function (response, status) {
-        // console.log(status);
         if (status == 'OK') {
-            // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
             dMatrix = response.rows;
-            // console.log(dMatrix);
-            // matrixComplete = true;
+            // Report api usage
+            console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
+            // Proceed to next step
             analyzeResults();
         } else {
-            alert('Distance Matrix call was not successful for the following reason: ' + status);
+            document.getElementById("display").innerHTML = "Distance matrix call unsuccessful: " + status;
+            return;
         }
     });
-
-    // analyzeResults();
-
-    // // Get LatLng coordinates
-    // coords = [];
-    // for (let i = 0; i < orders.length; i++) {
-    //     geocoder.geocode({
-    //         'address': orders[i].address
-    //     }, function (results, status) {
-    //         // console.log(status);
-    //         if (status == 'OK') {
-    //             // console.log("Lat: " + results[0].geometry.location.lat() + ", " + "Lng: " + results[0].geometry.location.lng());
-    //             // coords.push([Math.exp((results[0].geometry.location.lat() - storeCoords[0])), Math.exp((results[0].geometry.location.lng() - storeCoords[1]))]);
-    //             coords.push([(results[0].geometry.location.lat() - storeCoords[0]), (results[0].geometry.location.lng() - storeCoords[1])]);
-
-    //         } else {
-    //             alert('Geocode was not successful geocoding address "' + address + '" for the following reason: ' + status);
-    //         }
-    //         geocodeCounter++;
-    //         if (geocodeCounter == orders.length) {
-    //             geocodingComplete = true;
-    //             // console.log(coords);
-    //         }
-    //     });
-    // }
 }
 
+// Step 2 after button click
 function analyzeResults() {
 
-    console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
-
-    // // Aggregate k-means clustering results
-
-    // allKMeans = new Array(kmeanCount);
-    // for (let i = 0; i < kmeanCount; i++) {
-    //     allKMeans[i] = new KMeans({
-    //         data: coords,
-    //         k: numDrivers
-    //     });
-    // }
-
-    // // console.log(coords);
-    // // console.log("allKMeans.assignments:\n");
-    // // for (let i = 0; i < kmeanCount; i++) {
-    // //     console.log(allKMeans[i].assignments);
-
-    // // }
-
-    // let uniques = [];
-    // let freqs = [];
-    // for (let i = 0; i < kmeanCount; i++) {
-    //     let activeArray = allKMeans[i].assignments;
-    //     let pos = uniques.indexOf(activeArray);
-    //     if (pos != -1) {
-    //         uniques[pos] = activeArray;
-    //         freqs[pos]++;
-    //     } else {
-    //         uniques.push(activeArray);
-    //         freqs.push(1);
-    //     }
-    // }
-
-    // let mostFrequentKmean;
-    // let max = 0;
-    // for (let i = 0; i < uniques.length; i++) {
-    //     if (freqs[i] >= max) {
-    //         max = freqs[i];
-    //         mostFrequentKmean = uniques[i];
-    //     }
-    // }
-
-    // console.log("mostFrequentKmean:\n");
-    // console.log(mostFrequentKmean);
-
-
-    // indices = [];
-    // for (let i = 0; i < numDrivers; i++) {
-    //     indices[i] = [];
-    //     for (let j = 0; j < orders.length; j++) {
-    //         if (allKMeans[j].assignments[j] == i) {
-    //             indices[i].push(j);
-    //         }
-    //     }
-    // }
-
-    // console.log("indices:\n");
-    // console.log(indices);
-
+    // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
     let matrixTimes = [],
         averageTimes = [];
-
     for (let i = 0; i < orders.length + 1; i++) {
         matrixTimes.push([]);
         averageTimes.push([]);
         for (let j = 0; j < orders.length + 1; j++) {
-            // console.log("[" + i + ", " + j + "]");
             matrixTimes[i].push(dMatrix[i].elements[j].duration.value);
             averageTimes[i].push(0);
         }
     }
 
-    // console.log("matrixTimes:\n");
-    // console.log(matrixTimes);
-
+    // Average the forward and reverse times for each pair of addresses
     for (let i = 0; i < matrixTimes.length; i++) {
         for (let j = 0; j < matrixTimes.length; j++) {
             if (j < i) {
@@ -214,13 +104,10 @@ function analyzeResults() {
         }
     }
 
-    // console.log("averageTimes:\n");
-    // console.log(averageTimes);
-
-    // Determine global min and max of AverageTimes elements
+    // Find global min and max of all elements
     let avgMax = 0;
-    let bigNum = 999999999;
-    let avgMin = bigNum;
+    let avgMin = 999999999;
+
     for (let i = 1; i < averageTimes.length; i++) {
         for (let j = 1; j < i; j++) {
             if (averageTimes[i][j] >= avgMax) {
@@ -232,45 +119,44 @@ function analyzeResults() {
         }
     }
 
-    // Determine the maximum duration to consider two addresses in the same group
-    let matrixMidrange;
+    // Set maximum travel time to consider two addresses in the same group
+    let timeCutoff;
     if (numDrivers == 2) {
-        matrixMidrange = avgMin + (avgMax - avgMin) / numDrivers;
+        timeCutoff = avgMin + (avgMax - avgMin) / numDrivers;
     } else {
-        matrixMidrange = avgMin + (avgMax - avgMin) / 3;
+        timeCutoff = avgMin + (avgMax - avgMin) / 3;
 
     }
 
-    // Go through comparison process to determine groups
+    // Comparison process to determine groups
     groups = [];
+
     for (let i = 1; i < averageTimes.length; i++) {
         for (let j = 1; j < i; j++) {
-            if (averageTimes[i][j] < matrixMidrange) {
-                // Small time -> same group
-                if (groups.length != 0) {
-                    // not first pair checked
+            if (averageTimes[i][j] <= timeCutoff) { // Small time = same group
+                // (i,j) are in the same group
+
+                if (groups.length != 0) { // orders have been placed already
+
+                    // Check if either order in the pair has been placed already
                     for (let k = 0; k < groups.length; k++) {
-                        if (groups[k].includes(i) && groups[k].includes(j)) {
-                            // if both i and j are already in the group, do nothing
-                        } else if (groups[k].includes(i)) {
+                        if (groups[k].includes(i) && !groups[k].includes(j)) { // first present, add the second
                             groups[k].push(j);
-                        } else if (groups[k].includes(j)) {
+                        } else if (groups[k].includes(j) && !groups[k].includes(i)) { // second present, add the first
                             groups[k].push(i);
-                        } else {
+                        } else if (!(groups[k].includes(i) || groups[k].includes(j))) { // neither present
                             groups.push([i, j]);
                         }
                     }
-                } else {
-                    // first pair checked
+                } else { // this is the first pair and their time was under the cutoff so group these two 
                     groups.push([i, j]);
                 }
             }
+            // (i,j) in different groups, so do nothing else
         }
-        // console.log("groups " + i + "\n");
-        // console.log(groups);
     }
 
-    // 
+    // Check for missing orders
     for (let i = 0; i < orders.length; i++) {
         let contained = false;
         for (let j = 0; j < groups.length; j++) {
@@ -283,21 +169,21 @@ function analyzeResults() {
         }
     }
 
-    // 
+    // Sort each group so the lowest-numbered order is first
     for (let i = 0; i < groups.length; i++) {
         groups[i].sort();
     }
 
-    // console.log("\n");
-    // console.log("groups:\n");
-    // console.log(groups);
+    // Randomize which group is assigned to each driver.
+    groups = shuffle(groups);
 
+    // Proceed to next step
     drawTable();
 }
 
+// Step 3 after button click
 function drawTable() {
-
-    // Find max orders per driver over all drivers
+    // Find max orders per driver over all drivers, aka number of rows of table to generate
     let maxToOneDriver = 0;
     let ordersPerDriver = [];
     for (let i = 0; i < groups.length; i++) {
@@ -306,34 +192,28 @@ function drawTable() {
             maxToOneDriver = groups[i].length;
         }
     }
+
+    // If there are fewer groups than drivers, set order counts for extra drivers to 0
     for (let i = 0; i < numDrivers - ordersPerDriver.length; i++) {
         ordersPerDriver.push(0);
     }
 
-    // For each table element, determine if text will be placed there
+    // Determine if an order will be placed at each table entry
     let assignMap = [];
-    for (let i = 0; i < maxToOneDriver; i++) {
+    for (let i = 0; i < maxToOneDriver; i++) { // for each row
         assignMap.push([]);
-        for (j = 0; j < ordersPerDriver.length; j++) {
-            assignMap[i][j] = 0;
+        for (j = 0; j < numDrivers; j++) { // for each column
+            assignMap[i][j] = 0; // set to 0 to start
             if (ordersPerDriver[j] > 0) {
+                // The current driver has orders still to list
                 assignMap[i][j] = 1;
                 ordersPerDriver[j] -= 1;
             }
         }
     }
 
-    // 
-    // let counter = [];
-    // for (let i = 0; i < numDrivers; i++) {
-    //     counter.push(0);
-    // }
-
-    document.getElementById("go").innerHTML = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div></div>';
-
-
     // Table header
-    document.getElementById("go").innerHTML = '<table class="table table-condensed"><tbody id="tablebody"></tbody></table>';
+    document.getElementById("display").innerHTML = '<table class="table table-condensed"><tbody id="tablebody"></tbody></table>';
     for (let i = 0; i < numDrivers; i++) {
         let headNode = document.createElement("TH");
         let headText = document.createTextNode("Driver " + (i + 1));
@@ -355,8 +235,10 @@ function drawTable() {
         }
         document.getElementById("tablebody").appendChild(bodyNode);
     }
+    // Results have been printed to screen, process is complete.
 }
 
+// Called when google maps API loads 
 function googleReady() {
     // geocoder = new google.maps.Geocoder();
     matrixService = new google.maps.DistanceMatrixService();
@@ -364,6 +246,7 @@ function googleReady() {
     console.log("Distance Matrix service ready.");
 }
 
+// Check array equality
 function arraysMatch(arr1, arr2) {
     // Check if the arrays are the same length
     if (arr1.length !== arr2.length) return false;
@@ -377,10 +260,33 @@ function arraysMatch(arr1, arr2) {
     return true;
 }
 
+// Randomly choose an integer from 1 to a inclusively (picks an option)
 function randomChoice(a) {
     return Math.floor(Math.random() * (a + 1));
 }
 
+// Randomize an array
+function shuffle(arr) {
+    var currentIndex = arr.length,
+        temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // Swap it with the current element
+        temporaryValue = arr[currentIndex];
+        arr[currentIndex] = arr[randomIndex];
+        arr[randomIndex] = temporaryValue;
+    }
+
+    return arr;
+}
+
+// Add a new row of input fields on the bottom
 function addField() {
     let i = currentFields;
     let d = document.createElement("div");
@@ -399,12 +305,13 @@ function addField() {
             inp.setAttribute("placeholder", "Address");
             inp.setAttribute("id", "a" + (i + 1));
         }
-        inp.addEventListener("keyup", function(event) {
+        inp.addEventListener("keyup", function (event) {
+            // Enter key clicks assign button when any input field is selected
             if (event.keyCode === 13) {
-             event.preventDefault();
-             document.getElementById("assign").click();
+                event.preventDefault();
+                document.getElementById("assign").click();
             }
-          });
+        });
         din.appendChild(inp);
         d.appendChild(din)
     }
@@ -413,6 +320,7 @@ function addField() {
     currentFields++;
 }
 
+// Remove the last row of input fields
 function removeField() {
     if (currentFields > 1) {
         let select = document.getElementById('fields');

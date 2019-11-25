@@ -1,27 +1,46 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
 
-        Delivery Project
+        Driver Order Assignment
 
     </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS 4.3.1 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <!-- Local stylesheet CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- JQuery JS 3.3.1 -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
+
+    <!--Bootstrap JS 4.3.1-->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    <script src="kmeans.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <!-- <script src="test.js"></script> -->
+
+    <!-- Main functionality JS -->
     <script src="delivery.js"></script>
+
+    <!--Google Maps JS API-->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1DGqEQPnRtp4TTk6wMs9t44gUHQHbGjs&callback=googleReady"
+        async defer></script>
 </head>
 
 <body>
+
+    <!-- Title bar at top of page -->
     <nav class="navbar navbar-light bg-light">
         <h6 class="navbar-brand">
 
@@ -31,11 +50,11 @@
         <img class="logo" src="logo.png" width="60" height="60">
     </nav>
 
-    <div id="go" class="collapse">
-
-        
-
+    <!-- Area for displaying table or status string -->
+    <div id="display" class="collapse">
     </div>
+
+    <!-- Selection for number of available drivers -->
     <div class="form-group col-md-4">
         <label for="sel1">
 
@@ -49,47 +68,50 @@
             <option>5</option>
         </select>
     </div>
+
+    <!-- Buttons to add/remove field rows -->
     <div class="fieldbuttonrow">
-        <button class="btn btn-default" onclick="removeField()">
 
-            Remove row
-
-        </button>
         <button class="btn btn-default" onclick="addField()">
 
             Add row
 
         </button>
+        <button class="btn btn-default" onclick="removeField()">
 
+            Remove row
+
+        </button>
     </div>
 
+    <!-- Area for field grid -->
+    <form id="fields">
+    </form>
 
-    <form id="fields"></form>
-
+    <!-- Assign button -->
     <div class="buttonrow">
-        <button id ="assign" class="btn btn-primary" onclick="compute()">
+        <button id="assign" class="btn btn-primary" onclick="compute()">
 
             Assign
 
         </button>
     </div>
 
+    <!-- Make click of assign button show the display -->
     <script>
         $(document).ready(function () {
-            $(".btn-primary").click(function () {
+            $("#assign").click(function () {
                 $(".collapse").collapse('show');
             });
         });
     </script>
+
+    <!-- Start with the default number of field rows in delivery.js -->
     <script>
         for (let r = 0; r < defaultFields; r++) {
             addField();
         }
     </script>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1DGqEQPnRtp4TTk6wMs9t44gUHQHbGjs&callback=googleReady"
-        async defer></script>
-
 </body>
 
 </html>
