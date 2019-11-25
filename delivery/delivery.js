@@ -240,13 +240,12 @@ function showTable() {
 
 // Called when google maps API loads 
 function googleReady() {
-    // geocoder = new google.maps.Geocoder();
     matrixService = new google.maps.DistanceMatrixService();
     console.log("Delivery Assignment v" + version);
     console.log("Distance Matrix service ready.");
 }
 
-// Check array equality
+// Checks array equality
 function arraysMatch(arr1, arr2) {
     // Check if the arrays are the same length
     if (arr1.length !== arr2.length) return false;
@@ -260,12 +259,12 @@ function arraysMatch(arr1, arr2) {
     return true;
 }
 
-// Randomly choose an integer from 1 to a inclusively (picks an option)
+// Randomly chooses an integer from 1 to a inclusively (picks an option)
 function randomChoice(a) {
     return Math.floor(Math.random() * (a + 1));
 }
 
-// Randomize an array
+// Randomizes an array
 function shuffle(arr) {
     var currentIndex = arr.length,
         temporaryValue, randomIndex;
@@ -285,7 +284,7 @@ function shuffle(arr) {
     return arr;
 }
 
-// Add a new row of input fields on the bottom
+// Adds a new row of input fields on the bottom
 function addField() {
     let i = currentFields;
     let d = document.createElement("div");
@@ -319,7 +318,7 @@ function addField() {
     currentFields++;
 }
 
-// Remove the last row of input fields
+// Removes the last row of input fields
 function removeField() {
     if (currentFields > 1) {
         let select = document.getElementById('fields');
