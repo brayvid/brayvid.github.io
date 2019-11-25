@@ -1,9 +1,8 @@
-/*  Title: Driver Order Assignment
+/*  Title: Delivery Assignment
     Purpose: Assign deliveries that are close together to the same driver if possible.
     Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = n*(n+1)/2 where n is # orders)
     Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-    Author: Blake Rayvid (https//github.com/brayvid)
-*/
+    Author: Blake Rayvid (https//github.com/brayvid)    */
 
 var version = "0.2 (beta)";
 
@@ -13,14 +12,14 @@ var currentFields = 0;
 var numDrivers;
 var orders;
 var addresses;
-var dMatrix;
+var responses;
 var groups;
 
-// Set for each store
+// Per store location
 var storeAddress = '116 Macdougal St';
 var cityState = "NY NY";
 
-// Stores info from inputted orders
+// Holds info for each inputted order
 class Order {
     constructor(name, address) {
         this.name = name;
@@ -34,7 +33,7 @@ function compute() {
     $(window).scrollTop(0);
 
     // get number of drivers from input
-    numDrivers = document.getElementById("sel1").value;
+    numDrivers = document.getElementById("driverSelect").value;
 
     // get order IDs and addresses from fields
     orders = [];
@@ -66,7 +65,7 @@ function compute() {
         travelMode: 'BICYCLING',
     }, function (response, status) {
         if (status == 'OK') {
-            dMatrix = response.rows;
+            responses = response.rows;
             // Report api usage
             console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
             // Proceed to next step
@@ -88,7 +87,7 @@ function makeGroups() {
         matrixTimes.push([]);
         averageTimes.push([]);
         for (let j = 0; j < orders.length + 1; j++) {
-            matrixTimes[i].push(dMatrix[i].elements[j].duration.value);
+            matrixTimes[i].push(responses[i].elements[j].duration.value);
             averageTimes[i].push(0);
         }
     }
@@ -128,7 +127,7 @@ function makeGroups() {
 
     }
 
-    // Comparison process to determine groups
+    // Run comparison process to determine groups
     groups = [];
 
     for (let i = 1; i < averageTimes.length; i++) {
@@ -156,7 +155,7 @@ function makeGroups() {
         }
     }
 
-    // Check for missing orders
+    // Include any missing orders (i.e. ones not in any other group)
     for (let i = 0; i < orders.length; i++) {
         let contained = false;
         for (let j = 0; j < groups.length; j++) {
@@ -174,7 +173,7 @@ function makeGroups() {
         groups[i].sort();
     }
 
-    // Randomize which group is assigned to each driver.
+    // Randomize which group is assigned to which driver.
     groups = shuffle(groups);
 
     // Proceed to next step
@@ -213,7 +212,7 @@ function showTable() {
     }
 
     // Table header
-    document.getElementById("display").innerHTML = '<table class="table table-condensed"><tbody id="tablebody"></tbody></table>';
+    document.getElementById("display").innerHTML = '<table id="displayTable" class="table table-condensed"><tbody id="tablebody"></tbody></table>';
     for (let i = 0; i < numDrivers; i++) {
         let headNode = document.createElement("TH");
         let headText = document.createTextNode("Driver " + (i + 1));
