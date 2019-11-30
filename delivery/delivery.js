@@ -1,19 +1,28 @@
-/*  Title: Delivery Assignment
+/*  Title: Delivery Assignment System   
     Purpose: Assign deliveries that are close together to the same driver if possible.
-    Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = n*(n+1)/2 where n is # orders)
-    Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-    Author: Blake Rayvid (https//github.com/brayvid)    */
+    Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = (n+1)^2 where n is # orders)
+    Usage policy: (c)2019 Blake Rayvid. License is granted for non-commerical use only at this time.
+    Author: Blake Rayvid (https//github.com/brayvid)    
+    
+    Issues:
+    - What's the best way to determine if two orders are in the same group?
+    - What should happen if there are more natural groups than drivers?
+    - How to determine and handle out-of-range orders?
+    */
 
-var version = "0.2 (beta)";
+var version = "0.3 (beta)";
 
-var defaultFields = 3;
-var currentFields = 0;
+var defaultFields = 3,
+    currentFields = 0;
 
-var numDrivers;
-var orders;
-var addresses;
-var responses;
-var groups;
+var numDrivers,
+    orders,
+    addresses,
+    responses,
+    averageTimes,
+    groups;
+
+var matrixService;
 
 // Per store location
 var storeAddress = '116 Macdougal St';
@@ -29,7 +38,7 @@ class Order {
 
 // Step 1 after button clicked
 function compute() {
-    // Make table visible
+    // Make table area visible
     $(window).scrollTop(0);
 
     // get number of drivers from input
@@ -81,8 +90,9 @@ function compute() {
 function makeGroups() {
 
     // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
-    let matrixTimes = [],
-        averageTimes = [];
+    let matrixTimes = [];
+
+    averageTimes = [];
     for (let i = 0; i < orders.length + 1; i++) {
         matrixTimes.push([]);
         averageTimes.push([]);
@@ -118,7 +128,8 @@ function makeGroups() {
         }
     }
 
-    // Set maximum travel time to consider two addresses in the same group
+
+    // Set maximum time to consider two addresses in the same group (problem #1)
     let timeCutoff;
     if (numDrivers == 2) {
         timeCutoff = avgMin + (avgMax - avgMin) / numDrivers;
@@ -127,12 +138,13 @@ function makeGroups() {
 
     }
 
-    // Run comparison process to determine groups
-    groups = [];
 
+    // Run comparison process to determine groups (problem #2)
+    groups = [];
     for (let i = 1; i < averageTimes.length; i++) {
         for (let j = 1; j < i; j++) {
-            if (averageTimes[i][j] <= timeCutoff) { // Small time = same group
+            let diff = averageTimes[i][j] - timeCutoff;
+            if (diff <= 0) { // Small time = same group
                 // (i,j) are in the same group
 
                 if (groups.length != 0) { // orders have been placed already
@@ -155,7 +167,7 @@ function makeGroups() {
         }
     }
 
-    // Include any missing orders (i.e. ones not in any other group)
+    // Include any missing orders (i.e. ones not in any other group), each as a new group (needed because of problems #1,2)
     for (let i = 0; i < orders.length; i++) {
         let contained = false;
         for (let j = 0; j < groups.length; j++) {
@@ -167,6 +179,55 @@ function makeGroups() {
             groups.push([i + 1]);
         }
     }
+
+    // Remove duplicate groups (needed because of problems #1,2)
+    for (let i = 0; i < groups.length - 1; i++) {
+        for (let j = i + 1; j < groups.length; j++) {
+            if (arraysMatch(groups[i], groups[j])) {
+                groups.splice(j, 1);
+            }
+        }
+    }
+
+    // Check average distance between each group and the other groups
+    let distBtwnGroups = new Array(groups.length);
+    for (let i = 0; i < distBtwnGroups.length; i++) {
+        distBtwnGroups[i] = new Array(groups.length);
+    }
+
+    for (let i = 0; i < groups.length - 1; i++) {
+        for (let j = i + 1; j < groups.length; j++) {
+            let tot = 0;
+            for (let k = 0; k < groups[i].length; k++) {
+                for (let l = 0; l < groups[j].length; l++) {
+                    let rowIndex = groups[i][k];
+                    let colIndex = groups[j][l];
+                    if (rowIndex < colIndex) {
+                        let temp = rowIndex;
+                        rowIndex = colIndex;
+                        colIndex = temp;
+                    }
+                    tot += averageTimes[rowIndex][colIndex];
+                }
+            }
+            distBtwnGroups[j][i] = tot / (groups[i].length + groups[j].length);
+        }
+    }
+
+    // If necessary, consolidate groups (merge the closest groups) until groups.length <= numDrivers
+    // let groupsOver = groups.length - numDrivers;
+    // let minDist = 9999999999;
+    // let included = [];
+    // while (groupsOver > 0) {
+    //     // go through matrix, find smallest not yet grouped
+    //     for (let i = 1; i < distBtwnGroups.length; i++) {
+    //         for (let j = 0; j < i; j++) {
+    //             if (distBtwnGroups[i][j] < minDist && included.includes(i)) {
+    //                 minDist = distBtwnGroups[i][j];
+    //             }
+    //         }
+    //     }
+    // }
 
     // Sort each group so the lowest-numbered order is first
     for (let i = 0; i < groups.length; i++) {
@@ -235,13 +296,14 @@ function showTable() {
         document.getElementById("tablebody").appendChild(bodyNode);
     }
     // Results have been printed to screen, process is complete.
+
 }
 
 // Called when google maps API loads 
 function googleReady() {
     matrixService = new google.maps.DistanceMatrixService();
-    console.log("Delivery Assignment v" + version);
-    console.log("Distance Matrix service ready.");
+    console.log("Delivery Assignment version " + version);
+    console.log("Distance matrix service ready.");
 }
 
 // Checks array equality

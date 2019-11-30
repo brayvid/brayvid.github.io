@@ -1,3 +1,10 @@
+<!-- Title: Delivery Assignment System   
+    Purpose: Assign deliveries that are close together to the same driver if possible.
+    Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = (n+1)^2 where n is # orders)
+    Usage policy: (c)2019 Blake Rayvid. License is granted for non-commerical use only at this time.
+    Author: Blake Rayvid (https//github.com/brayvid)    
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,13 +41,12 @@
 
     <!--Google Maps JS API-->
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1DGqEQPnRtp4TTk6wMs9t44gUHQHbGjs&callback=googleReady"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwBBZnhL74H2NDxpcK6KT2eWLm9ZaATcw&callback=googleReady"
         async defer></script>
 </head>
 
 <body>
-
-    <!-- Title bar at top of page -->
+    <!-- Title bar -->
     <nav class="navbar navbar-light bg-light">
         <h6 class="navbar-brand">
 
@@ -96,8 +102,8 @@
 
         </button>
     </div>
-
-    <!-- Make click of assign button show the display -->
+    
+    <!-- Make clicking assign button show display -->
     <script>
         $(document).ready(function () {
             $("#assign").click(function () {
