@@ -1,7 +1,7 @@
 /*  Title: Delivery Assignment System   
-    Purpose: Assign deliveries that are close together to the same driver if possible.
+    Purpose: Assigns deliveries that are close together to the same driver if possible.
     Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = (n+1)^2 where n is # orders)
-    Usage policy: (c)2019 Blake Rayvid. License is granted for non-commerical use only at this time.
+    Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
     Author: Blake Rayvid (https//github.com/brayvid)    
     
     Issues:
@@ -10,23 +10,22 @@
     - How to determine and handle out-of-range orders?
     */
 
-var version = "0.3 (beta)";
+var version = "0.3 (beta)",
 
-var defaultFields = 3,
-    currentFields = 0;
+    defaultFields = 3,
+    currentFields = 0,
 
-var numDrivers,
+    numDrivers,
     orders,
     addresses,
     responses,
     averageTimes,
-    groups;
+    groups,
 
-var matrixService;
+    matrixService,
 
-// Per store location
-var storeAddress = '116 Macdougal St';
-var cityState = "NY NY";
+    storeAddress = '116 Macdougal St',
+    cityState = "NY NY";
 
 // Holds info for each inputted order
 class Order {
@@ -189,32 +188,32 @@ function makeGroups() {
         }
     }
 
-    // Check average distance between each group and the other groups
-    let distBtwnGroups = new Array(groups.length);
-    for (let i = 0; i < distBtwnGroups.length; i++) {
-        distBtwnGroups[i] = new Array(groups.length);
-    }
-
-    for (let i = 0; i < groups.length - 1; i++) {
-        for (let j = i + 1; j < groups.length; j++) {
-            let tot = 0;
-            for (let k = 0; k < groups[i].length; k++) {
-                for (let l = 0; l < groups[j].length; l++) {
-                    let rowIndex = groups[i][k];
-                    let colIndex = groups[j][l];
-                    if (rowIndex < colIndex) {
-                        let temp = rowIndex;
-                        rowIndex = colIndex;
-                        colIndex = temp;
-                    }
-                    tot += averageTimes[rowIndex][colIndex];
-                }
-            }
-            distBtwnGroups[j][i] = tot / (groups[i].length + groups[j].length);
-        }
-    }
-
-    // If necessary, consolidate groups (merge the closest groups) until groups.length <= numDrivers
+    // // Check average distance between each group and the other groups
+    // let distBtwnGroups = new Array(groups.length);
+    // for (let i = 0; i < distBtwnGroups.length; i++) {
+    //     distBtwnGroups[i] = new Array(groups.length);
+    // }
+    //
+    // for (let i = 0; i < groups.length - 1; i++) {
+    //     for (let j = i + 1; j < groups.length; j++) {
+    //         let tot = 0;
+    //         for (let k = 0; k < groups[i].length; k++) {
+    //             for (let l = 0; l < groups[j].length; l++) {
+    //                 let rowIndex = groups[i][k];
+    //                 let colIndex = groups[j][l];
+    //                 if (rowIndex < colIndex) {
+    //                     let temp = rowIndex;
+    //                     rowIndex = colIndex;
+    //                     colIndex = temp;
+    //                 }
+    //                 tot += averageTimes[rowIndex][colIndex];
+    //             }
+    //         }
+    //         distBtwnGroups[j][i] = tot / (groups[i].length + groups[j].length);
+    //     }
+    // }
+    //
+    // // If necessary, consolidate groups (merge the closest groups) until groups.length <= numDrivers
     // let groupsOver = groups.length - numDrivers;
     // let minDist = 9999999999;
     // let included = [];
