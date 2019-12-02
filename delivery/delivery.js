@@ -5,12 +5,12 @@
     Author: Blake Rayvid (https//github.com/brayvid)    
     
     Issues:
-    - What's the best way to determine if two orders are in the same group?
-    - What should happen if there are more natural groups than drivers?
     - How to determine and handle out-of-range orders?
+    - Clustering algorithm sometimes separates orders which should be together to accomodate all drivers.
+    - Does not try to divide tips or distance traveled evenly between drivers.
     */
 
-var version = "0.3 (beta)",
+var version = "0.4 (beta)",
 
     defaultFields = 3,
     currentFields = 0,
@@ -112,121 +112,50 @@ function makeGroups() {
         }
     }
 
-    // Find global min and max of all elements
-    let avgMax = 0;
-    let avgMin = 999999999;
-
-    for (let i = 1; i < averageTimes.length; i++) {
-        for (let j = 1; j < i; j++) {
-            if (averageTimes[i][j] >= avgMax) {
-                avgMax = averageTimes[i][j];
-            }
-            if (averageTimes[i][j] <= avgMin) {
-                avgMin = averageTimes[i][j];
-            }
-        }
+    // Hierarchical agglomerative clustering
+    let activeSet = [];
+    let tree = [];
+    for (let i = 0; i < orders.length; i++) {
+        activeSet.push([i + 1]);
     }
+  
+    while (activeSet.length > numDrivers) {
 
+        let minDist = 999999999,
+            closestGroup1, closestGroup2,
+            group1Index, group2Index; // for argmin
+        // compare distance between each group in activeSet
 
-    // Set maximum time to consider two addresses in the same group (problem #1)
-    let timeCutoff;
-    if (numDrivers == 2) {
-        timeCutoff = avgMin + (avgMax - avgMin) / numDrivers;
-    } else {
-        timeCutoff = avgMin + (avgMax - avgMin) / 3;
-
-    }
-
-
-    // Run comparison process to determine groups (problem #2)
-    groups = [];
-    for (let i = 1; i < averageTimes.length; i++) {
-        for (let j = 1; j < i; j++) {
-            let diff = averageTimes[i][j] - timeCutoff;
-            if (diff <= 0) { // Small time = same group
-                // (i,j) are in the same group
-
-                if (groups.length != 0) { // orders have been placed already
-
-                    // Check if either order in the pair has been placed already
-                    for (let k = 0; k < groups.length; k++) {
-                        if (groups[k].includes(i) && !groups[k].includes(j)) { // first present, add the second
-                            groups[k].push(j);
-                        } else if (groups[k].includes(j) && !groups[k].includes(i)) { // second present, add the first
-                            groups[k].push(i);
-                        } else if (!(groups[k].includes(i) || groups[k].includes(j))) { // neither present
-                            groups.push([i, j]);
-                        }
-                    }
-                } else { // this is the first pair and their time was under the cutoff so group these two 
-                    groups.push([i, j]);
+        for (let i = 0; i < activeSet.length - 1; i++) {
+            for (let j = i + 1; j < activeSet.length; j++) {
+                let d = averageClusterDistance(activeSet[i], activeSet[j], averageTimes);
+                if (d < minDist) {
+                    closestGroup1 = activeSet[i];
+                    group1Index = i;
+                    closestGroup2 = activeSet[j];
+                    group2Index = j;
+                    minDist = d;
                 }
             }
-            // (i,j) in different groups, so do nothing else
+
         }
+
+        // Remove individual members (from end of array first)
+        if (group1Index > group2Index) {
+            activeSet.splice(group1Index, 1);
+            activeSet.splice(group2Index, 1);
+        } else {
+            activeSet.splice(group2Index, 1);
+            activeSet.splice(group1Index, 1);
+        }
+
+        // Add newly formed composite group containing members just removed
+        let setToAdd = closestGroup1.concat(closestGroup2);
+
+        activeSet.push(setToAdd);
     }
 
-    // Include any missing orders (i.e. ones not in any other group), each as a new group (needed because of problems #1,2)
-    for (let i = 0; i < orders.length; i++) {
-        let contained = false;
-        for (let j = 0; j < groups.length; j++) {
-            if (groups[j].includes(i + 1)) {
-                contained = true;
-            }
-        }
-        if (!contained) {
-            groups.push([i + 1]);
-        }
-    }
-
-    // Remove duplicate groups (needed because of problems #1,2)
-    for (let i = 0; i < groups.length - 1; i++) {
-        for (let j = i + 1; j < groups.length; j++) {
-            if (arraysMatch(groups[i], groups[j])) {
-                groups.splice(j, 1);
-            }
-        }
-    }
-
-    // // Check average distance between each group and the other groups
-    // let distBtwnGroups = new Array(groups.length);
-    // for (let i = 0; i < distBtwnGroups.length; i++) {
-    //     distBtwnGroups[i] = new Array(groups.length);
-    // }
-    //
-    // for (let i = 0; i < groups.length - 1; i++) {
-    //     for (let j = i + 1; j < groups.length; j++) {
-    //         let tot = 0;
-    //         for (let k = 0; k < groups[i].length; k++) {
-    //             for (let l = 0; l < groups[j].length; l++) {
-    //                 let rowIndex = groups[i][k];
-    //                 let colIndex = groups[j][l];
-    //                 if (rowIndex < colIndex) {
-    //                     let temp = rowIndex;
-    //                     rowIndex = colIndex;
-    //                     colIndex = temp;
-    //                 }
-    //                 tot += averageTimes[rowIndex][colIndex];
-    //             }
-    //         }
-    //         distBtwnGroups[j][i] = tot / (groups[i].length + groups[j].length);
-    //     }
-    // }
-    //
-    // // If necessary, consolidate groups (merge the closest groups) until groups.length <= numDrivers
-    // let groupsOver = groups.length - numDrivers;
-    // let minDist = 9999999999;
-    // let included = [];
-    // while (groupsOver > 0) {
-    //     // go through matrix, find smallest not yet grouped
-    //     for (let i = 1; i < distBtwnGroups.length; i++) {
-    //         for (let j = 0; j < i; j++) {
-    //             if (distBtwnGroups[i][j] < minDist && included.includes(i)) {
-    //                 minDist = distBtwnGroups[i][j];
-    //             }
-    //         }
-    //     }
-    // }
+    groups = activeSet;
 
     // Sort each group so the lowest-numbered order is first
     for (let i = 0; i < groups.length; i++) {
@@ -385,4 +314,22 @@ function removeField() {
         select.removeChild(select.lastChild);
         currentFields -= 1;
     }
+}
+
+// Distance function for clustering algorithm
+function averageClusterDistance(X, Y, M) {
+    // X, Y are 1D arrays representing groups; they contain the indices (w/r averageTimes matrix) of the orders in their group
+    let n = X.length;
+    let m = Y.length;
+    let den = n * m;
+    let outerSum = 0;
+    for (let i = 0; i < n; i++) {
+        let innerSum = 0;
+        for (let j = 0; j < m; j++) {
+            let dist = M[Math.max(X[i], Y[j])][Math.min(X[i], Y[j])];
+            innerSum += dist;
+        }
+        outerSum += innerSum;
+    }
+    return outerSum / den;
 }
