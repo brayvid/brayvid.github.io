@@ -60,49 +60,59 @@
     <div id="display" class="collapse">
     </div>
 
-    <!-- Selection for number of available drivers -->
-    <div class="form-group col-md-4">
-        <label for="driverSelect">
+    <main role="main" class="container">
+        <!-- Selection for number of available drivers -->
+        <div class="form-group col-md-4">
+            <label for="driverSelect">
 
-            Drivers:
+                Drivers:
 
-        </label>
-        <select class="form-control" id="driverSelect">
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </div>
+            </label>
+            <select class="form-control" id="driverSelect">
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
 
-    <!-- Buttons to add/remove field rows -->
-    <div class="fieldbuttonrow">
+        <!-- Buttons to add/remove field rows -->
+        <div class="fieldbuttonrow">
 
-        <button class="btn btn-default" onclick="addField()">
+            <button class="btn btn-default" onclick="addField()">
 
-            Add row
+                Add row
 
-        </button>
-        <button class="btn btn-default" onclick="removeField()">
+            </button>
+            <button class="btn btn-default" onclick="removeField()">
 
-            Remove row
+                Remove row
 
-        </button>
-    </div>
+            </button>
+        </div>
 
-    <!-- Area for field grid -->
-    <form id="fields">
-    </form>
+        <!-- Area for field grid -->
+        <form id="fields">
+        </form>
 
-    <!-- Assign button -->
-    <div class="buttonrow">
-        <button id="assign" class="btn btn-primary" onclick="compute()">
+        <!-- Assign button -->
+        <div class="buttonrow">
+            <button id="assign" class="btn btn-primary" onclick="compute()">
 
-            Assign
+                Assign
 
-        </button>
-    </div>
-    
+            </button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container" id="footertext">
+            <span>
+                <a href="https://cloud.google.com/"><img id="googlelogo" src="cloud.png"></img></a>
+            </span>
+        </div>
+    </footer>
+
     <!-- Make clicking assign button show display -->
     <script>
         $(document).ready(function () {

@@ -5,12 +5,13 @@
     Author: Blake Rayvid (https//github.com/brayvid)    
     
     Issues:
+    - Store location hard coded
     - How to determine and handle out-of-range orders?
     - Clustering algorithm sometimes separates orders which should be together to accomodate all drivers.
     - Does not try to divide tips or distance traveled evenly between drivers.
     */
 
-var version = "0.4 (beta)",
+var version = "0.5 (beta)",
 
     defaultFields = 3,
     currentFields = 0,
@@ -54,7 +55,7 @@ function compute() {
     }
 
     // Don't process when all fields are empty or only one order present
-    if (orders.length == 0 || orders.length == 1) {
+    if (orders.length < 2) {
         document.getElementById("display").innerHTML = "Enter at least two orders.";
         return;
     }
@@ -76,7 +77,7 @@ function compute() {
             responses = response.rows;
             // Report api usage
             console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
-            // Proceed to next step
+            // Proceed to step 2
             makeGroups();
         } else {
             document.getElementById("display").innerHTML = "Distance matrix call unsuccessful: " + status;
