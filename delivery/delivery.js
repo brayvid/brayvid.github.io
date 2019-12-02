@@ -92,8 +92,8 @@ function makeGroups() {
 
     // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
     let matrixTimes = [];
-
     averageTimes = [];
+    
     for (let i = 0; i < orders.length + 1; i++) {
         matrixTimes.push([]);
         averageTimes.push([]);
