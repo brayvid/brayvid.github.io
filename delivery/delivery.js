@@ -8,7 +8,8 @@
     - Store location hard coded
     - How to determine and handle out-of-range orders?
     - Clustering algorithm sometimes separates orders which should be together to accomodate all drivers.
-    - Does not try to divide tips or distance traveled evenly between drivers.
+    - Program does not try to divide tips or distance traveled evenly between drivers.
+    - Program does not assign orders to drivers in terms of payroll. It only separates them into groups.
     */
 
 var version = "0.5 (beta)",
@@ -138,7 +139,6 @@ function makeGroups() {
                     minDist = d;
                 }
             }
-
         }
 
         // Remove individual members (from end of array first)
@@ -155,6 +155,7 @@ function makeGroups() {
 
         activeSet.push(setToAdd);
     }
+    // End clustering
 
     groups = activeSet;
 
@@ -225,7 +226,6 @@ function showTable() {
         document.getElementById("tablebody").appendChild(bodyNode);
     }
     // Results have been printed to screen, process is complete.
-
 }
 
 // Called when google maps API loads 
