@@ -37,7 +37,10 @@
     </script>
 
     <!-- Main functionality JS -->
+    <!-- <script src="delivery.js"></script> -->
+    <script src="colors.js"></script>
     <script src="delivery.js"></script>
+   
 
     <!--Google Maps JS API-->
     <script
@@ -56,11 +59,14 @@
         <img class="logo" src="logo.png" width="50" height="50">
     </nav>
 
-    <!-- Area for displaying table or status string -->
-    <div id="display" class="collapse">
-    </div>
+
 
     <main role="main" class="container">
+        <!-- Area for displaying table or status string -->
+        <div id="display" class="collapse">
+            <div id="tbl"></div>
+            <div id="map"></div>
+        </div>
         <!-- Selection for number of available drivers -->
         <div class="form-group col-md-4">
             <label for="driverSelect">

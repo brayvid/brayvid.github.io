@@ -1,174 +1,223 @@
-/*  Title: Delivery Assignment System   
+/*  Title: Delivery Assignment   
     Purpose: Assigns deliveries that are close together to the same driver if possible.
     Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = (n+1)^2 where n is # orders)
     Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-    Author: Blake Rayvid (https//github.com/brayvid)    
-    
-    Issues:
-    - Store location hard coded
-    - How to determine and handle out-of-range orders?
-    - Clustering algorithm sometimes separates orders which should be together to accomodate all drivers.
-    - Program does not try to divide tips or distance traveled evenly between drivers.
-    - Program does not assign orders to drivers in terms of payroll. It only separates them into groups.
+    Author: Blake Rayvid (https//github.com/brayvid)
     */
 
-var version = "0.5 (beta)",
-
-    defaultFields = 3,
+var defaultFields = 3,
     currentFields = 0,
+    colors = [
+        "#ff6600",
+        "#0000ff",
+        "#00ff00",
+        "#6600ff"
+    ],
 
     numDrivers,
-    orders,
-    addresses,
-    responses,
-    averageTimes,
-    groups,
 
     matrixService,
+    directionService,
+    map,
+    mapOptions,
 
     storeAddress = '116 Macdougal St',
-    cityState = "NY NY";
+    cityState = "NY NY",
+    storeLL = [40.729671, -74.000450],
 
-// Holds info for each inputted order
-class Order {
-    constructor(name, address) {
-        this.name = name;
-        this.address = address;
-    }
-}
+    transportation = 'BICYCLING', // or 'DRIVING' or 'WALKING'
+    dropoffSeconds = 120, // rough time stopped at a customer's location
 
-// Step 1 after button clicked
-function compute() {
-    // Make table area visible
-    $(window).scrollTop(0);
+    orders,
+    addressArray,
+    groups,
+    addressGroups,
+    numGroups,
+    routeDurations = [],
 
-    // get number of drivers from input
+    trialCounter = 0,
+    matrixCounter,
+    directionsCounter,
+
+    trials = 5,
+    minOrders = 2, // 2 or more
+    maxOrders = 5;
+
+
+
+function compute(orderCount) {
+    matrixCounter = 0;
+    directionsCounter = 0;
+
     numDrivers = document.getElementById("driverSelect").value;
+
+    // let orderCount = uniformRandomInt(minOrders, maxOrders); // Pick a random number of orders
+
+    // Randomly choose the specified number of addresses 
+    // addressArray = new Array(orderCount);
+    // for (let i = 0; i < orderCount; i++) {
+    //     let choice = testList[uniformRandomInt(0, testList.length - 1)]; // choose street
+    //     addressArray[i] = uniformRandomInt(parseInt(choice.min), parseInt(choice.max)) + " " + choice.street + " " + cityState; // choose building
+    //     // console.log(addressArray[i]);
+    // }
 
     // get order IDs and addresses from fields
     orders = [];
+    addressArray = [];
     for (let i = 1; i < (currentFields + 1); i++) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
         if (nTemp.match(/\S/) && aTemp.match(/\S/)) {
-            orders.push(new Order(nTemp, aTemp));
+            orders.push(new Order(nTemp, aTemp + " " + cityState));
+            addressArray.push(aTemp + " " + cityState);
         }
     }
 
     // Don't process when all fields are empty or only one order present
     if (orders.length < 2) {
-        document.getElementById("display").innerHTML = "Enter at least two orders.";
+        document.getElementById("map").style.height = "30px";
+        document.getElementById("map").innerHTML = "Enter at least two orders.";
         return;
     }
 
-    // Extract all addresses into a single array (include store address as first entry) for Google
-    addresses = [storeAddress + " " + cityState];
-    for (let i = 0; i < orders.length; i++) {
-        addresses.push(orders[i].address + " " + cityState);
+    mapOptions = {
+        zoom: 14,
+        center: {
+            lat: storeLL[0],
+            lng: storeLL[1]
+        },
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true,
+        gestureHandling: 'cooperative'
+    }
+    map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+
+    console.log("Addresses:");
+    for (let i = 0; i < addressArray.length; i++) {
+        console.log(addressArray[i]);
     }
 
-    // Get distance matrix (call Google Maps JS API - each table element is a call for billing purposes)
-    matrixService.getDistanceMatrix({
+    // Get distance matrix for this set of orders
+    let matrixRequest = {
         // origins same as destinations
-        origins: addresses,
-        destinations: addresses,
-        travelMode: 'BICYCLING',
-    }, function (response, status) {
-        if (status == 'OK') {
-            responses = response.rows;
-            // Report api usage
-            console.log("+" + ((orders.length + 1) * orders.length / 2) + " distance matrix calls.");
-            // Proceed to step 2
-            makeGroups();
-        } else {
-            document.getElementById("display").innerHTML = "Distance matrix call unsuccessful: " + status;
-            return;
-        }
-    });
+        origins: [storeAddress + " " + cityState].concat(addressArray),
+        destinations: [storeAddress + " " + cityState].concat(addressArray),
+        travelMode: transportation,
+    };
+
+    matrixService.getDistanceMatrix(matrixRequest, matrixCallback);
+    $(".collapse").collapse('show');
 }
 
-// Step 2 after button click
-function makeGroups() {
+function matrixCallback(response, status) {
+    if (status == 'OK') {
+        matrixCounter++;
+        // console.log("Distance matrix received.");
 
-    // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
-    let matrixTimes = [];
-    averageTimes = [];
-    
-    for (let i = 0; i < orders.length + 1; i++) {
-        matrixTimes.push([]);
-        averageTimes.push([]);
-        for (let j = 0; j < orders.length + 1; j++) {
-            matrixTimes[i].push(responses[i].elements[j].duration.value);
-            averageTimes[i].push(0);
-        }
-    }
-
-    // Average the forward and reverse times for each pair of addresses
-    for (let i = 0; i < matrixTimes.length; i++) {
-        for (let j = 0; j < matrixTimes.length; j++) {
-            if (j < i) {
-                averageTimes[j][i] = 0;
-            } else {
-                averageTimes[j][i] = (matrixTimes[i][j] + matrixTimes[j][i]) / 2;
+        cluster(response.rows); // determine groups
+        addressGroups = new Array(groups.length);
+        numGroups = groups.length;
+        for (let i = 0; i < groups.length; i++) {
+            console.log("Group " + (i + 1) + ":");
+            for (let j = 0; j < groups[i].length; j++) {
+                addressGroups[i] = [];
+                let currentAddress = addressArray[groups[i][j] - 1];
+                console.log(currentAddress);
+                addressGroups[i].push(currentAddress);
             }
+            getRouteDuration(addressGroups[i]);
         }
+    } else {
+        document.getElementById("map").style.height = "30px";
+        document.getElementById("map").innerHTML = "Distance matrix request unsuccessful: " + status;
+    }
+}
+
+function getRouteDuration(addresses) {
+    let waypts = [];
+    for (let j = 0; j < addresses.length; j++) {
+        waypts.push({
+            location: addresses[j],
+            stopover: true
+        });
     }
 
-    // Hierarchical agglomerative clustering
-    let activeSet = [];
-    let tree = [];
-    for (let i = 0; i < orders.length; i++) {
-        activeSet.push([i + 1]);
-    }
-  
-    while (activeSet.length > numDrivers) {
+    let directionsRequest = {
+        origin: storeAddress + " " + cityState,
+        destination: storeAddress + " " + cityState,
+        travelMode: transportation,
+        waypoints: waypts,
+        optimizeWaypoints: true,
+        provideRouteAlternatives: false,
+    };
 
-        let minDist = 999999999,
-            closestGroup1, closestGroup2,
-            group1Index, group2Index; // for argmin
-        // compare distance between each group in activeSet
+    directionService.route(directionsRequest, directionsCallback);
+}
 
-        for (let i = 0; i < activeSet.length - 1; i++) {
-            for (let j = i + 1; j < activeSet.length; j++) {
-                let d = averageClusterDistance(activeSet[i], activeSet[j], averageTimes);
-                if (d < minDist) {
-                    closestGroup1 = activeSet[i];
-                    group1Index = i;
-                    closestGroup2 = activeSet[j];
-                    group2Index = j;
-                    minDist = d;
-                }
+function directionsCallback(response, status) {
+    if (status === 'OK') {
+        directionsCounter++;
+        // console.log("Route received.");
+
+        // Add route to map
+        let directionsRenderer = new google.maps.DirectionsRenderer({
+            polylineOptions: {
+                strokeColor: colors[directionsCounter - 1]
             }
+        });
+        directionsRenderer.setMap(map);
+        directionsRenderer.setOptions({
+            suppressMarkers: true,
+            draggable: false,
+            preserveViewport: true,
+            suppressBicyclingLayer: true
+        });
+        directionsRenderer.setDirections(response);
+
+        // Get route duration
+        let route = response.routes[0];
+        let legs = route.legs;
+        let duration = 0;
+        for (let k = 0; k < legs.length; k++) {
+            duration += legs[k].duration.value;
         }
-
-        // Remove individual members (from end of array first)
-        if (group1Index > group2Index) {
-            activeSet.splice(group1Index, 1);
-            activeSet.splice(group2Index, 1);
-        } else {
-            activeSet.splice(group2Index, 1);
-            activeSet.splice(group1Index, 1);
+        routeDurations.push(duration + dropoffSeconds * (legs.length - 1));
+        if (directionsCounter == numGroups) {
+            results();
+            showTable();
+            let marker = new google.maps.Marker({
+                position: {
+                    lat: storeLL[0],
+                    lng: storeLL[1]
+                },
+                map: map,
+                icon: {
+                    url: 'cookie.png',
+                    // This marker is 20 pixels wide by 32 pixels high.
+                    size: new google.maps.Size(28, 28),
+                    anchor: new google.maps.Point(14, 14)
+                },
+                title: "Store"
+            });
+            document.getElementById("map").style.height = "300px";
         }
-
-        // Add newly formed composite group containing members just removed
-        let setToAdd = closestGroup1.concat(closestGroup2);
-
-        activeSet.push(setToAdd);
+    } else {
+        document.getElementById("map").style.height = "30px";
+        document.getElementById("map").innerHTML = "Directions request unsuccessful: " + status;
     }
-    // End clustering
+}
 
-    groups = activeSet;
-
-    // Sort each group so the lowest-numbered order is first
-    for (let i = 0; i < groups.length; i++) {
-        groups[i].sort();
+function results() {
+    let avg = 0;
+    console.log("Results:");
+    for (let i = 0; i < routeDurations.length; i++) {
+        let minutes = routeDurations[i] / 60;
+        avg += minutes;
+        console.log("Route duration: " + minutes.toFixed(2) + " min");
     }
-
-    // Randomize which group is assigned to which driver.
-    groups = shuffle(groups);
-
-    // Proceed to next step
-    showTable();
+    avg = avg / routeDurations.length;
+    console.log("Average time: " + avg.toFixed(2) + " min");
 }
 
 // Step 3 after button click
@@ -201,13 +250,20 @@ function showTable() {
             }
         }
     }
+    // document.getElementById("map").innerHTML = ""; // clear previous messages
+
+
 
     // Table header
-    document.getElementById("display").innerHTML = '<table id="displayTable" class="table table-condensed"><tbody id="tablebody"></tbody></table>';
+    document.getElementById("tbl").innerHTML = '<table id="displayTable" class="table table-condensed"><tbody id="tablebody"></tbody></table>';
     for (let i = 0; i < numDrivers; i++) {
         let headNode = document.createElement("TH");
         let headText = document.createTextNode("Driver " + (i + 1));
+        // let headColor = document.createElement("SPAN");
+        // headColor.innerHTML = " ";
         headNode.appendChild(headText);
+        headNode.style.borderBottom = "20px solid " + colors[i];
+        // headNode.appendChild(headColor);
         document.getElementById("tablebody").appendChild(headNode);
     }
 
@@ -228,11 +284,99 @@ function showTable() {
     // Results have been printed to screen, process is complete.
 }
 
+function cluster(rows) {
+    // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
+    let matrixTimes = [];
+    let averageTimes = [];
+    for (let i = 0; i < rows.length; i++) {
+        matrixTimes.push([]);
+        averageTimes.push([]);
+        for (let j = 0; j < rows.length; j++) {
+            matrixTimes[i].push(rows[i].elements[j].duration.value);
+            averageTimes[i].push(0);
+        }
+    }
+
+    // Average the forward and reverse times for each pair of addresses
+    for (let i = 0; i < matrixTimes.length; i++) {
+        for (let j = 0; j < matrixTimes.length; j++) {
+            if (j < i) {
+                averageTimes[j][i] = 0;
+            } else {
+                averageTimes[j][i] = (matrixTimes[i][j] + matrixTimes[j][i]) / 2;
+            }
+        }
+    }
+
+    // Hierarchical agglomerative clustering
+    let activeSet = [];
+    for (let i = 0; i < rows.length - 1; i++) {
+        activeSet.push([i + 1]);
+    }
+
+    while (activeSet.length > numDrivers) {
+        let minDist = 999999999,
+            closestGroup1, closestGroup2,
+            group1Index, group2Index; // for argmin
+
+        // compare distance between each group in activeSet
+        for (let i = 0; i < activeSet.length - 1; i++) {
+            for (let j = i + 1; j < activeSet.length; j++) {
+                let d = averageClusterDistance(activeSet[i], activeSet[j], averageTimes);
+                if (d < minDist) {
+                    closestGroup1 = activeSet[i];
+                    group1Index = i;
+                    closestGroup2 = activeSet[j];
+                    group2Index = j;
+                    minDist = d;
+                }
+            }
+        }
+
+        // Remove individual members (from end of array first)
+        if (group1Index > group2Index) {
+            activeSet.splice(group1Index, 1);
+            activeSet.splice(group2Index, 1);
+        } else {
+            activeSet.splice(group2Index, 1);
+            activeSet.splice(group1Index, 1);
+        }
+
+        // Add newly formed composite group containing members just removed
+        let setToAdd = closestGroup1.concat(closestGroup2);
+
+        activeSet.push(setToAdd);
+    }
+    // End clustering
+
+    groups = activeSet;
+    // let groups = activeSet;
+    // Sort each group so the lowest-numbered order is first
+    for (let i = 0; i < groups.length; i++) {
+        groups[i].sort();
+    }
+
+    // Randomize which group is assigned to which driver.
+    groups = shuffle(groups);
+
+    // return groups;
+}
+
+// Holds info for each inputted order
+class Order {
+    constructor(name, address) {
+        this.name = name;
+        this.address = address;
+    }
+}
+
 // Called when google maps API loads 
 function googleReady() {
     matrixService = new google.maps.DistanceMatrixService();
-    console.log("Delivery Assignment version " + version);
+    directionService = new google.maps.DirectionsService();
+    console.log("Delivery Assignment Testing");
     console.log("Distance matrix service ready.");
+    console.log("Directions service ready.");
 }
 
 // Checks array equality
@@ -249,9 +393,27 @@ function arraysMatch(arr1, arr2) {
     return true;
 }
 
-// Randomly chooses an integer from 1 to a inclusively (picks an option)
-function randomChoice(a) {
-    return Math.floor(Math.random() * (a + 1));
+// Returns a random integer from min to max inclusively
+function uniformRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Generates a positive int from a geometric distribution
+function randomGeometric(successProbability, randomUniform) {
+    successProbability = successProbability || 1 - Math.exp(-1);
+    var rate = -Math.log(1 - successProbability);
+    return Math.floor(randomExponential(rate, randomUniform));
+}
+
+// Generates a positive float from an exponential distribution
+function randomExponential(rate, randomUniform) {
+    rate = rate || 1;
+    var U = randomUniform;
+    if (typeof randomUniform === 'function') U = randomUniform();
+    if (!U) U = Math.random();
+    return -Math.log(U) / rate;
 }
 
 // Randomizes an array
