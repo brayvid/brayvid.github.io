@@ -7,7 +7,9 @@
 
 var defaultFields = 3,
     currentFields = 0,
-    colors = [
+    colors,
+
+    defaultColors = [
         "#ff6600",
         "#0000ff",
         "#00ff00",
@@ -18,6 +20,7 @@ var defaultFields = 3,
 
     matrixService,
     directionService,
+    placesService,
     map,
     mapOptions,
 
@@ -31,24 +34,20 @@ var defaultFields = 3,
     orders,
     addressArray,
     groups,
+    orderedGroups,
+    orderedColors,
     addressGroups,
     numGroups,
     routeDurations = [],
-
-    trialCounter = 0,
     matrixCounter,
-    directionsCounter,
-
-    trials = 5,
-    minOrders = 2, // 2 or more
-    maxOrders = 5;
-
-
+    directionsCounter;
 
 function compute(orderCount) {
     matrixCounter = 0;
     directionsCounter = 0;
-
+    orderedGroups = [];
+    colors = defaultColors;
+    orderedColors = [];
     numDrivers = document.getElementById("driverSelect").value;
 
     // let orderCount = uniformRandomInt(minOrders, maxOrders); // Pick a random number of orders
@@ -60,10 +59,9 @@ function compute(orderCount) {
     //     addressArray[i] = uniformRandomInt(parseInt(choice.min), parseInt(choice.max)) + " " + choice.street + " " + cityState; // choose building
     //     // console.log(addressArray[i]);
     // }
-
-    // get order IDs and addresses from fields
     orders = [];
     addressArray = [];
+    // get order IDs and addresses from fields
     for (let i = 1; i < (currentFields + 1); i++) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
@@ -92,7 +90,6 @@ function compute(orderCount) {
     }
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-
     console.log("Addresses:");
     for (let i = 0; i < addressArray.length; i++) {
         console.log(addressArray[i]);
@@ -119,9 +116,9 @@ function matrixCallback(response, status) {
         addressGroups = new Array(groups.length);
         numGroups = groups.length;
         for (let i = 0; i < groups.length; i++) {
+            addressGroups[i] = [];
             console.log("Group " + (i + 1) + ":");
             for (let j = 0; j < groups[i].length; j++) {
-                addressGroups[i] = [];
                 let currentAddress = addressArray[groups[i][j] - 1];
                 console.log(currentAddress);
                 addressGroups[i].push(currentAddress);
@@ -159,11 +156,26 @@ function directionsCallback(response, status) {
     if (status === 'OK') {
         directionsCounter++;
         // console.log("Route received.");
+        let randInt = uniformRandomInt(0, colors.length - 1);
+        let color = colors[randInt];
+        colors.splice(randInt, 1);
+        orderedColors.push(color);
+        // Get route duration
+        let route = response.routes[0];
+        let legs = route.legs;
+        let duration = 0;
+        for (let k = 0; k < legs.length; k++) {
+            duration += legs[k].duration.value;
+        }
+        routeDurations.push(duration + dropoffSeconds * (legs.length - 1));
+
+        // Get updated waypoint order
+        orderedGroups.push(route.waypoint_order);
 
         // Add route to map
         let directionsRenderer = new google.maps.DirectionsRenderer({
             polylineOptions: {
-                strokeColor: colors[directionsCounter - 1]
+                strokeColor: color
             }
         });
         directionsRenderer.setMap(map);
@@ -175,14 +187,9 @@ function directionsCallback(response, status) {
         });
         directionsRenderer.setDirections(response);
 
-        // Get route duration
-        let route = response.routes[0];
-        let legs = route.legs;
-        let duration = 0;
-        for (let k = 0; k < legs.length; k++) {
-            duration += legs[k].duration.value;
-        }
-        routeDurations.push(duration + dropoffSeconds * (legs.length - 1));
+
+
+
         if (directionsCounter == numGroups) {
             results();
             showTable();
@@ -193,10 +200,9 @@ function directionsCallback(response, status) {
                 },
                 map: map,
                 icon: {
-                    url: 'cookie.png',
-                    // This marker is 20 pixels wide by 32 pixels high.
-                    size: new google.maps.Size(28, 28),
-                    anchor: new google.maps.Point(14, 14)
+                    url: 'home.png',
+                    size: new google.maps.Size(22, 22),
+                    anchor: new google.maps.Point(11, 11)
                 },
                 title: "Store"
             });
@@ -262,7 +268,7 @@ function showTable() {
         // let headColor = document.createElement("SPAN");
         // headColor.innerHTML = " ";
         headNode.appendChild(headText);
-        headNode.style.borderBottom = "20px solid " + colors[i];
+        headNode.style.borderBottom = "20px solid " + orderedColors[i];
         // headNode.appendChild(headColor);
         document.getElementById("tablebody").appendChild(headNode);
     }
@@ -273,7 +279,7 @@ function showTable() {
         for (let j = 0; j < numDrivers; j++) {
             let bodyData = document.createElement("TD");
             if (assignMap[i][j] == 1) {
-                let bodyText = document.createTextNode(orders[groups[j][i] - 1].name);
+                let bodyText = document.createTextNode(orders[groups[j][orderedGroups[j][i]] - 1].name);
                 // counter[j]++;
                 bodyData.appendChild(bodyText);
             }
@@ -357,7 +363,7 @@ function cluster(rows) {
     }
 
     // Randomize which group is assigned to which driver.
-    groups = shuffle(groups);
+    // groups = shuffle(groups);
 
     // return groups;
 }
