@@ -17,6 +17,7 @@ html, js, css, jquery, bootstrap & google maps js api.
     * `prefs.js`
 * `img/`
     * `cloud.png`
+    * `example.png`
     * `home.png`
     * `logo.png`
 
