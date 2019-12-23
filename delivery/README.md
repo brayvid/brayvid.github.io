@@ -1,5 +1,16 @@
-### delivery.js
-Efficiently divide orders among drivers with html, css, js, jquery, bootstrap & google maps js api.
+# Delivery Assignment
+Efficiently divide deliveries among available couriers.
 
-#### Results
-2-3 drivers spend 5-15 minutes delivering 2-6 orders using the calculated routing scheme. These figures do not include the time spent off the bike completing deliveries. Add roughly 2 minutes per delivery to get total elapsed time.
+## Requirements
+html, js, css, jquery, bootstrap & google maps js api.
+
+## Directory
+* `index.html`
+* `README.md`
+* `src/`
+    * `delivery.js`
+    * `prefs.js`
+* `img/`
+    * `cloud.png`
+    * `home.png`
+    * `logo.png`

@@ -1,20 +1,11 @@
 /*  Title: Delivery Assignment   
     Purpose: Assigns deliveries that are close together to the same driver if possible.
-    Requirements: Google Maps JS API Distance Matrix Service (# of calls per button click = (n+1)^2 where n is # orders)
     Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-    Author: Blake Rayvid (https//github.com/brayvid)
-    */
+    Author: Blake Rayvid (https//github.com/brayvid)    */
 
-var defaultFields = 3,
-    currentFields = 0,
+var store,
+    numFields = 0,
     colors,
-
-    defaultColors = [
-        "#ff6600",
-        "#0000ff",
-        "#00ff00",
-        "#6600ff"
-    ],
 
     numDrivers,
 
@@ -24,50 +15,26 @@ var defaultFields = 3,
     map,
     mapOptions,
 
-    storeAddress = '116 Macdougal St',
-    cityState = "NY NY",
-    storeLL = [40.729671, -74.000450],
-
-    transportation = 'BICYCLING', // or 'DRIVING' or 'WALKING'
-    dropoffSeconds = 120, // rough time stopped at a customer's location
-
     orders,
     addressArray,
     groups,
     orderedGroups,
     orderedColors,
     addressGroups,
-    numGroups,
-    routeDurations = [],
-    matrixCounter,
+    routeDurations,
     directionsCounter;
 
-function compute(orderCount) {
-    matrixCounter = 0;
-    directionsCounter = 0;
-    orderedGroups = [];
-    colors = defaultColors;
-    orderedColors = [];
-    numDrivers = document.getElementById("driverSelect").value;
-
-    // let orderCount = uniformRandomInt(minOrders, maxOrders); // Pick a random number of orders
-
-    // Randomly choose the specified number of addresses 
-    // addressArray = new Array(orderCount);
-    // for (let i = 0; i < orderCount; i++) {
-    //     let choice = testList[uniformRandomInt(0, testList.length - 1)]; // choose street
-    //     addressArray[i] = uniformRandomInt(parseInt(choice.min), parseInt(choice.max)) + " " + choice.street + " " + cityState; // choose building
-    //     // console.log(addressArray[i]);
-    // }
+/* Sends distance matrix request */
+function requestMatrix(orderCount) {
+    // get order IDs and addresses from fields
     orders = [];
     addressArray = [];
-    // get order IDs and addresses from fields
-    for (let i = 1; i < (currentFields + 1); i++) {
+    for (let i = 1; i < (numFields + 1); i++) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
         if (nTemp.match(/\S/) && aTemp.match(/\S/)) {
-            orders.push(new Order(nTemp, aTemp + " " + cityState));
-            addressArray.push(aTemp + " " + cityState);
+            orders.push(new Order(nTemp, aTemp + " " + locality));
+            addressArray.push(aTemp + " " + locality);
         }
     }
 
@@ -77,17 +44,23 @@ function compute(orderCount) {
         document.getElementById("map").innerHTML = "Enter at least two orders.";
         return;
     }
-
+    // Initialize variables
+    numDrivers = document.getElementById("driverSelect").value;
+    directionsCounter = 0;
+    orderedGroups = [];
+    colors = defaultColors;
+    orderedColors = [];
+    routeDurations = [];
     mapOptions = {
         zoom: 14,
         center: {
-            lat: storeLL[0],
-            lng: storeLL[1]
+            lat: store.latLong[0],
+            lng: store.latLong[1]
         },
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
         gestureHandling: 'cooperative'
-    }
+    };
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     console.log("Addresses:");
@@ -98,20 +71,20 @@ function compute(orderCount) {
     // Get distance matrix for this set of orders
     let matrixRequest = {
         // origins same as destinations
-        origins: [storeAddress + " " + cityState].concat(addressArray),
-        destinations: [storeAddress + " " + cityState].concat(addressArray),
+        origins: [store.address].concat(addressArray),
+        destinations: [store.address].concat(addressArray),
         travelMode: transportation,
     };
 
     matrixService.getDistanceMatrix(matrixRequest, matrixCallback);
+
     $(".collapse").collapse('show');
 }
 
+/* Runs when distance matrix is received */
 function matrixCallback(response, status) {
     if (status == 'OK') {
-        matrixCounter++;
         // console.log("Distance matrix received.");
-
         cluster(response.rows); // determine groups
         addressGroups = new Array(groups.length);
         numGroups = groups.length;
@@ -123,7 +96,7 @@ function matrixCallback(response, status) {
                 console.log(currentAddress);
                 addressGroups[i].push(currentAddress);
             }
-            getRouteDuration(addressGroups[i]);
+            requestRoutes(addressGroups[i]);
         }
     } else {
         document.getElementById("map").style.height = "30px";
@@ -131,165 +104,7 @@ function matrixCallback(response, status) {
     }
 }
 
-function getRouteDuration(addresses) {
-    let waypts = [];
-    for (let j = 0; j < addresses.length; j++) {
-        waypts.push({
-            location: addresses[j],
-            stopover: true
-        });
-    }
-
-    let directionsRequest = {
-        origin: storeAddress + " " + cityState,
-        destination: storeAddress + " " + cityState,
-        travelMode: transportation,
-        waypoints: waypts,
-        optimizeWaypoints: true,
-        provideRouteAlternatives: false,
-    };
-
-    directionService.route(directionsRequest, directionsCallback);
-}
-
-function directionsCallback(response, status) {
-    if (status === 'OK') {
-        directionsCounter++;
-        // console.log("Route received.");
-        let randInt = uniformRandomInt(0, colors.length - 1);
-        let color = colors[randInt];
-        colors.splice(randInt, 1);
-        orderedColors.push(color);
-        // Get route duration
-        let route = response.routes[0];
-        let legs = route.legs;
-        let duration = 0;
-        for (let k = 0; k < legs.length; k++) {
-            duration += legs[k].duration.value;
-        }
-        routeDurations.push(duration + dropoffSeconds * (legs.length - 1));
-
-        // Get updated waypoint order
-        orderedGroups.push(route.waypoint_order);
-
-        // Add route to map
-        let directionsRenderer = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: color
-            }
-        });
-        directionsRenderer.setMap(map);
-        directionsRenderer.setOptions({
-            suppressMarkers: true,
-            draggable: false,
-            preserveViewport: true,
-            suppressBicyclingLayer: true
-        });
-        directionsRenderer.setDirections(response);
-
-
-
-
-        if (directionsCounter == numGroups) {
-            results();
-            showTable();
-            let marker = new google.maps.Marker({
-                position: {
-                    lat: storeLL[0],
-                    lng: storeLL[1]
-                },
-                map: map,
-                icon: {
-                    url: 'home.png',
-                    size: new google.maps.Size(22, 22),
-                    anchor: new google.maps.Point(11, 11)
-                },
-                title: "Store"
-            });
-            document.getElementById("map").style.height = "300px";
-        }
-    } else {
-        document.getElementById("map").style.height = "30px";
-        document.getElementById("map").innerHTML = "Directions request unsuccessful: " + status;
-    }
-}
-
-function results() {
-    let avg = 0;
-    console.log("Results:");
-    for (let i = 0; i < routeDurations.length; i++) {
-        let minutes = routeDurations[i] / 60;
-        avg += minutes;
-        console.log("Route duration: " + minutes.toFixed(2) + " min");
-    }
-    avg = avg / routeDurations.length;
-    console.log("Average time: " + avg.toFixed(2) + " min");
-}
-
-// Step 3 after button click
-function showTable() {
-    // Find max orders per driver over all drivers, aka number of rows of table to generate
-    let maxToOneDriver = 0;
-    let ordersPerDriver = [];
-    for (let i = 0; i < groups.length; i++) {
-        ordersPerDriver.push(groups[i].length);
-        if (groups[i].length > maxToOneDriver) {
-            maxToOneDriver = groups[i].length;
-        }
-    }
-
-    // If there are fewer groups than drivers, set order counts for extra drivers to 0
-    for (let i = 0; i < numDrivers - ordersPerDriver.length; i++) {
-        ordersPerDriver.push(0);
-    }
-
-    // Determine if an order will be placed at each table entry
-    let assignMap = [];
-    for (let i = 0; i < maxToOneDriver; i++) { // for each row
-        assignMap.push([]);
-        for (j = 0; j < numDrivers; j++) { // for each column
-            assignMap[i][j] = 0; // set to 0 to start
-            if (ordersPerDriver[j] > 0) {
-                // The current driver has orders still to list
-                assignMap[i][j] = 1;
-                ordersPerDriver[j] -= 1;
-            }
-        }
-    }
-    // document.getElementById("map").innerHTML = ""; // clear previous messages
-
-
-
-    // Table header
-    document.getElementById("tbl").innerHTML = '<table id="displayTable" class="table table-condensed"><tbody id="tablebody"></tbody></table>';
-    for (let i = 0; i < numDrivers; i++) {
-        let headNode = document.createElement("TH");
-        let headText = document.createTextNode("Driver " + (i + 1));
-        // let headColor = document.createElement("SPAN");
-        // headColor.innerHTML = " ";
-        headNode.appendChild(headText);
-        headNode.style.borderBottom = "20px solid " + orderedColors[i];
-        // headNode.appendChild(headColor);
-        document.getElementById("tablebody").appendChild(headNode);
-    }
-
-    // Table body
-    for (let i = 0; i < maxToOneDriver; i++) { //  each row
-        let bodyNode = document.createElement("TR");
-        for (let j = 0; j < numDrivers; j++) {
-            let bodyData = document.createElement("TD");
-            if (assignMap[i][j] == 1) {
-                let bodyText = document.createTextNode(orders[groups[j][orderedGroups[j][i]] - 1].name);
-                // counter[j]++;
-                bodyData.appendChild(bodyText);
-            }
-            bodyNode.appendChild(bodyData);
-        }
-        document.getElementById("tablebody").appendChild(bodyNode);
-    }
-    // Results have been printed to screen, process is complete.
-}
-
+/* Clustering process */
 function cluster(rows) {
     // Consolidate travel times (by bike) into a 2D array, rows = origins, cols = dests.
     let matrixTimes = [];
@@ -368,7 +183,182 @@ function cluster(rows) {
     // return groups;
 }
 
-// Holds info for each inputted order
+/* Distance function for clustering */
+function averageClusterDistance(X, Y, M) {
+    // X, Y are 1D arrays representing groups; they contain the indices (w/r averageTimes matrix) of the orders in their group
+    let n = X.length;
+    let m = Y.length;
+    let den = n * m;
+    let outerSum = 0;
+    for (let i = 0; i < n; i++) {
+        let innerSum = 0;
+        for (let j = 0; j < m; j++) {
+            let dist = M[Math.max(X[i], Y[j])][Math.min(X[i], Y[j])];
+            innerSum += dist;
+        }
+        outerSum += innerSum;
+    }
+    return outerSum / den;
+}
+
+/* Sends directions request */
+function requestRoutes(addresses) {
+    let waypts = [];
+    for (let j = 0; j < addresses.length; j++) {
+        waypts.push({
+            location: addresses[j],
+            stopover: true
+        });
+    }
+
+    let directionsRequest = {
+        origin: store.address,
+        destination: store.address,
+        travelMode: transportation,
+        waypoints: waypts,
+        optimizeWaypoints: true,
+        provideRouteAlternatives: false,
+    };
+
+    directionService.route(directionsRequest, directionsCallback);
+}
+
+/* Runs whenever directions are received */
+function directionsCallback(response, status) {
+    if (status === 'OK') {
+        directionsCounter++;
+        // console.log("Route received.");
+        let randInt = uniformRandomInt(0, colors.length - 1);
+        let color = colors[randInt];
+        colors.splice(randInt, 1);
+        orderedColors.push(color);
+        // Get route duration
+        let route = response.routes[0];
+        let legs = route.legs;
+        let duration = 0;
+        for (let k = 0; k < legs.length; k++) {
+            duration += legs[k].duration.value;
+        }
+        routeDurations.push(duration + dropoffSeconds * (legs.length - 1));
+
+        // Get updated waypoint order
+        orderedGroups.push(route.waypoint_order);
+
+        // Add route to map
+        let directionsRenderer = new google.maps.DirectionsRenderer({
+            polylineOptions: {
+                strokeColor: color
+            }
+        });
+        directionsRenderer.setMap(map);
+        directionsRenderer.setOptions({
+            suppressMarkers: true,
+            draggable: false,
+            preserveViewport: true,
+            suppressBicyclingLayer: true
+        });
+        directionsRenderer.setDirections(response);
+
+        // Final callback was executed
+        if (directionsCounter == groups.length) {
+            // Update table
+            results();
+
+            // Place map marker at store location
+            let marker = new google.maps.Marker({
+                position: {
+                    lat: store.latLong[0],
+                    lng: store.latLong[1]
+                },
+                map: map,
+                icon: {
+                    url: 'img/home.png',
+                    size: new google.maps.Size(22, 22),
+                    anchor: new google.maps.Point(11, 11)
+                },
+                title: "Store"
+            });
+            document.getElementById("map").style.height = "300px";
+        }
+    } else {
+        document.getElementById("map").style.height = "30px";
+        document.getElementById("map").innerHTML = "Directions request unsuccessful: " + status;
+    }
+}
+
+/* Updates table and console */
+function results() {
+    // Print average route duration to console
+    let avg = 0;
+    console.log("Results:");
+    for (let i = 0; i < routeDurations.length; i++) {
+        let minutes = routeDurations[i] / 60;
+        avg += minutes;
+        console.log("Route duration: " + minutes.toFixed(2) + " min");
+    }
+    avg = avg / routeDurations.length;
+    console.log("Average time: " + avg.toFixed(2) + " min");
+
+    // Find max orders per driver over all drivers, aka number of rows of table to generate
+    let maxToOneDriver = 0;
+    let ordersPerDriver = [];
+    for (let i = 0; i < groups.length; i++) {
+        ordersPerDriver.push(groups[i].length);
+        if (groups[i].length > maxToOneDriver) {
+            maxToOneDriver = groups[i].length;
+        }
+    }
+
+    // If there are fewer groups than drivers, set order counts for extra drivers to 0
+    for (let i = 0; i < numDrivers - ordersPerDriver.length; i++) {
+        ordersPerDriver.push(0);
+    }
+
+    // Determine if an order will be placed at each table entry
+    let assignMap = [];
+    for (let i = 0; i < maxToOneDriver; i++) { // for each row
+        assignMap.push([]);
+        for (j = 0; j < numDrivers; j++) { // for each column
+            assignMap[i][j] = 0; // set to 0 to start
+            if (ordersPerDriver[j] > 0) {
+                // The current driver has orders still to list
+                assignMap[i][j] = 1;
+                ordersPerDriver[j] -= 1;
+            }
+        }
+    }
+
+    // Table header
+    document.getElementById("tbl").innerHTML = '<table id="displayTable" class="table table-condensed"><tbody id="tablebody"></tbody></table>';
+    for (let i = 0; i < numDrivers; i++) {
+        let headNode = document.createElement("TH");
+        let headText = document.createTextNode("Driver " + (i + 1));
+        // let headColor = document.createElement("SPAN");
+        // headColor.innerHTML = " ";
+        headNode.appendChild(headText);
+        headNode.style.borderBottom = "20px solid " + orderedColors[i];
+        // headNode.appendChild(headColor);
+        document.getElementById("tablebody").appendChild(headNode);
+    }
+
+    // Table body
+    for (let i = 0; i < maxToOneDriver; i++) { //  each row
+        let bodyNode = document.createElement("TR");
+        for (let j = 0; j < numDrivers; j++) {
+            let bodyData = document.createElement("TD");
+            if (assignMap[i][j] == 1) {
+                let bodyText = document.createTextNode(orders[groups[j][orderedGroups[j][i]] - 1].name);
+                // counter[j]++;
+                bodyData.appendChild(bodyText);
+            }
+            bodyNode.appendChild(bodyData);
+        }
+        document.getElementById("tablebody").appendChild(bodyNode);
+    }
+    // Results have been printed to screen, process is complete.
+}
+
+/* Holds info for each inputted order */
 class Order {
     constructor(name, address) {
         this.name = name;
@@ -376,7 +366,14 @@ class Order {
     }
 }
 
-// Called when google maps API loads 
+class Store {
+    constructor(address, latLong) {
+        this.address = address;
+        this.latLong = latLong;
+    }
+}
+
+/* Called when google cloud API has loaded */
 function googleReady() {
     matrixService = new google.maps.DistanceMatrixService();
     directionService = new google.maps.DirectionsService();
@@ -385,7 +382,7 @@ function googleReady() {
     console.log("Directions service ready.");
 }
 
-// Checks array equality
+/* Checks array equality */
 function arraysMatch(arr1, arr2) {
     // Check if the arrays are the same length
     if (arr1.length !== arr2.length) return false;
@@ -399,30 +396,14 @@ function arraysMatch(arr1, arr2) {
     return true;
 }
 
-// Returns a random integer from min to max inclusively
+/* Returns a random integer from min to max inclusively */
 function uniformRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Generates a positive int from a geometric distribution
-function randomGeometric(successProbability, randomUniform) {
-    successProbability = successProbability || 1 - Math.exp(-1);
-    var rate = -Math.log(1 - successProbability);
-    return Math.floor(randomExponential(rate, randomUniform));
-}
-
-// Generates a positive float from an exponential distribution
-function randomExponential(rate, randomUniform) {
-    rate = rate || 1;
-    var U = randomUniform;
-    if (typeof randomUniform === 'function') U = randomUniform();
-    if (!U) U = Math.random();
-    return -Math.log(U) / rate;
-}
-
-// Randomizes an array
+/* Randomizes an array */
 function shuffle(arr) {
     var currentIndex = arr.length,
         temporaryValue, randomIndex;
@@ -442,9 +423,9 @@ function shuffle(arr) {
     return arr;
 }
 
-// Adds a new row of input fields on the bottom
+/* Adds a new row of input fields on the bottom */
 function addField() {
-    let i = currentFields;
+    let i = numFields;
     let d = document.createElement("div");
     d.setAttribute("class", "form-row");
     d.setAttribute("id", "row" + (i + 1));
@@ -473,32 +454,14 @@ function addField() {
     }
 
     document.getElementById("fields").appendChild(d);
-    currentFields++;
+    numFields++;
 }
 
-// Removes the last row of input fields
+/* Removes the last row of input fields */
 function removeField() {
-    if (currentFields > 1) {
+    if (numFields > 1) {
         let select = document.getElementById('fields');
         select.removeChild(select.lastChild);
-        currentFields -= 1;
+        numFields -= 1;
     }
-}
-
-// Distance function for clustering algorithm
-function averageClusterDistance(X, Y, M) {
-    // X, Y are 1D arrays representing groups; they contain the indices (w/r averageTimes matrix) of the orders in their group
-    let n = X.length;
-    let m = Y.length;
-    let den = n * m;
-    let outerSum = 0;
-    for (let i = 0; i < n; i++) {
-        let innerSum = 0;
-        for (let j = 0; j < m; j++) {
-            let dist = M[Math.max(X[i], Y[j])][Math.min(X[i], Y[j])];
-            innerSum += dist;
-        }
-        outerSum += innerSum;
-    }
-    return outerSum / den;
 }
