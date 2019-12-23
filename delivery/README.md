@@ -19,3 +19,6 @@ html, js, css, jquery, bootstrap & google maps js api.
     * `cloud.png`
     * `home.png`
     * `logo.png`
+
+## Example
+<img src="img/example.png" width="80%">
