@@ -1,7 +1,7 @@
 /*  Title: Delivery Assignment   
     Purpose: Assigns deliveries that are close together to the same driver if possible.
-    Usage policy: (c) 2019 Blake Rayvid. License is granted for non-commerical use only.
-    Author: Blake Rayvid (https//github.com/brayvid)    */
+    Usage policy: (c) 2019 Blake Rayvid. Non-commercial use only.
+    Author: Blake Rayvid (https//github.com/brayvid)  */
 
 var store,
     numFields = 0,
@@ -272,7 +272,7 @@ function directionsCallback(response, status) {
                 },
                 map: map,
                 icon: {
-                    url: 'img/home.png',
+                    url: '../img/home.png',
                     size: new google.maps.Size(22, 22),
                     anchor: new google.maps.Point(11, 11)
                 },

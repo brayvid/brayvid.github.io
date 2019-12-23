@@ -1,5 +1,10 @@
 # Delivery Assignment
-Efficiently divide deliveries among available couriers.
+Efficiently divide deliveries among available drivers.
+
+Demonstration: [https://brayvid.github.io/delivery](htps://brayvid.github.io/delivery)
+
+## License
+&copy; 2019 Blake Rayvid. Non-commercial use only.
 
 ## Requirements
 html, js, css, jquery, bootstrap & google maps js api.
