@@ -1,7 +1,7 @@
 # Delivery Assignment
 Efficiently divide deliveries among available drivers.
 
-Demonstration: [https://brayvid.github.io/delivery](htps://brayvid.github.io/delivery)
+Demonstration: https://brayvid.github.io/delivery
 
 ## License
 &copy; 2019 Blake Rayvid. Non-commercial use only.
