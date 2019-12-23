@@ -21,4 +21,4 @@ html, js, css, jquery, bootstrap & google maps js api.
     * `logo.png`
 
 ## Example
-<img src="img/example.png" width="80%">
+<img src="img/example.png" width="100%">
