@@ -1,5 +1,5 @@
 /*  Title: Delivery Assignment   
-    Purpose: Assigns deliveries that are close together to the same driver if possible.
+    Purpose: Efficiently divide deliveries among available drivers.
     Usage policy: (c) 2019 Blake Rayvid. Non-commercial use only.
     Author: Blake Rayvid (https//github.com/brayvid)  */
 
