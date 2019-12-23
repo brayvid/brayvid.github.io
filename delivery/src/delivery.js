@@ -436,7 +436,7 @@ function addField() {
         inp.setAttribute("class", "form-control");
         inp.setAttribute("type", "text");
         if (j == 0) {
-            inp.setAttribute("placeholder", "Order ID");
+            inp.setAttribute("placeholder", "Name");
             inp.setAttribute("id", "n" + (i + 1));
         } else {
             inp.setAttribute("placeholder", "Address");
