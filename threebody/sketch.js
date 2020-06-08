@@ -108,12 +108,12 @@ function drawTriangle(vvv) {
 }
 
 
-function mousePressed() {
-    beginTouch = [mouseX, mouseY];
-    console.log();
-}
+// function mousePressed() {
+//     beginTouch = [mouseX, mouseY];
+//     console.log();
+// }
 
-function mouseReleased() {
+function mouseClicked() {
     if (!entered[0]) {
         posVec[0] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 4, windowWidth / 4));
         entered[0] = true;
