@@ -1,3 +1,9 @@
+let introFont;
+
+function preload() {
+    introFont = loadFont('cmunss.otf');
+}
+
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     frameRate(60);
@@ -31,11 +37,24 @@ function setup() {
 
     entered = [false, false, false];
     beginTouch = [0, 0];
+    touchAllowed = true;
 }
 
 function draw() {
     background(0);
     // Lighting
+
+    if (entered[0] == false) {
+        push();
+        fill(255);
+        // translate(-windowWidth / 2, -windowHeight / 2, 0);
+        textAlign(CENTER, CENTER);
+        textFont(introFont, 24);
+        text("3-body system under gravity:\nTap on three regions.", 0, -40);
+        text("v0.2", 0, windowHeight / 2 - 80);
+        pop();
+    }
+
     ambientLight(166);
     directionalLight(255, 255, 255, 1, 1, -1);
 
@@ -54,21 +73,20 @@ function draw() {
 
     for (let i = 0; i < posVec.length; i++) {
         if (entered[i]) {
-            drawVector(posVec[i], cols[i]);
+            drawBody(posVec[i], cols[i]);
         }
     }
-
     // drawAxes();
 }
 
 function getCentroid() {
-    let centroid = p5.Vector.add(p5.Vector.add(posVec[0].mult(bodyMass[0]), posVec[1].mult(bodyMass[0])), posVec[2].mult(bodyMass[0])).mult(-1 / (bodyMass[0] + bodyMass[1] + bodyMass[2]));
+    let centroid = p5.Vector.add(p5.Vector.add(posVec[0].mult(bodyMass[0]), posVec[1].mult(bodyMass[1])), posVec[2].mult(bodyMass[2])).mult(-1 / (bodyMass[0] + bodyMass[1] + bodyMass[2]));
     return centroid;
 }
 
 function accel(posA, posB, posC, mB, mC) {
-    const c1 = -mB / Math.log(p5.Vector.sub(posA, posB).magSq() + 1);
-    const c2 = -mC / Math.log(p5.Vector.sub(posA, posC).magSq() + 1);
+    const c1 = -mB / (Math.log(p5.Vector.sub(posA, posB).magSq() - 1) + 0.01);
+    const c2 = -mC / (Math.log(p5.Vector.sub(posA, posC).magSq() - 1) + 0.01);
     return p5.Vector.add(p5.Vector.sub(posA, posB).normalize().mult(c1), p5.Vector.sub(posA, posC).normalize().mult(c2));
 }
 
@@ -77,16 +95,8 @@ function updatePosition(which, acc) {
     posBuffer[which].add(velVec[which]);
 }
 
-function drawVector(v, c) {
+function drawBody(v, c) {
     push();
-    // Stroke
-    // stroke(c);
-    // beginShape();
-    // vertex(0, 0, 0);
-    // vertex(v.x, v.y, v.z);
-    // endShape();
-
-    // Sphere
     noStroke();
     translate(v.x, v.y, v.z);
     fill(c);
@@ -114,17 +124,30 @@ function drawTriangle(vvv) {
     pop();
 }
 
+// function touchStarted() {
+//     // verifiedTouch = true;
+//     // justTouched = false;
+// }
+
 function touchEnded() {
-    if (!entered[0]) {
-        posVec[0] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
-        entered[0] = true;
-    } else if (!entered[1]) {
-        posVec[1] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
-        entered[1] = true;
-    } else if (!entered[2]) {
-        posVec[2] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
-        entered[2] = true;
+    if (touchAllowed) {
+        if (!entered[0]) {
+            posVec[0] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
+            entered[0] = true;
+        } else if (!entered[1]) {
+            posVec[1] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
+            entered[1] = true;
+        } else if (!entered[2]) {
+            posVec[2] = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2, random(-windowWidth / 6, windowWidth / 6));
+            entered[2] = true;
+        }
+        touchAllowed = false;
+        setInterval(resetTouchState, 300);
     }
+}
+
+function resetTouchState() {
+    touchAllowed = true;
 }
 
 
