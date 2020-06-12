@@ -1,7 +1,10 @@
 let introFont;
 
 function preload() {
-    introFont = loadFont('cmunss.otf');
+    introFont = loadFont('assets/cmunss.otf');
+    img1 = loadImage('assets/img1.jpg');
+    img2 = loadImage('assets/img2.jpg');
+
 }
 
 function setup() {
@@ -12,7 +15,7 @@ function setup() {
     bodySize = Math.round(Math.log(windowWidth + windowHeight + 100));
     // axisRadius = 0.5;
     // axisLength = 20;
-    cols = [color(255, 0, 0), color(0, 0, 255), color(255)]
+    cols = [color(81, 119, 166), color(70, 133, 62), color(220, 110, 121)]
     posVec = [
         createVector(0, 0, 0),
         createVector(0, 0, 0),
@@ -38,6 +41,9 @@ function setup() {
     entered = [false, false, false];
     beginTouch = [0, 0];
     touchAllowed = true;
+    textureMode(IMAGE);
+    // textureSize()
+    textureWrap(REPEAT);
 }
 
 function draw() {
@@ -85,8 +91,8 @@ function getCentroid() {
 }
 
 function accel(posA, posB, posC, mB, mC) {
-    const c1 = -mB / (Math.log(p5.Vector.sub(posA, posB).magSq() - 1) + 0.01);
-    const c2 = -mC / (Math.log(p5.Vector.sub(posA, posC).magSq() - 1) + 0.01);
+    const c1 = -mB / (Math.log(p5.Vector.sub(posA, posB).magSq() + 1) + 0.01);
+    const c2 = -mC / (Math.log(p5.Vector.sub(posA, posC).magSq() + 1) + 0.01);
     return p5.Vector.add(p5.Vector.sub(posA, posB).normalize().mult(c1), p5.Vector.sub(posA, posC).normalize().mult(c2));
 }
 
@@ -108,14 +114,15 @@ function drawTriangle(vvv) {
 
     const surfaceNormal = p5.Vector.cross(p5.Vector.sub(vvv[1], vvv[0]), p5.Vector.sub(vvv[2], vvv[0])).normalize().mult(0.05);
     push();
-    noStroke();
-    fill(50);
+    texture(img1);
+    // noStroke();
+    // fill(50);
     beginShape();
     for (let i = 0; i < 3; i++) {
         vertex(vvv[i].x - surfaceNormal.x, vvv[i].y - surfaceNormal.y, vvv[i].z - surfaceNormal.z);
     }
     endShape();
-    fill(150);
+    texture(img2);
     beginShape();
     for (let i = 0; i < 3; i++) {
         vertex(vvv[i].x + surfaceNormal.x, vvv[i].y + surfaceNormal.y, vvv[i].z + surfaceNormal.z);
