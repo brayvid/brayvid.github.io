@@ -11,6 +11,15 @@
 			<tr>
 				<td><a href="https://brayvid.github.io/interest">Exponential growth of savings</a></td>
 			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/spring">Damped harmonic oscillator</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/collide">Elastic collisions</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/tank">ODE tank problem</a></td>
+			</tr>
 		</table>
 	</section>
 </body>
