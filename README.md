@@ -20,6 +20,9 @@
 						<tr>
 				<td><a href="https://brayvid.github.io/tank">ODE tank problem</a></td>
 			</tr>
+			<tr>
+				<td><a href="https://brayvid.github.io/misc/threebody">Three-body gravity simulator</a></td>
+			</tr>
 		</table>
 	</section>
 </body>
