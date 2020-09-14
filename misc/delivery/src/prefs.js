@@ -1,16 +1,16 @@
 var locality = "New York NY",
 
     store = {
-        name: "NYU",
-        address: '116 Macdougal St ' + locality,
-        latLong: [40.729671, -74.000450]
+        name: "Garage",
+        address: '525 E 11th St ' + locality,
+        latLong: [40.727974, -73.980532]
     },
 
-    initialInputRows = 3,
+    initialInputRows = 5,
 
-    transportation = 'BICYCLING', // or 'DRIVING' or 'WALKING'
+    transportation = 'DRIVING', // or 'DRIVING' or 'WALKING'
 
-    dropoffSeconds = 120, // rough time stopped at a customer's location
+    dropoffSeconds = 300, // rough time stopped at a customer's location
 
     defaultColors = [
         "#e6194B",
