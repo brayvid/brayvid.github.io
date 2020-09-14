@@ -215,7 +215,7 @@ function requestRoutes(addresses) {
 
     let directionsRequest = {
         origin: store.address,
-        destination: store.address,
+        destination: endpt.address,
         travelMode: transportation,
         waypoints: waypts,
         optimizeWaypoints: true,
