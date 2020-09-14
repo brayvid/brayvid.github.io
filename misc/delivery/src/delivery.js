@@ -33,8 +33,10 @@ function requestMatrix(orderCount) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
         if (nTemp.match(/\S/) && aTemp.match(/\S/)) {
-            orders.push(new Order(nTemp, aTemp + " " + locality));
-            addressArray.push(aTemp + " " + locality);
+            // orders.push(new Order(nTemp, aTemp + " " + locality));
+            // addressArray.push(aTemp + " " + locality);
+            orders.push(new Order(nTemp, aTemp));
+            addressArray.push(aTemp);
         }
     }
 
