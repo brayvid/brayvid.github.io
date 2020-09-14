@@ -74,7 +74,7 @@ function requestMatrix(orderCount) {
     let matrixRequest = {
         // origins same as destinations
         origins: [store.address].concat(addressArray),
-        destinations: [endpt.address].concat(addressArray),
+        destinations: addressArray.concat([endpt.address]),
         travelMode: transportation,
     };
 
