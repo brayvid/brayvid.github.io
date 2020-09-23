@@ -4,7 +4,7 @@ const SIZE = 25;
 const bodies = ["jupiter", "saturn", "neptune", "uranus", "earth", "voyager2"];
 const coords = ["solar_ecliptic", "heliographic_inertial", "heliographic"];
 const masses = {
-    "sun": 50000,
+    "sun": 333000,
     "jupiter": 317.0,
     "saturn": 95.0,
     "neptune": 17.0,
@@ -31,6 +31,7 @@ function setup() {
 
     num_frames = tables["voyager2"].getRowCount();
     timestep = 1;
+    initPos = [0, 0];
     // rotateX(map(mouseY, 0, windowHeight, 0, PI * 0.55));
     // rotateZ(map(mouseX, 0, windowWidth, PI, 0));
     // voyager_grid_pos;
@@ -50,6 +51,11 @@ function draw() {
     camera(0, 0, 1800, 0, 0, 0, 0, 1, 0);
     rotateX(map(mouseY, 0, windowHeight, 0, PI * 0.49));
     rotateZ(map(mouseX, 0, windowWidth, TWO_PI, 0));
+    // if (mouseIsPressed) {
+    //     rotateX(map(initPos[1] - mouseY, 0, windowHeight, PI * 0.49, 0));
+    //     rotateZ(map(initPos[0] - mouseX, 0, windowWidth, TWO_PI, 0));
+    //     initPos = [mouseX, mouseY];
+    // }
     translate(-WIDTH * SIZE / 2, -DEPTH * SIZE / 2);
     // orbitControl();
     // getPotential();
@@ -76,16 +82,107 @@ function draw() {
     // voyager_grid_pos =
     push();
     fill(0);
-    stroke(1);
-    specularMaterial(255, 0, 0);
+    noStroke();
+    // specularMaterial(255, 0, 0);
     // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
     translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x + WIDTH / 2, voyager_y + DEPTH / 2, timestep));
     rotateX(PI);
     rotateY(PI);
     // rotateZ(timestep * 0.01);
-    scale(0.4); // Scaled to make model fit into canvas
+    scale(1.1); // Scaled to make model fit into canvas
     model(voyager, true);
     pop();
+
+    // Sun
+    push();
+    stroke(1);
+    translate(SIZE * WIDTH / 2, SIZE * DEPTH / 2, -7000);
+    fill('#ffcc00');
+    sphere(150);
+    pop();
+
+    // Jupiter
+    let jupiter_r = parseFloat(tables["jupiter"].get(timestep, 2));
+    let jupiter_theta = parseFloat(tables["jupiter"].get(timestep, 4));
+    let jupiter_x = jupiter_r * cos(PI * jupiter_theta / 180)
+    let jupiter_y = jupiter_r * sin(PI * jupiter_theta / 180)
+    // voyager_grid_pos =
+    push();
+    fill('#e36e4b');
+    noStroke();
+    // normalMaterial();
+    // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
+    translate(WIDTH * SIZE / 2 + jupiter_x * SIZE, DEPTH * SIZE / 2 + jupiter_y * SIZE, -5500);
+    // rotateX(PI);
+    // rotateY(PI);
+    // rotateZ(timestep * 0.01);
+    // scale(0.4); // Scaled to make model fit into canvas
+    sphere(30);
+    pop();
+
+
+    // Saturn
+    let saturn_r = parseFloat(tables["saturn"].get(timestep, 2));
+    let saturn_theta = parseFloat(tables["saturn"].get(timestep, 4));
+    let saturn_x = saturn_r * cos(PI * saturn_theta / 180)
+    let saturn_y = saturn_r * sin(PI * saturn_theta / 180)
+    // voyager_grid_pos =
+    push();
+    fill('#ab604a');
+    noStroke();
+    // normalMaterial();
+    // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
+    translate(WIDTH * SIZE / 2 + saturn_x * SIZE, DEPTH * SIZE / 2 + saturn_y * SIZE, -1750);
+    // rotateX(PI);
+    // rotateY(PI);
+    // rotateZ(timestep * 0.01);
+    // scale(0.4); // Scaled to make model fit into canvas
+    sphere(20);
+    pop();
+
+
+    // Uranus
+    let uranus_r = parseFloat(tables["uranus"].get(timestep, 2));
+    let uranus_theta = parseFloat(tables["uranus"].get(timestep, 4));
+    let uranus_x = uranus_r * cos(PI * uranus_theta / 180)
+    let uranus_y = uranus_r * sin(PI * uranus_theta / 180)
+    // voyager_grid_pos =
+    push();
+    fill('#ace5ee');
+    noStroke();
+    // normalMaterial();
+    // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
+    translate(WIDTH * SIZE / 2 + uranus_x * SIZE, DEPTH * SIZE / 2 + uranus_y * SIZE, -500);
+    // rotateX(PI);
+    // rotateY(PI);
+    // rotateZ(timestep * 0.01);
+    // scale(0.4); // Scaled to make model fit into canvas
+    sphere(15);
+    pop();
+
+    // Neptune
+    let neptune_r = parseFloat(tables["neptune"].get(timestep, 2));
+    let neptune_theta = parseFloat(tables["neptune"].get(timestep, 4));
+    let neptune_x = neptune_r * cos(PI * neptune_theta / 180)
+    let neptune_y = neptune_r * sin(PI * neptune_theta / 180)
+    // voyager_grid_pos =
+    push();
+    fill('#3e54e8');
+    noStroke();
+    // normalMaterial();
+    // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
+    translate(WIDTH * SIZE / 2 + neptune_x * SIZE, DEPTH * SIZE / 2 + neptune_y * SIZE, -200);
+    rotateX(PI);
+    rotateY(PI);
+    // rotateZ(timestep * 0.01);
+    // scale(0.4); // Scaled to make model fit into canvas
+    sphere(12);
+    pop();
+
+
+
+
+
 
     if (timestep > num_frames - 29) {
         noLoop();
@@ -113,4 +210,9 @@ function getPotential(x, y, t) {
     total_potential += sun_potential;
     // console.log("potential=" + total_potential);
     return 0.5 * total_potential;
+}
+
+function mouseClicked() {
+    initPos = [mouseX, mouseY];
+    return false;
 }
