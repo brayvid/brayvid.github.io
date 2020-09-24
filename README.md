@@ -24,7 +24,7 @@
 				<td><a href="https://brayvid.github.io/misc/threebody">Three-body gravity simulator</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II animation</a></td>
+				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II trajectory animation</a></td>
 			</tr>
 		</table>
 	</section>
