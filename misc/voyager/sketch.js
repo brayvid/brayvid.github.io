@@ -39,24 +39,28 @@ function setup() {
 
 function draw() {
     background(0, 20, 50);
-    push();
-    textFont(myFont);
-    fill(255);
-    textSize(36);
-    translate(-85, -200, 800);
-    textAlign("CENTER");
-    text('VOYAGER 2', 0, 0);
-    text(Math.round(1977 + timestep / 365), 58, 50);
-    pop();
+    // push();
+    // textFont(myFont);
+    // fill(255);
+    // textSize(36);
+    // translate(-85, -200, 800);
+    // textAlign("CENTER");
+    // text('VOYAGER 2', 0, 0);
+    // text(Math.round(1977 + timestep / 365), 58, 50);
+    // pop();
+
+    frustum(width / 4, -width / 4, -height / 4, height / 4, 400, -400);
     camera(0, 0, 1800, 0, 0, 0, 0, 1, 0);
-    rotateX(map(mouseY, 0, windowHeight, 0, PI * 0.49));
-    rotateZ(map(mouseX, 0, windowWidth, TWO_PI, 0));
+    rotateX(constrain(map(mouseY, 0, windowHeight, 5 * PI / 4, PI / 2), PI / 1.8, PI));
+    rotateZ(map(mouseX, 0, windowWidth, 0, TWO_PI));
+    rotateY(PI)
     // if (mouseIsPressed) {
     //     rotateX(map(initPos[1] - mouseY, 0, windowHeight, PI * 0.49, 0));
     //     rotateZ(map(initPos[0] - mouseX, 0, windowWidth, TWO_PI, 0));
     //     initPos = [mouseX, mouseY];
     // }
     translate(-WIDTH * SIZE / 2, -DEPTH * SIZE / 2);
+
     // orbitControl();
     // getPotential();
     // ambientMaterial(20, 60, 40);
@@ -86,17 +90,18 @@ function draw() {
     // specularMaterial(255, 0, 0);
     // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
     translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x + WIDTH / 2, voyager_y + DEPTH / 2, timestep));
-    rotateX(PI);
-    rotateY(PI);
+    rotateX(-PI / 2);
+    // rotateY(PI / 2);
+    rotateZ(-3 * PI / 2);
     // rotateZ(timestep * 0.01);
-    scale(1.1); // Scaled to make model fit into canvas
+    scale(1); // Scaled to make model fit into canvas
     model(voyager, true);
     pop();
 
     // Sun
     push();
     stroke(1);
-    translate(SIZE * WIDTH / 2, SIZE * DEPTH / 2, -7000);
+    translate(SIZE * WIDTH / 2, SIZE * DEPTH / 2, -6550);
     fill('#ffcc00');
     sphere(150);
     pop();
@@ -117,7 +122,7 @@ function draw() {
     // rotateY(PI);
     // rotateZ(timestep * 0.01);
     // scale(0.4); // Scaled to make model fit into canvas
-    sphere(30);
+    sphere(35);
     pop();
 
 
@@ -132,12 +137,12 @@ function draw() {
     noStroke();
     // normalMaterial();
     // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
-    translate(WIDTH * SIZE / 2 + saturn_x * SIZE, DEPTH * SIZE / 2 + saturn_y * SIZE, -1750);
+    translate(WIDTH * SIZE / 2 + saturn_x * SIZE, DEPTH * SIZE / 2 + saturn_y * SIZE, -1765);
     // rotateX(PI);
     // rotateY(PI);
     // rotateZ(timestep * 0.01);
     // scale(0.4); // Scaled to make model fit into canvas
-    sphere(20);
+    sphere(15);
     pop();
 
 
@@ -148,16 +153,16 @@ function draw() {
     let uranus_y = uranus_r * sin(PI * uranus_theta / 180)
     // voyager_grid_pos =
     push();
-    fill('#ace5ee');
+    fill('#89c7c5');
     noStroke();
     // normalMaterial();
     // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
-    translate(WIDTH * SIZE / 2 + uranus_x * SIZE, DEPTH * SIZE / 2 + uranus_y * SIZE, -500);
+    translate(WIDTH * SIZE / 2 + uranus_x * SIZE, DEPTH * SIZE / 2 + uranus_y * SIZE, -440);
     // rotateX(PI);
     // rotateY(PI);
     // rotateZ(timestep * 0.01);
     // scale(0.4); // Scaled to make model fit into canvas
-    sphere(15);
+    sphere(12);
     pop();
 
     // Neptune
@@ -171,7 +176,7 @@ function draw() {
     noStroke();
     // normalMaterial();
     // translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x, voyager_y, timestep));
-    translate(WIDTH * SIZE / 2 + neptune_x * SIZE, DEPTH * SIZE / 2 + neptune_y * SIZE, -200);
+    translate(WIDTH * SIZE / 2 + neptune_x * SIZE, DEPTH * SIZE / 2 + neptune_y * SIZE, -190);
     rotateX(PI);
     rotateY(PI);
     // rotateZ(timestep * 0.01);
