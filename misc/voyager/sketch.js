@@ -1,3 +1,7 @@
+/*
+Voyager II Escaping the Solar System (p5.js sketch) by Blake Rayvid
+*/
+
 const WIDTH = 120;
 const DEPTH = 120;
 const SIZE = 25;
@@ -16,7 +20,7 @@ function preload() {
     tables = {};
     coord_select = 1;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < bodies.length; i++) {
         tables[bodies[i]] = loadTable("data/" + coords[coord_select] + "/" + bodies[i] + "_" + coords[coord_select] + "_coords.csv", "csv", "header");
     }
     myFont = loadFont('assets/cmunss.otf');
@@ -26,19 +30,30 @@ function preload() {
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     frameRate(10);
-    // setAttributes('antialias', true);
-    // frustum(-500, 500, -500, 500, 500, 5000);
-
     num_frames = tables["voyager2"].getRowCount();
     timestep = 1;
     initPos = [0, 0];
-    // rotateX(map(mouseY, 0, windowHeight, 0, PI * 0.55));
-    // rotateZ(map(mouseX, 0, windowWidth, PI, 0));
-    // voyager_grid_pos;
+    allBodiesXY = {};
+    sunPotentialSurface = [];
+    for (let y = 0; y < DEPTH + 1; y++) {
+        let tempPotentialRow = [];
+        for (let x = 0; x < WIDTH + 1; x++) {
+            // console.log(x, y);
+            tempPotentialRow[x] = sunPotential(x, y);
+        }
+        sunPotentialSurface.push(tempPotentialRow);
+    }
 }
 
 function draw() {
     background(0, 20, 50);
+
+    for (let i = 0; i < bodies.length; i++) {
+        let tempR = tables[bodies[i]].get(timestep, 2);
+        let tempTh = tables[bodies[i]].get(timestep, 4);
+        allBodiesXY[bodies[i]] = [tempR * cos(PI * tempTh / 180), tempR * sin(PI * tempTh / 180)];
+    }
+
     push();
     textFont(myFont);
     fill(255);
@@ -71,22 +86,28 @@ function draw() {
     // directionalLight(color(127), -1, 1, -1);
     // fill(20, 60, 40);
 
-    for (let y = 0; y < DEPTH; ++y) {
+    for (let y = 0; y < DEPTH; y++) {
         beginShape(TRIANGLE_STRIP);
-        for (let x = 0; x < WIDTH + 1; ++x) {
-            let thisPotential = getPotential(x, y, timestep);
-            stroke
-
-            vertex(x * SIZE, y * SIZE, thisPotential);
-            vertex(x * SIZE, (y + 1) * SIZE, getPotential(x, y + 1, timestep));
+        for (let x = 0; x < WIDTH + 1; x++) {
+            if (xyClearOfBodies(x, y)) {
+                vertex(x * SIZE, y * SIZE, sunPotentialSurface[x][y]);
+                vertex(x * SIZE, (y + 1) * SIZE, sunPotentialSurface[x][y + 1]);
+                // vertex(x * SIZE, y * SIZE, 1000);
+                // vertex(x * SIZE, (y + 1) * SIZE, 1000);
+            } else {
+                let thisPotential = getPotential(x, y, timestep);
+                vertex(x * SIZE, y * SIZE, thisPotential);
+                vertex(x * SIZE, (y + 1) * SIZE, getPotential(x, y + 1, timestep));
+            }
         }
         endShape();
     }
+
+    //Voyager
     let voyager_r = parseFloat(tables["voyager2"].get(timestep, 2));
     let voyager_theta = parseFloat(tables["voyager2"].get(timestep, 4));
     let voyager_x = voyager_r * cos(PI * voyager_theta / 180)
     let voyager_y = voyager_r * sin(PI * voyager_theta / 180)
-    // voyager_grid_pos =
     push();
     fill(0);
     noStroke();
@@ -97,7 +118,7 @@ function draw() {
     // rotateY(PI / 2);
     rotateZ(-3 * PI / 2);
     // rotateZ(timestep * 0.01);
-    scale(1); // Scaled to make model fit into canvas
+    scale(1);
     model(voyager, true);
     pop();
 
@@ -187,11 +208,6 @@ function draw() {
     sphere(12);
     pop();
 
-
-
-
-
-
     if (timestep > num_frames - 29) {
         noLoop();
         console.log("Finished.")
@@ -218,6 +234,21 @@ function getPotential(x, y, t) {
     total_potential += sun_potential;
     // console.log("potential=" + total_potential);
     return 0.5 * total_potential;
+}
+
+function sunPotential(x, y) {
+    return -0.5 * masses["sun"] / (Math.pow(x - WIDTH / 2, 2) + Math.pow(y - DEPTH / 2, 2));
+}
+
+function xyClearOfBodies(x, y) {
+    for (let i = 0; i < bodies.length; i++) {
+        if (Math.pow(x - allBodiesXY[bodies[i]][0] - WIDTH / 2, 2) + Math.pow(y - allBodiesXY[bodies[i]][1] - DEPTH / 2, 2) < 8) {
+            // console.log("false");
+            return false;
+        }
+    }
+    // console.log("true");
+    return true;
 }
 
 function mouseClicked() {
