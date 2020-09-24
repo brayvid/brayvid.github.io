@@ -39,15 +39,18 @@ function setup() {
 
 function draw() {
     background(0, 20, 50);
-    // push();
-    // textFont(myFont);
-    // fill(255);
-    // textSize(36);
-    // translate(-85, -200, 800);
-    // textAlign("CENTER");
-    // text('VOYAGER 2', 0, 0);
-    // text(Math.round(1977 + timestep / 365), 58, 50);
-    // pop();
+    push();
+    textFont(myFont);
+    fill(255);
+    textSize(36);
+    textAlign(CENTER);
+    translate(100, 350, 1000);
+    rotateY(-PI);
+    rotateX(PI);
+    textAlign("CENTER");
+    text('VOYAGER 2', 0, 0);
+    text(Math.round(1977 + timestep / 365), 58, 50);
+    pop();
 
     frustum(width / 4, -width / 4, -height / 4, height / 4, 400, -400);
     camera(0, 0, 1800, 0, 0, 0, 0, 1, 0);
