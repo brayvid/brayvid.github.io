@@ -44,7 +44,7 @@ function draw() {
     fill(255);
     textSize(36);
     textAlign(CENTER);
-    translate(100, 350, 1000);
+    translate(100, 200, 800);
     rotateY(-PI);
     rotateX(PI);
     textAlign("CENTER");
