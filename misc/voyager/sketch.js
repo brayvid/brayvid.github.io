@@ -1,19 +1,44 @@
-/*
-Voyager II Escaping the Solar System (p5.js sketch) by Blake Rayvid
-*/
-
-
+/**
+@title Voyager II escaping the Solar System
+@author Blake Rayvid
+ */
 const WIDTH = 120; // Number of grid units left to right
 const DEPTH = 120; // Number of grid units front to back
 const SIZE = 25; // Pixels per grid unit
-const bodies = ["jupiter", "saturn", "neptune", "uranus", "voyager2"]; // 
+const bodies = ["jupiter", "saturn", "uranus", "neptune", "earth", "voyager2"]; // 
 const coords = ["solar_ecliptic", "heliographic_inertial", "heliographic"]; // Not functional yet - keep coord_select = 1 below
 const masses = { // x Earth mass
     "sun": 333000.0,
     "jupiter": 317.0,
     "saturn": 95.0,
-    "neptune": 17.0,
     "uranus": 14.0,
+    "neptune": 17.0,
+    "earth": 1.0
+};
+const colors = {
+    "sun": '#ffcc00',
+    "jupiter": '#e36e4b',
+    "saturn": '#ab604a',
+    "uranus": '#89c7c5',
+    "neptune": '#3e54e8',
+    "earth": '#0099cc'
+};
+const sizes = { // Diameters
+    "sun": 250, // 865370
+    "jupiter": 50, // 86881
+    "saturn": 41, // 72367
+    "uranus": 18, // 31518
+    "neptune": 17, // 30599
+    "earth": 5 // 7917
+};
+const planetLevels = { // value of the potential field
+    "sun": -30000,
+    "jupiter": -5500, // 107 x Neptune
+    "saturn": -1765, // 17 ""   ""
+    "uranus": -440, // 1.3
+    "neptune": -190, // 1.0
+    "earth": -5000 // 1.7
+
 }
 
 //Runs once before setup()
@@ -55,7 +80,11 @@ function setup() {
     xRotation = 0;
     zRotation = 0;
     whereWasMouse = [mouseX, mouseY];
-    ezComputeProximity = 15;
+    computeProximity = 30;
+
+
+
+
 }
 
 // Runs at ~FPS set above
@@ -67,6 +96,7 @@ function draw() {
         let tempR = tables[bodies[i]].get(timestep, 2);
         let tempTh = tables[bodies[i]].get(timestep, 4);
         allBodiesXY[bodies[i]] = [tempR * cos(PI * tempTh / 180), tempR * sin(PI * tempTh / 180)];
+        // planetLevels[bodies[i]] = sunPotentialSurface[round(allBodiesXY[bodies[i][0]])][round(allBodiesXY[bodies[i][1]])];
     }
 
     // Draw text
@@ -107,12 +137,13 @@ function draw() {
     // Draw potential surface
     push();
     strokeWeight(0.5);
+    fill(255, 230);
     for (let y = 0; y < DEPTH; y++) {
         beginShape(TRIANGLE_STRIP);
         for (let x = 0; x < WIDTH + 1; x++) {
             if (xyClearOfBodies(x, y)) { // Use pre-computed sun potential surface for points far enough away from any bodies
-                vertex(x * SIZE, y * SIZE, sunPotentialSurface[x][y]);
-                vertex(x * SIZE, (y + 1) * SIZE, sunPotentialSurface[x][y + 1]);
+                vertex(x * SIZE, y * SIZE, max(sunPotentialSurface[x][y], planetLevels["sun"]));
+                vertex(x * SIZE, (y + 1) * SIZE, max(sunPotentialSurface[x][y + 1], planetLevels["sun"]));
             } else { // Compute total potential directly
                 let thisPotential = getPotential(x, y, timestep);
                 vertex(x * SIZE, y * SIZE, thisPotential);
@@ -123,39 +154,44 @@ function draw() {
     }
     pop();
 
-    //Display Voyager II
+    // Display bodies
+
+    //Voyager II
     let voyager_r = parseFloat(tables["voyager2"].get(timestep, 2));
     let voyager_theta = parseFloat(tables["voyager2"].get(timestep, 4));
     let voyager_x = voyager_r * cos(PI * voyager_theta / 180)
     let voyager_y = voyager_r * sin(PI * voyager_theta / 180)
     push();
-    fill(0);
+    fill(50);
     noStroke();
     translate(WIDTH * SIZE / 2 + voyager_x * SIZE, DEPTH * SIZE / 2 + voyager_y * SIZE, getPotential(voyager_x + WIDTH / 2, voyager_y + DEPTH / 2, timestep));
-    rotateX(-PI / 2);
+    rotateX(timestep * 0.01);
+    rotateY(PI / 2);
     // rotateY(PI / 2);
-    rotateZ(-3 * PI / 2);
+    rotateZ(PI / 4);
     // rotateZ(timestep * 0.01);
     scale(1);
     model(voyager, true);
     pop();
 
-    // Display bodies
     // Sun
     push();
-    stroke(1);
-    translate(SIZE * WIDTH / 2, SIZE * DEPTH / 2, -6550);
-    fill('#ffcc00');
-    sphere(150);
+    noStroke();
+    translate(SIZE * WIDTH / 2, SIZE * DEPTH / 2, planetLevels["sun"]);
+    fill(colors["sun"]);
+    sphere(sizes["sun"]);
     pop();
+
     //  Jupiter
-    displaySphere("jupiter", '#e36e4b', 35, -5500);
+    displaySphere("jupiter");
     //  Saturn
-    displaySphere("saturn", '#ab604a', 15, -1765);
+    displaySphere("saturn");
     //  Uranus
-    displaySphere("uranus", '#89c7c5', 12, -440);
+    displaySphere("uranus");
     // Neptune
-    displaySphere("neptune", '#3e54e8', 12, -190);
+    displaySphere("neptune");
+    // Earth
+    displaySphere("earth");
 
     // Stop animation at end of sequence
     if (timestep > num_frames - 41) {
@@ -166,7 +202,7 @@ function draw() {
     timestep += timeUnit;
 }
 
-// Computes potential V(x,y,t): https://en.wikipedia.org/wiki/Gravitational_potential
+// Computes gravitational potential at (x,y) at timestep t: https://en.wikipedia.org/wiki/Gravitational_potential
 function getPotential(x, y, t) {
     let total_potential = 0;
     for (let i = 0; i < bodies.length - 1; i++) {
@@ -175,7 +211,7 @@ function getPotential(x, y, t) {
         let theta = parseFloat(tables[bodies[i]].get(t, 4));
         let body_x = r * cos(PI * theta / 180);
         let body_y = r * sin(PI * theta / 180);
-        total_potential += -masses[bodies[i]] / (Math.pow(x - body_x - WIDTH / 2, 2) + Math.pow(y - body_y - DEPTH / 2, 2));;
+        total_potential += -masses[bodies[i]] / (Math.pow(x - body_x - WIDTH / 2, 2) + Math.pow(y - body_y - DEPTH / 2, 2) + 0.01);
     }
 
     sun_potential = -masses["sun"] / (Math.pow(x - WIDTH / 2, 2) + Math.pow(y - DEPTH / 2, 2));
@@ -192,7 +228,7 @@ function sunPotential(x, y) {
 // Return true if the passed coordinate is not currently near any bodies
 function xyClearOfBodies(x, y) {
     for (let i = 0; i < bodies.length; i++) {
-        if (Math.pow(x - allBodiesXY[bodies[i]][0] - WIDTH / 2, 2) + Math.pow(y - allBodiesXY[bodies[i]][1] - DEPTH / 2, 2) < ezComputeProximity) {
+        if (Math.pow(x - allBodiesXY[bodies[i]][0] - WIDTH / 2, 2) + Math.pow(y - allBodiesXY[bodies[i]][1] - DEPTH / 2, 2) < computeProximity) {
             // console.log("false");
             return false;
         }
@@ -220,15 +256,19 @@ function windowResized() {
 }
 
 // Draw specified body
-function displaySphere(obj, col, size, ht) {
+function displaySphere(obj) {
+
     let r = parseFloat(tables[obj].get(timestep, 2));
+    // if (obj == "earth") {
+    //     r *= 3;
+    // }
     let theta = parseFloat(tables[obj].get(timestep, 4));
     let x = r * cos(PI * theta / 180)
     let y = r * sin(PI * theta / 180)
     push();
-    fill(col);
+    fill(colors[obj]);
     noStroke();
-    translate(WIDTH * SIZE / 2 + x * SIZE, DEPTH * SIZE / 2 + y * SIZE, ht);
-    sphere(size);
+    translate(WIDTH * SIZE / 2 + x * SIZE, DEPTH * SIZE / 2 + y * SIZE, planetLevels[obj]);
+    sphere(sizes[obj]);
     pop();
 }
