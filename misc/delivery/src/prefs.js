@@ -1,22 +1,16 @@
 var locality = "New York NY",
 
-    endpt = {
-        name: "Camp",
-        address: '1002 Adirondack Loj Rd, Lake Placid, NY 12946',
-        latLong: [44.181294, -73.964690]
-    },
-
     store = {
-        name: "Garage",
-        address: '525 E 11th St, New York NY 10009',
-        latLong: [40.727974, -73.980532]
+        name: "NYU",
+        address: '116 Macdougal St ' + locality,
+        latLong: [40.729671, -74.000450]
     },
 
-    initialInputRows = 5,
+    initialInputRows = 3,
 
-    transportation = 'DRIVING', // or 'DRIVING' or 'WALKING'
+    transportation = 'BICYCLING', // or 'DRIVING' or 'WALKING'
 
-    dropoffSeconds = 300, // rough time stopped at a customer's location
+    dropoffSeconds = 120, // rough time stopped at a customer's location
 
     defaultColors = [
         "#e6194B",

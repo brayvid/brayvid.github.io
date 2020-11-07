@@ -33,10 +33,8 @@ function requestMatrix(orderCount) {
         let nTemp = document.getElementById("n" + i).value;
         let aTemp = document.getElementById("a" + i).value;
         if (nTemp.match(/\S/) && aTemp.match(/\S/)) {
-            // orders.push(new Order(nTemp, aTemp + " " + locality));
-            // addressArray.push(aTemp + " " + locality);
-            orders.push(new Order(nTemp, aTemp));
-            addressArray.push(aTemp);
+            orders.push(new Order(nTemp, aTemp + " " + locality));
+            addressArray.push(aTemp + " " + locality);
         }
     }
 
@@ -74,7 +72,7 @@ function requestMatrix(orderCount) {
     let matrixRequest = {
         // origins same as destinations
         origins: [store.address].concat(addressArray),
-        destinations: addressArray.concat([endpt.address]),
+        destinations: [store.address].concat(addressArray),
         travelMode: transportation,
     };
 
@@ -215,7 +213,7 @@ function requestRoutes(addresses) {
 
     let directionsRequest = {
         origin: store.address,
-        destination: endpt.address,
+        destination: store.address,
         travelMode: transportation,
         waypoints: waypts,
         optimizeWaypoints: true,
