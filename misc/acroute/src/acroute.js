@@ -452,7 +452,7 @@ function addField() {
     d.setAttribute("id", "row" + (i + 1));
     for (let j = 0; j < 1; j++) {
         let din = document.createElement("div");
-        din.setAttribute("class", "col col-md-" + (4 * (j + 1)));
+        din.setAttribute("class", "col col-md-" + (12 * (j + 1)));
         let inp = document.createElement("input");
         inp.setAttribute("class", "form-control");
         inp.setAttribute("type", "text");
@@ -491,14 +491,14 @@ function makeEndptFields() {
         inp.setAttribute("class", "form-control");
         inp.setAttribute("type", "text");
         if(j==0){
-            inp.setAttribute("placeholder", "(CITY)");
+            inp.setAttribute("placeholder", "(City)");
             inp.setAttribute("id", "city");
         }
         else if (j == 1) {
-            inp.setAttribute("placeholder", "*START*");
+            inp.setAttribute("placeholder", "*Start*");
             inp.setAttribute("id", "startAddress");
         } else {
-            inp.setAttribute("placeholder", "(FINISH)");
+            inp.setAttribute("placeholder", "(Finish)");
             inp.setAttribute("id", "stopAddress");
         }
         // inp.addEventListener("keyup", function (event) {

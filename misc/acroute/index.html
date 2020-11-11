@@ -40,6 +40,8 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
         }
 
         .container {
+            width: 100%;
+            white-space:nowrap;
             padding-top: 20px;
         }
 
@@ -106,6 +108,13 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
             width: auto;
             overflow: visible;
         }
+        #fields{
+            width:100%;
+        }
+
+        .navbar-brand{
+            text-align: center;
+        }
     </style>
 
     <!-- JQuery JS 3.3.1 -->
@@ -133,7 +142,7 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
 
 <body>
     <!-- Title bar -->
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar-nav nav-fill w-100">
         <h6 class="navbar-brand">
 
             ACRoute v1.0
@@ -186,9 +195,9 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
 
         </div>
         <!-- Area for field grid -->
-        <form id="fields" class=".w-auto">
+        <form id="fields">
         </form>
-        <form id="finish" class=".w-auto">
+        <form id="finish">
         </form>
 
         <!-- Assign button -->
