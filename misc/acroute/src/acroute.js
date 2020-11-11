@@ -274,7 +274,7 @@ function directionsCallback(response, status) {
         directionsRenderer.setMap(map);
         directionsRenderer.setOptions({
             suppressMarkers: true,
-            draggable: true,
+            draggable: false,
             preserveViewport: true,
             suppressBicyclingLayer: true
         });
