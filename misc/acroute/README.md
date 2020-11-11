@@ -12,7 +12,7 @@ html, js, css, jquery, bootstrap & google maps js api.
 * `index.html`
 * `README.md`
 * `src/`
-    * `delivery.js`
+    * `acroute.js`
     * `prefs.js`
 * `img/`
     * `cloud.png`
