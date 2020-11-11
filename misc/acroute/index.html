@@ -41,7 +41,7 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
 
         .container {
             width: 100%;
-            white-space:nowrap;
+            white-space: nowrap;
             padding-top: 20px;
         }
 
@@ -108,13 +108,16 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
             width: auto;
             overflow: visible;
         }
-        #fields{
-            width:100%;
+
+        #fields {
+            width: 100%;
         }
 
-        .navbar-brand{
+        .navbar-brand {
             text-align: center;
         }
+
+        /* .upload {} */
     </style>
 
     <!-- JQuery JS 3.3.1 -->
@@ -132,7 +135,8 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
 
     <!-- Main program JS -->
     <script src="src/acroute.js"></script>
-
+    <!-- v2 -->
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
 
     <!-- Google Maps JS API -->
     <script
@@ -148,6 +152,8 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
             ACRoute v1.0
 
             <br>
+
+            <input id="uploader" type="file" accept="image/*" capture="camera">
 
             <form id="start" class=".w-auto">
             </form>
@@ -197,8 +203,7 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
         <!-- Area for field grid -->
         <form id="fields">
         </form>
-        <form id="finish">
-        </form>
+
 
         <!-- Assign button -->
         <div class="buttonrow">
@@ -220,6 +225,8 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
 
     <script>
         $(document).ready(function () {
+
+            // import Tesseract from 'tesseract.js';
             // Identify store location
             // document.getElementById("store").innerHTML = store.name;
             makeEndptFields();
@@ -232,6 +239,36 @@ Author: Blake Rayvid (https//github.com/brayvid)  */
             $("#assign").click(function () {
                 $(".collapse").collapse('show');
             });
+
+            const recognize = async ({
+                target: {
+                    files
+                }
+            }) => {
+                const {
+                    data: {
+                        text
+                    }
+                } = await Tesseract.recognize(files[0], 'eng', {
+                    // corePath: "tesseract.min.js",
+                    logger: m => console.log(m),
+                });
+                console.log(text);
+                ocrText = text.split("\n");
+                i = 0;
+                j = 0;
+                while (j < ocrText.length) {
+                    if (ocrText[j] != "" && ocrText[j] != "\n") {
+                        document.getElementById('a' + (i + 1)).value = ocrText[j];
+                        i++;
+                    }
+                    j++;
+                }
+            }
+
+            var myInput = document.getElementById('uploader');
+            myInput.addEventListener('change', recognize);
+
         });
     </script>
 </body>

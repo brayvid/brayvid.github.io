@@ -24,13 +24,19 @@ var store,
     directionsCounter,
     startVal,
     stopVal,
-    locality;
+    locality,
+    ocrText,
+    splitted,
+    coords,
+    geocoder;
 
 /* Sends distance matrix request */
 function requestMatrix(orderCount) {
     // get order IDs and addresses from fields
     orders = [];
     addressArray = [];
+
+    // splitted = ocrText
 
     locality = document.getElementById("city").value;
     if (locality == "") {
@@ -74,8 +80,8 @@ function requestMatrix(orderCount) {
     mapOptions = {
         zoom: 12,
         center: {
-            lat: 40.7128,
-            lng: -74
+            lat: coords[0],
+            lng: coords[1]
         },
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
@@ -397,9 +403,12 @@ class Store {
 function googleReady() {
     matrixService = new google.maps.DistanceMatrixService();
     directionService = new google.maps.DirectionsService();
+    geocoder = new google.maps.Geocoder();
     // console.log("Delivery Assignment Testing");
     console.log("Distance matrix service ready.");
     console.log("Directions service ready.");
+    console.log("Geocoder ready.");
+    getLocation();
 }
 
 /* Checks array equality */
@@ -522,5 +531,37 @@ function removeField() {
         let select = document.getElementById('fields');
         select.removeChild(select.lastChild);
         numFields -= 1;
+    }
+}
+
+function geocodeLatLng(pos) {
+    // console.log(pos)
+    const latlng = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+    };
+    coords = [latlng.lat, latlng.lng];
+    geocoder.geocode({
+        location: latlng
+    }, (results, status) => {
+        if (status === "OK") {
+            if (results[0]) {
+                document.getElementById("startAddress").value = results[0].formatted_address;
+                // infowindow.setContent();
+                // infowindow.open(map, marker);
+            } else {
+                // window.alert("No results found");
+            }
+        } else {
+            // window.alert("Geocoder failed due to: " + status);
+        }
+    });
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(geocodeLatLng);
+    } else {
+        document.getElementById("startAddress").value = "Unknown";
     }
 }
