@@ -33,19 +33,18 @@ function requestMatrix(orderCount) {
     addressArray = [];
 
     locality = document.getElementById("city").value;
-    if(locality == ""){
+    if (locality == "") {
         locality = "New York, NY";
     }
     startVal = document.getElementById("startAddress").value;
     stopVal = document.getElementById("stopAddress").value;
-    
-    if (startVal == ''){
+
+    if (startVal == '') {
         document.getElementById("map").style.height = "30px";
         document.getElementById("map").innerHTML = "Enter a starting address.";
         return;
-    }
-    else{
-        if (stopVal == ''){
+    } else {
+        if (stopVal == '') {
             stopVal = startVal;
         }
     }
@@ -60,9 +59,9 @@ function requestMatrix(orderCount) {
     }
 
     // Don't process when all fields are empty or only one order present
-    if (orders.length < 1) {
+    if (orders.length < 2) {
         document.getElementById("map").style.height = "30px";
-        document.getElementById("map").innerHTML = "Enter at least one waypoint.";
+        document.getElementById("map").innerHTML = "Enter at least two waypoints.";
         return;
     }
     // Initialize variables
@@ -93,7 +92,7 @@ function requestMatrix(orderCount) {
     let matrixRequest = {
         // origins same as destinations
         origins: [startVal + ", " + locality].concat(addressArray),
-        destinations: [stopVal  + ", " + locality].concat(addressArray),
+        destinations: [stopVal + ", " + locality].concat(addressArray),
         travelMode: transportation,
     };
 
@@ -233,7 +232,7 @@ function requestRoutes(addresses) {
     }
 
     let directionsRequest = {
-        origin: startVal  + ', ' + locality,
+        origin: startVal + ', ' + locality,
         destination: stopVal + ', ' + locality,
         travelMode: transportation,
         waypoints: waypts,
@@ -457,7 +456,7 @@ function addField() {
         inp.setAttribute("class", "form-control");
         inp.setAttribute("type", "text");
         if (j == 1) {
-            inp.setAttribute("placeholder", i+1);
+            inp.setAttribute("placeholder", i + 1);
             inp.setAttribute("id", "n" + (i + 1));
         } else {
             inp.setAttribute("placeholder", "Address");
@@ -490,11 +489,10 @@ function makeEndptFields() {
         let inp = document.createElement("input");
         inp.setAttribute("class", "form-control");
         inp.setAttribute("type", "text");
-        if(j==0){
+        if (j == 0) {
             inp.setAttribute("placeholder", "(City)");
             inp.setAttribute("id", "city");
-        }
-        else if (j == 1) {
+        } else if (j == 1) {
             inp.setAttribute("placeholder", "*Start*");
             inp.setAttribute("id", "startAddress");
         } else {
