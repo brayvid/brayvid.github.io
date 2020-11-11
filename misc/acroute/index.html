@@ -1,0 +1,230 @@
+<!--
+Title: ACRoute v1.0   
+Usage: (c) 2020 Blake Rayvid. Non-commercial use only.
+Author: Blake Rayvid (https//github.com/brayvid)  */
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+
+        ACRoute
+
+    </title>
+
+    <!-- Bootstrap CSS 4.3.1 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <!-- Local stylesheet CSS -->
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            margin-bottom: 60px;
+            /* Margin bottom by footer height */
+        }
+
+        .navbar {
+            height: 100px;
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        #store {
+            font-size: 0.9em;
+        }
+
+        .form-row {
+            margin: 8px;
+        }
+
+        .buttonrow {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .fieldbuttonrow {
+            text-align: center;
+        }
+
+        #display {
+            padding: 16px;
+        }
+
+        .btn {
+            width: 40%;
+        }
+
+        #tablebody {
+            padding: 10px;
+        }
+
+        #assign {
+            background-color: #2d096b;
+            border-color: #2d096b;
+        }
+
+        #displayTable {
+            margin: 0;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+        }
+
+        #footertext {
+            text-align: center;
+        }
+
+        #googlelogo {
+            display: inline;
+            /* the default for span */
+            height: 1.3em;
+        }
+
+        #map {
+            margin: 0;
+            padding: 0;
+            height: 400px;
+            width: auto;
+            overflow: visible;
+        }
+    </style>
+
+    <!-- JQuery JS 3.3.1 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+
+    <!-- Bootstrap JS 4.3.1 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    <!-- Preferences JS -->
+    <script src="src/prefs.js"></script>
+
+    <!-- Main program JS -->
+    <script src="src/acroute.js"></script>
+
+
+    <!-- Google Maps JS API -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwBBZnhL74H2NDxpcK6KT2eWLm9ZaATcw&callback=googleReady"
+        async defer></script>
+</head>
+
+<body>
+    <!-- Title bar -->
+    <nav class="navbar navbar-light bg-light">
+        <h6 class="navbar-brand">
+
+            ACRoute v1.0
+
+            <br>
+
+            <form id="start" class=".w-auto">
+            </form>
+
+        </h6>
+
+        <!-- <img class="logo" src="img/logo.png" width="50" height="50"> -->
+    </nav>
+
+    <main role="main" class="container">
+        <!-- Area for displaying table or status string -->
+        <div id="display" class="collapse">
+            <div id="tbl"></div>
+            <div id="map"></div>
+        </div>
+        <!-- Selection for number of available drivers -->
+        <!--
+        <div class="form-group col-md-4">
+            <label for="driverSelect">
+
+                Drivers:
+
+            </label>
+            <select class="form-control" id="driverSelect">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div> -->
+
+        <!-- Buttons to add/remove field rows -->
+        <div class="fieldbuttonrow">
+            <button class="btn btn-default" onclick="removeField()">
+
+                Remove row
+
+            </button>
+            <button class="btn btn-default" onclick="addField()">
+
+                Add row
+
+            </button>
+
+        </div>
+        <!-- Area for field grid -->
+        <form id="fields" class=".w-auto">
+        </form>
+        <form id="finish" class=".w-auto">
+        </form>
+
+        <!-- Assign button -->
+        <div class="buttonrow">
+            <button id="assign" class="btn btn-primary" onclick="requestMatrix()">
+
+                Route
+
+            </button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container" id="footertext">
+            <span>
+                <a href="https://cloud.google.com/"><img id="googlelogo" src="img/cloud.png"></img></a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            // Identify store location
+            // document.getElementById("store").innerHTML = store.name;
+            makeEndptFields();
+            // Set initial number of input rows
+            for (let r = 0; r < initialInputRows; r++) {
+                addField();
+            }
+
+            // "Assign" button shows display
+            $("#assign").click(function () {
+                $(".collapse").collapse('show');
+            });
+        });
+    </script>
+</body>
+
+</html>
