@@ -272,7 +272,7 @@ function directionsCallback(response, status) {
                 },
                 map: map,
                 icon: {
-                    url: '/img/home.png',
+                    url: 'https://brayvid.github.io/misc/delivery/img/home.png',
                     size: new google.maps.Size(22, 22),
                     anchor: new google.maps.Point(11, 11)
                 },
