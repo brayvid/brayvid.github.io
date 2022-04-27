@@ -1,30 +1,30 @@
 <html>
 <body>
 	<section>
-		<h2><span><a href="https://brayvid.github.io">brayvid.github.io</a></span></h2>
+		<h2><span><a href="https://brayvid.github.io">Visualizing math and science</a></span></h2>
 	</section>
 	<section>
 		<table>
-			<tr>
-				<td><a href="https://brayvid.github.io/optics">Converging lens diagram</a></td>
-			</tr>
-			<tr>
-				<td><a href="https://brayvid.github.io/interest">Exponential growth of savings</a></td>
+						<tr>
+				<td><a href="https://brayvid.github.io/optics">Convex Lens Diagram</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/spring">Damped harmonic oscillator</a></td>
+				<td><a href="https://brayvid.github.io/spring">Damped Harmonic Oscillator</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/collide">Elastic collisions</a></td>
+				<td><a href="https://brayvid.github.io/interest">Exponential Growth of Savings</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/tank">ODE tank problem</a></td>
-			</tr>
-			<tr>
-				<td><a href="https://brayvid.github.io/misc/threebody">Three-body gravity simulator</a></td>
+				<td><a href="https://brayvid.github.io/tank">Tank Problem</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II trajectory animation</a></td>
+				<td><a href="https://brayvid.github.io/misc/chem-quiz">Chemistry II Quiz</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/misc/threebody">Three Body Problem</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II Trajectory</a></td>
 			</tr>
 		</table>
 	</section>
