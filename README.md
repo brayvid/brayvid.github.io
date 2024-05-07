@@ -15,16 +15,13 @@
 				<td><a href="https://brayvid.github.io/interest">Exponential Growth of Savings</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/tank">Tank Problem</a></td>
+				<td><a href="https://brayvid.github.io/tank">Tank Mixing Problem</a></td>
 			</tr>
 						<tr>
 				<td><a href="https://brayvid.github.io/misc/chem-quiz">Chemistry II Quiz</a></td>
 			</tr>
 						<tr>
 				<td><a href="https://brayvid.github.io/misc/threebody">Three Body Problem</a></td>
-			</tr>
-						<tr>
-				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II Trajectory</a></td>
 			</tr>
 		</table>
 	</section>
