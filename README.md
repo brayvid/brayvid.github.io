@@ -25,5 +25,22 @@
 			</tr>
 		</table>
 	</section>
+	<section>
+	<h3>Misc</h3>
+		<table>
+						<tr>
+				<td><a href="https://brayvid.github.io/misc/chem-quiz">General Chemistry II Quiz</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/misc/threebody">Three-Body Problem</a></td>
+			</tr>
+						<tr>
+				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II Animation</a></td>
+			</tr>
+				<tr>
+				<td><a href="https://brayvid.github.io/misc/bandman">Bandman</a></td>
+			</tr>
+		</table>
+	</section>	
 </body>
 </html>
