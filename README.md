@@ -17,30 +17,22 @@
 						<tr>
 				<td><a href="https://brayvid.github.io/tank">Tank Mixing Problem</a></td>
 			</tr>
+				<tr>
+				<td><a href="https://brayvid.github.io/collide">Rigid Body Collisions in 2D</a></td>
+			</tr>
 						<tr>
 				<td><a href="https://brayvid.github.io/misc/chem-quiz">Chemistry II Quiz</a></td>
 			</tr>
 						<tr>
 				<td><a href="https://brayvid.github.io/misc/threebody">Three Body Problem</a></td>
 			</tr>
-		</table>
-	</section>
-	<section>
-	<h3>Misc</h3>
-		<table>
-						<tr>
-				<td><a href="https://brayvid.github.io/misc/chem-quiz">General Chemistry II Quiz</a></td>
-			</tr>
-						<tr>
-				<td><a href="https://brayvid.github.io/misc/threebody">Three-Body Problem</a></td>
-			</tr>
-						<tr>
+									<tr>
 				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II Animation</a></td>
 			</tr>
 				<tr>
-				<td><a href="https://brayvid.github.io/misc/bandman">Bandman</a></td>
-			</tr>
+				<td><a href="https://brayvid.github.io/misc/bandman">Bandman Game</a></td>
+				</tr>
 		</table>
-	</section>	
+	</section>
 </body>
 </html>
