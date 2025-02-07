@@ -21,17 +21,8 @@
 				<td><a href="https://brayvid.github.io/collide">Rigid Body Collisions in 2D</a></td>
 			</tr>
 						<tr>
-				<td><a href="https://brayvid.github.io/misc/chem-quiz">Chemistry II Quiz</a></td>
+				<td><a href="https://brayvid.github.io/threebody">Three Body Problem</a></td>
 			</tr>
-						<tr>
-				<td><a href="https://brayvid.github.io/misc/threebody">Three Body Problem</a></td>
-			</tr>
-									<tr>
-				<td><a href="https://brayvid.github.io/misc/voyager">Voyager II Animation</a></td>
-			</tr>
-				<tr>
-				<td><a href="https://brayvid.github.io/misc/bandman">Bandman Game</a></td>
-				</tr>
 		</table>
 	</section>
 </body>
