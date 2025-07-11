@@ -371,3 +371,14 @@ h2 {
 
 }
 
+#sketch-list {
+  /* Reserves vertical space to prevent layout shift from the gallery */
+  min-height: 800px;
+}
+
+/* On smaller screens, we don't need as much space reserved */
+@media (max-width: 768px) {
+  #sketch-list {
+    min-height: 1200px;
+  }
+}
