@@ -371,14 +371,21 @@ h2 {
 
 }
 
-#sketch-list {
-  /* Reserves vertical space to prevent layout shift from the gallery */
-  min-height: 800px;
+/*
+  This is the magic fix for CLS.
+  It tells the browser to reserve space for each image based on its
+  natural aspect ratio, which is defined by the width/height attributes in the HTML.
+  This prevents the page from jumping when the images load.
+*/
+#sketch-list > a > picture,
+#sketch-list > a > img {
+    aspect-ratio: attr(width) / attr(height);
+    display: block; /* Ensures the aspect-ratio is applied correctly */
+    width: 100%;    /* Makes the image responsive within its container */
+    height: auto;   /* Lets the height adjust based on the aspect ratio */
 }
 
-/* On smaller screens, we don't need as much space reserved */
-@media (max-width: 768px) {
-  #sketch-list {
-    min-height: 1200px;
-  }
+/* This targets the container the justified-gallery plugin creates */
+.jg-entry {
+    background-color: #f0f0f0; /* Optional: A light placeholder color */
 }
