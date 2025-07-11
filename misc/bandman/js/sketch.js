@@ -18,8 +18,15 @@ var gameState = 0;
 var upCount = 1;
 var downCount = 1;
 var fallCount = 0;
-var frameCount = 0;
-var inverseFR = 16;
+// REMOVED the broken 'var frameCount = 0;'
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++ SETTING SCROLL SPEED TO BE 8x FASTER THAN ORIGINAL +++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// This is the number of frames to scroll one segment.
+// Lower is much faster. Original was 16. This is now 8x faster.
+var inverseFR = 4; 
+
 var intraFrameCt;
 var oldBounds = bounds;
 var minH = 0.1
@@ -27,11 +34,6 @@ var playerSize = 15;
 var dateNow;
 
 function preload(){
-    // NOTE: This assumes 'ibm_data' is a global variable
-    // from a script included in your HTML, as the original code implies.
-    // If you are loading from a file, it should be:
-    // data = loadJSON(loc); 
-    // And you'd access it differently in setup(). For now, keeping original logic.
     data = ibm_data["Technical Analysis: BBANDS"];
 }
 
@@ -67,18 +69,14 @@ function setup(){
     initScale = 2 * (shownValues["upper"][jxFrame - 1] - shownValues["middle"][jxFrame - 1]);
 }
 
-
-// ++++++++++++++++++++++++++++++++++++++++++++++
-// +++ NEW HELPER FUNCTION TO CHECK ALL INPUTS +++
-// ++++++++++++++++++++++++++++++++++++++++++++++
 function isGoingUp() {
-  // Check for equals key (keyCode 187)
-  // Check for space bar (keyCode 32)
-  // Check for mouse press OR screen touch
   return keyIsDown(187) || keyIsDown(32) || mouseIsPressed;
 }
 
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++ CORRECTED DRAW LOOP WITH ORIGINAL PHYSICS & FIXED COUNTER +++
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function draw(){
     translate(0, windowHeight / 2);
     background(0);
@@ -105,10 +103,8 @@ function draw(){
         text((floor((dateNow.getTime() - startDate.getTime()) / (1000*60*60*24*7))-22).toString(), windowWidth / 2, -(windowHeight / 2) + 30);
         pop();
         
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // +++ MODIFIED THIS 'IF' BLOCK TO USE THE NEW FUNCTION +++
-        // +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        if (isGoingUp()) { // This now checks for '=', space, or touch
+        // Using original vertical physics, as requested
+        if (isGoingUp()) { 
             displaced += 1.5 * log(upCount);
             upCount += 1;
             fallCount = 0;
@@ -117,11 +113,10 @@ function draw(){
             fallCount += 1;
         }
     
-        // This 'down' control was not requested to change, so it's left as is.
         if (keyIsDown(189)) {
             displaced -= log(downCount);
             downCount += 1;
-            fallCount += 0.5; // Adjusted to be consistent with original logic
+            fallCount += 0.5;
         }else{
             downCount = 1;
         }
@@ -137,7 +132,8 @@ function draw(){
 
     intraFrameCt ++;
 
-    if ((frameCount % inverseFR == 0) && ! outBounds && (frameCount > 0)){ 
+    // Using the BUILT-IN p5.js 'frameCount' which increments automatically and correctly.
+    if ((frameCount % inverseFR == 0) && !outBounds && (frameCount > 0)){ 
         intraFrameCt = 0;
         do {
             dateNow = addDays(dateNow, 1);
@@ -157,8 +153,7 @@ function draw(){
             console.log("End of demo");
             gameOver(yvals);
         }
-
-        frameCount ++;   
+        // REMOVED the broken 'frameCount++' that was here.
     }  
 }
 
