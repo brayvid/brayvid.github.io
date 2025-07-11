@@ -4,7 +4,7 @@
 <head>
 	<title>Science Sims | Blake Rayvid</title>
 
-	<!-- Basic SEO & Social Media Meta Tags -->
+	<!-- Meta Tags -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="A collection of interactive science simulations and animations built with p5.js.">
@@ -47,7 +47,6 @@
 		</section>
 
 		<section id="content">
-			<!-- The gallery is back to its simple, original structure -->
 			<div id="sketch-list">
 				<a class="sketch-link" href="optics"><picture><source srcset="img/ray-screenshot.webp" type="image/webp"><source srcset="img/ray-screenshot.png" type="image/png"><img src="img/ray-screenshot.png" alt="Interactive simulation of a converging lens" width="1000" height="573"></picture><div class="caption"><strong>Converging lens diagram</strong></div></a>
 				<a class="sketch-link" href="interest"><picture><source srcset="img/interest-screenshot.webp" type="image/webp"><source srcset="img/interest-screenshot.png" type="image/png"><img src="img/interest-screenshot.png" alt="Animation of exponential growth" width="1000" height="558"></picture><div class="caption"><strong>Exponential growth of savings</strong></div></a>
@@ -59,13 +58,12 @@
 		</section>
 
 		<section id="bottom-space"></section>
-
 		<section id="footer">
 			<table id="footer-content">
 				<tr>
-					<td class="footer-link"><a id="name-link" class="footer-link-inner" href="https://blakerayvid.com">blakerayvid.com</a></td>
-					<td class="footer-link"><a id="ccny-link" class="footer-link-inner" href="http://sciencesims.com">ccny science sims</a></td>
-					<td class="footer-link"><a id="misc-link" class="footer-link-inner" href="misc">misc programs</a></td>
+					<td class="footer-link"><a id="name-link" class="footer-link-inner" href="https://blakerayvid.com">portfolio</a></td>
+					<td class="footer-link"><a id="ccny-link" class="footer-link-inner" href="http://sciencesims.com">science sims</a></td>
+					<td class="footer-link"><a id="misc-link" class="footer-link-inner" href="misc">misc</a></td>
 				</tr>
 			</table>
 		</section>
@@ -85,8 +83,11 @@
 				margins: 15,
 				lastRow: "center"
 			}).on('jg.complete', function () {
-				// The only job of the JS is to make the gallery visible when ready.
-				$(this).css('opacity', 1);
+				// 1. Make the gallery items visible
+				$(this).find('a').css('opacity', 1);
+
+				// 2. FINAL FIX: Collapse the container to its true height to remove the extra space
+				$(this).css('min-height', 'auto');
 			});
 		});
 	</script>

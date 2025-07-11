@@ -1,430 +1,88 @@
-/* === FINAL PERFORMANCE & STABILITY FIX === */
+/* === FINAL, STABLE PERFORMANCE FIX (v.Mobile) === */
 
+/* 1. DO NOT HIDE THE CONTAINER. The JS plugin needs to see it. */
+/*    This rule ONLY reserves space to prevent layout shift. */
 #sketch-list {
-  /* 1. Hide the container to prevent flash of unstyled content and visual glitches */
-  opacity: 0;
-
-  /* 2. Add a transition for a smooth fade-in effect once the gallery is ready */
-  transition: opacity 0.4s ease-in-out;
-
-  /* 3. Reserve space to prevent Cumulative Layout Shift (CLS) */
-  /* Estimated height for desktop (e.g., 2-3 rows) */
-  min-height: 700px;
+  min-height: 700px; /* Estimated height for desktop */
 }
 
-/* On smaller screens, the gallery will be taller */
+/* 2. HIDE THE CHILDREN INITIALLY. This is the key change. */
+#sketch-list > a {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* 3. Media query for the mobile container height */
 @media (max-width: 768px) {
   #sketch-list {
-    /* Estimated height for mobile (e.g., 6 rows) */
-    min-height: 2000px;
+    min-height: 2000px; /* Estimated height for mobile */
   }
 }
 
-/* === END OF FIX === */
+/* === STATIC OVERLAY CAPTION === */
 
-
-/* === STATIC OVERLAY CAPTION (FINAL) === */
-
-/* 1. Establish the card as the positioning container */
 .jg-entry {
-  position: relative; /* This is the anchor for the caption overlay */
-  overflow: hidden; /* Ensures nothing spills out */
+  position: relative;
+  overflow: hidden;
 }
 
-/* 2. Fix the image cropping/zooming issue */
 .jg-entry img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Scales the image to fit inside the box without cropping */
+  object-fit: contain;
 }
 
-/* 3. Style the static title overlay */
 .jg-entry .caption {
-  /* Positioning */
-  position: absolute; /* Take the caption out of the normal flow */
-  top: 0;             /* Stick it to the top of the card */
-  left: 0;            /* Stick it to the left of the card */
-  width: 100%;        /* Make it span the full width */
-  z-index: 2;         /* Ensure it's on top of the image */
-
-  /* Appearance */
-  background-color: rgba(0, 0, 0, 0.6); /* Semitransparent black background */
-  color: white;                         /* White text */
-  text-align: center;                   /* Center the text horizontally */
-  padding: 0.75em 1em;                  /* Add some nice spacing */
-  font-family: "Helvetica", sans-serif; /* A cleaner font for an overlay */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-align: center;
+  padding: 0.75em 1em;
+  font-family: "Helvetica", sans-serif;
   font-size: 0.9em;
-
-  /* Make sure it's always visible and doesn't get hidden by the plugin */
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-/* Hide the plugin's default hover overlay which is no longer needed */
 .jg-caption {
   background: none !important;
 }
+
+/* === END OF FIXES === */
+
+
 /* All devices */
-
-html	{
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-	height: 100%;
-	box-sizing: border-box;
-	background-color: #fff;
-	font-family:"Times New Roman";
-	text-align: center;
-}
-
-*,	*:before,	*:after {
-	box-sizing: inherit;
-}
-
-body	{
-	padding: 0px;
-	margin: 0px;
-	border: 0px;
-	background-color: #fff;
-	height: 100%;
-}
-
-a	{
-	color: #000;
-	text-decoration: none;
-}
-
-a:hover{
-	text-decoration:underline;
-}
-
-#container {
-	position:relative; /* needed for footer positioning*/
-	height:auto !important; /* real browsers */
-	min-height:100%; /* real browsers */
-}
-
-#title	{
-	margin: 0 auto;
-	padding-top: none;
-	color: #000;
-	font-size: 1.8em;
-}
-
-#title-line-break {
-	display: none;
-}
-
-#title-space {
-	display: inline;
-}
-
-h2 {
-	min-width:100%;
-}
-
-
-.p5-link	{
-	color: rgb(240,27,91); /* p5 pink */
-	font-family: "Helvetica";
-	font-weight: 600;
-}
-
-.p5-link:hover {
-	text-decoration: none;
-}
-
-
-#asterisk{
-	position: absolute;
-	font-size: 0.8em;
-	 transform:  translate(-0.5px, 60%);
-	 -webkit-transform:  translate(-0.5px, 60%);
-	 -moz-transform: translate(-0.5px, 60%);
-	 -o-transform:  translate(-0.5px, 60%);
-	 -ms-transform:  translate(-0.5px, 60%);
-}
-
-#content {
-	margin: 0 auto;
-}
-
-.sketch-link	{
-	border-top: 1px solid #222;
-	border-right: 1px solid #222;
-	border-left: 1px solid #000;
-	border-bottom: 1px solid #000;
-}
-
-#bottom-space {
-	position: relative;
-	width: 100%;
-	min-height: 100px;
-}
-
-#footer	{
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-}
-
-#footer-content	{
-	display:inline-block;
-}
-
-.footer-link-inner:active{
-	text-decoration: underline;
-}
-
-.footer-link	{
-	width: 20%;
-	font-style: italic;
-}
-
-
-/* 	Device-specific	*/
-
-
-/* Misc small screens 1 */ 
-@media only screen and (max-width: 400px) and (max-height: 240px){
-	#header {
-		line-height: 1em;
-	}
-
-	#physical-principles {
-		font-size: 0.7em;
-	}
-
-	#in{
-		font-size: 0.5em;
-	}
-
-	#top-line {
-		font-size: 1.2em;
-	}
-	.p5-link {
-		font-size: 0.7em;
-	}
-
-	#title-line-break {
-	display: inline;
-	}
-
-	#title-space {
-	display: none;
-	}
-
-	#footer-content{
-		font-size: 0.5em;
-	}
-}
-
-/* Smartphones (portrait and landscape) */
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-	#header {
-		padding-top: 1.5em;
-		padding-bottom: 1.5em;
-	}
-	
-	#title-line-break {
-	display: inline;
-	}
-
-	#title-space {
-	display: none;
-	}
-
-	#bottom-space {
-		height: 2em;
-	}
-
-	#footer {
-		padding-bottom: 1.5em;
-	}
-
-	#footer-content {
-		font-size: 1.5em;
-	}
-}
-
-/* Smartphones (landscape) */
-@media only screen and (min-width : 321px) {
-	#header {
-		padding-top: 2.5em;
-		padding-bottom: 1em;
-	}
-	
-	#title-line-break {
-	display: none;
-	}
-
-	#title-space {
-	display: inline;
-	}
-
-	#content {
-		width: 90%;
-	}
-
-	#bottom-space {
-		height: 2em;
-	}
-
-	#footer {
-		padding-bottom: 1.5em;
-	}
-
-	#footer-content{
-		font-size: 1em;
-	}
-}
-
-/* Smartphones (portrait) */
-@media only screen and (max-width : 375px) {
-	#header {
-		padding-top: 1.5em;
-		padding-bottom: 0em;
-		margin: 0 auto;
-	}
-	
-	#title-line-break {
-	display: inline;
-	}
-
-	#title-space {
-	display: none;
-	}
-
-	#top-line{
-		font-size: 1em;
-	}
-
-	#in{
-		font-size: 0.2em;
-	}
-
-	#bottom-space {
-		height: 6em;
-	}
-
-	#footer {
-		padding-bottom: 1.5em;
-	}
-	#footer-content{
-		font-size: 1em;
-	}
-}
-
-/* iPads (portrait and landscape) */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
-	#in {
-		font-size: 1.2em;
-		margin-right: 5px;
-	}
-
-	#footer-content {
-		font-size: 0.5em;
-	}
-
-	#title-line-break {
-	display: none;
-	}
-
-	#title-space {
-	display: inline;
-	}
-}
-
-/* iPads (landscape) */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-	#header {
-		padding-top: 2em;
-		padding-bottom: 2em;
-	}
-
-	#top-line {
-		font-size: 1.6em;
-	}
-
-	.p5-link {
-		font-size: 1.6em;
-	}
-
-	#content {
-		max-width: 65%;
-	}
-
-	#title-line-break {
-	display: none;
-	}
-
-	#title-space {
-	display: inline;
-	}
-}
-
-/* iPads (portrait) */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-	#header {
-		padding-top: 3em;
-		padding-bottom: 2em;
-	}
-
-	#top-line {
-		font-size: 1.6em;
-	}
-
-	.p5-link {
-		font-size: 1.6em;
-	}
-
-	#content {
-		max-width: 75%;
-	}
-	
-	#title-line-break {
-	display: none;
-	}
-
-	#title-space {
-	display: inline;
-	}
-}
-
-/* Desktops and laptops */
-@media only screen and (min-width : 1224px) {
-	#header {
-		padding-top: 2.5em;
-		padding-bottom: 2.5em;
-	}
-
-	#top-line {
-		font-size: 1.6em;
-	}
-
-
-	#in {
-		font-size: 1.3em;
-		margin-right: 5px;
-	}
-
-	.p5-link {
-		font-size: 1.6em;
-	}
-
-	#content {
-		width: 70%;
-	}
-
-	#footer-content {
-		font-size: 1.2em;
-	}
-	
-	#title-line-break {
-	display: none;
-	}
-
-	#title-space {
-	display: inline;
-	}
-}
+html{margin:0;padding:0;border:0;height:100%;box-sizing:border-box;background-color:#fff;font-family:"Times New Roman";text-align:center}
+*,*:before,*:after{box-sizing:inherit}
+body{padding:0;margin:0;border:0;background-color:#fff;height:100%}
+a{color:#000;text-decoration:none}
+a:hover{text-decoration:underline}
+#container{position:relative;height:auto!important;min-height:100%}
+#title{margin:0 auto;padding-top:none;color:#000;font-size:1.8em}
+#title-line-break{display:none}
+#title-space{display:inline}
+h2{min-width:100%}
+.p5-link{color:rgb(240,27,91);font-family:"Helvetica";font-weight:600}
+.p5-link:hover{text-decoration:none}
+#asterisk{position:absolute;font-size:.8em;transform:translate(-.5px,60%);-webkit-transform:translate(-.5px,60%);-moz-transform:translate(-.5px,60%);-o-transform:translate(-.5px,60%);-ms-transform:translate(-.5px,60%)}
+#content{margin:0 auto}
+.sketch-link{border-top:1px solid #222;border-right:1px solid #222;border-left:1px solid #000;border-bottom:1px solid #000}
+#bottom-space{position:relative;width:100%;min-height:100px}
+#footer{position:absolute;bottom:0;width:100%}
+#footer-content{display:inline-block}
+.footer-link-inner:active{text-decoration:underline}
+.footer-link{width:20%;font-style:italic}
+
+/* Device-specific */
+@media only screen and (max-width:400px) and (max-height:240px){#header{line-height:1em}#physical-principles{font-size:.7em}#in{font-size:.5em}#top-line{font-size:1.2em}.p5-link{font-size:.7em}#title-line-break{display:inline}#title-space{display:none}#footer-content{font-size:.5em}}
+@media only screen and (min-device-width:320px) and (max-device-width:480px){#header{padding-top:1.5em;padding-bottom:1.5em}#title-line-break{display:inline}#title-space{display:none}#bottom-space{height:2em}#footer{padding-bottom:1.5em}#footer-content{font-size:1.5em}}
+@media only screen and (min-width:321px){#header{padding-top:2.5em;padding-bottom:1em}#title-line-break{display:none}#title-space{display:inline}#content{width:90%}#bottom-space{height:2em}#footer{padding-bottom:1.5em}#footer-content{font-size:1em}}
+@media only screen and (max-width:375px){#header{padding-top:1.5em;padding-bottom:0;margin:0 auto}#title-line-break{display:inline}#title-space{display:none}#top-line{font-size:1em}#in{font-size:.2em}#bottom-space{height:6em}#footer{padding-bottom:1.5em}#footer-content{font-size:1em}}
+@media only screen and (min-device-width:768px) and (max-device-width:1024px){#in{font-size:1.2em;margin-right:5px}#footer-content{font-size:.5em}#title-line-break{display:none}#title-space{display:inline}}
+@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:landscape){#header{padding-top:2em;padding-bottom:2em}#top-line{font-size:1.6em}.p5-link{font-size:1.6em}#content{max-width:65%}#title-line-break{display:none}#title-space{display:inline}}
+@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:portrait){#header{padding-top:3em;padding-bottom:2em}#top-line{font-size:1.6em}.p5-link{font-size:1.6em}#content{max-width:75%}#title-line-break{display:none}#title-space{display:inline}}
+@media only screen and (min-width:1224px){#header{padding-top:2.5em;padding-bottom:2.5em}#top-line{font-size:1.6em}#in{font-size:1.3em;margin-right:5px}.p5-link{font-size:1.6em}#content{width:70%}#footer-content{font-size:1.2em}#title-line-break{display:none}#title-space{display:inline}}
