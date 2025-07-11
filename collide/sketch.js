@@ -124,7 +124,7 @@ function Sphere(p, v, a, m, c){
 function draw(){
     if (stopAll) return; // Simplified pause logic
 
-	background(226, 226, 226);
+	background(255);
 			
 	if(!started){
         // **FIX**: Responsive intro screen
