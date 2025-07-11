@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Rigid Body Collisions | Blake Rayvid</title>
+  <title>2D Collisions | Blake Rayvid</title>
 
   <!-- SEO & Social Media Meta Tags -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -33,24 +33,33 @@
   <!-- These scripts are loaded from the 'lib' folder inside this 'collide' directory -->
   <script type="text/javascript" src="lib/inobounce.js"></script>
   <script type="text/javascript" src="lib/science.js"></script>
-  <script type="text/javascript" src="lib/p5.collide2d.js"></script>
+  <script type="text/javascript" src="lib/p5.collide2d.min.js"></script>
   
   <!-- Your Sketch -->
   <script language="javascript" src="sketch.js"></script>
 
-  <style> 
-      body{
-          margin: 0;
-          padding: 0;
-          font-family:Helvetica, Arial, Sans-serif;
-          color: black; 
-          font-size: 10pt;
-          background-color: #E2E2E2;
-          height: 100%;
-          overflow: auto;
-          -webkit-overflow-scrolling: touch;
-      }    
-  </style>
+  <!-- In your HTML file's <head> -->
+<!-- In your HTML file's <head> -->
+<style>
+  html {
+    position: fixed;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    font-family: Helvetica, Arial, Sans-serif;
+    background-color: #E2E2E2;
+  }
+  canvas {
+    display: block;
+  }
+</style>
 
 </head>
 
