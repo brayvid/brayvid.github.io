@@ -38,13 +38,24 @@
 	    gtag('config', 'G-0X17N0BWYV');
 	</script>
 
-    <!-- This style hides the gallery until it's ready, preventing CLS. Optional: added a transition for a fade-in effect. -->
-    <style>
-        #sketch-list.justified-gallery > a {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-    </style>
+	<style>
+		/* 
+		This style prevents a "flash of unstyled content" (FOUC).
+		It keeps the gallery items invisible until the JS plugin
+		has finished arranging them.
+		*/
+		#sketch-list > a {
+			visibility: hidden; /* Use visibility instead of opacity to prevent interaction with empty space */
+		}
+		#sketch-list.jg-complete > a {
+			visibility: visible;
+			opacity: 0;
+			animation: fadeIn 0.5s forwards;
+		}
+		@keyframes fadeIn {
+			to { opacity: 1; }
+		}
+	</style>
 </head>
 
 <body>
@@ -136,19 +147,18 @@
 	<script defer src="homepage/jquery.justifiedGallery.min.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-        // JAVASCRIPT FIX: We put the DOMContentLoaded listener back.
-        // This ensures the code inside only runs after the deferred scripts (like jQuery) are ready.
-        document.addEventListener("DOMContentLoaded", function(event) {
-            $("#sketch-list").justifiedGallery({
-                rowHeight: 300,
-                captions: true,
-                border: -1,
-                margins: 15,
-                lastRow: "center"
-            }).on('jg.complete', function () {
-                $(this).find('a').css('opacity', 1); // Fade in images when layout is complete
-            });
-        });
+		document.addEventListener("DOMContentLoaded", function(event) {
+			$("#sketch-list").justifiedGallery({
+				rowHeight: 300,
+				captions: true,
+				border: -1,
+				margins: 15,
+				lastRow: "center"
+			}).on('jg.complete', function () {
+				// Add a class to the container when the gallery is ready
+				$(this).addClass('jg-complete');
+			});
+		});
 	</script>
 
 </body>
