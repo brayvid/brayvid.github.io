@@ -79,7 +79,7 @@ function draw() {
             fill(255);
             textAlign(CENTER, CENTER);
             textFont(introFont, 24);
-            text("3-body system with custom forces:\nTap on three places to choose\nan initial position for each body.\nAll start at rest.", 0, -40);
+            text("3-body system under gravity:\nTap on three places to choose\nan initial position for each body.\nAll start at rest.", 0, -40);
             text("v0.7", 0, windowHeight / 2 - 80);
             pop();
         }
