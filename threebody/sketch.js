@@ -80,7 +80,7 @@ function draw() {
             textAlign(CENTER, CENTER);
             textFont(introFont, 24);
             text("3-body system with custom forces:\nTap on three places to choose\nan initial position for each body.\nAll start at rest.", 0, -40);
-            text("v0.8 (Setup Fixed)", 0, windowHeight / 2 - 80);
+            text("v0.7", 0, windowHeight / 2 - 80);
             pop();
         }
 
