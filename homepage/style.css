@@ -64,3 +64,11 @@ h2{min-width:100%}
 @media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:landscape){#header{padding-top:2em;padding-bottom:2em}#top-line{font-size:1.6em}.p5-link{font-size:1.6em}}
 @media only screen and (min-device-width:768px) and (max-device-width:1024px) and (orientation:portrait){#header{padding-top:3em;padding-bottom:2em}#top-line{font-size:1.6em}.p5-link{font-size:1.6em}}
 @media only screen and (min-width:1224px){#header{padding-top:2.5em;padding-bottom:2.5em}#top-line{font-size:1.6em}#in{font-size:1.3em;margin-right:5px}.p5-link{font-size:1.6em}#footer-content{font-size:1.2em}#title-line-break{display:none}#title-space{display:inline}}
+/* --- Responsive Title Line Break for Mobile --- */
+
+/* On screens 600px wide or less... */
+@media (max-width: 768px) {
+  .title-first-line {
+    display: block;
+  }
+}
