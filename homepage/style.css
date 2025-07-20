@@ -24,7 +24,7 @@ html, body {
 #sketch-list {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  min-height: 500px; /* A reasonable starting height to help CLS */
+  min-height: 800px; /* A reasonable starting height to help CLS */
 }
 
 /* 3. Static overlay caption & image scaling */
