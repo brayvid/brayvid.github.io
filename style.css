@@ -1,38 +1,69 @@
-/* === FINAL, BULLETPROOF FIX === */
+/* === CSS Grid Gallery === */
 
-/* 1. Remove all height/positioning hacks from the main layout */
+/* 1. Basic Layout Reset (kept from your original) */
 html, body {
-  height: auto; /* Let the body be as tall as its content */
+  height: auto;
 }
-
 #container {
-  /* Remove all old sticky footer rules. This just centers the content. */
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 15px;
 }
-
 #footer {
-  /* Let the footer sit naturally at the bottom of the content flow */
   position: static;
   padding: 2em 0;
 }
 
-/* 2. Hide the gallery initially to prevent visual glitches.
-      This has a MINIMAL min-height just to prevent a total collapse,
-      which helps the browser. It will NOT create a large blank space. */
+/* 2. The Grid Container */
 #sketch-list {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  min-height: 800px; /* A reasonable starting height to help CLS */
+  display: grid;
+  /* Create responsive columns that are at least 320px wide but can grow */
+  /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); */
+  gap: 15px; /* The space between gallery items */
 }
 
-/* 3. Static overlay caption & image scaling */
-.jg-entry{position:relative;overflow:hidden}
-.jg-entry img{width:100%;height:100%;object-fit:contain}
-.jg-entry .caption{position:absolute;top:0;left:0;width:100%;z-index:2;background-color:rgba(0,0,0,.6);color:#fff;text-align:center;padding:.75em 1em;font-family:"Helvetica",sans-serif;font-size:.9em}
+/* --- Desktop: Single Column Layout --- */
+@media (min-width: 768px) {
+  #sketch-list {
+    grid-template-columns: 1fr; /* Force one full-width column */
+    gap: 40px; /* Increase vertical gap for better separation */
+  }
+}
 
-/* === END OF FIXES === */
+/* 3. Grid Items & Captions */
+.sketch-link {
+  /* This is your <a> tag, now acting as the grid item */
+  position: relative; /* Essential for positioning the caption inside it */
+  display: block;      /* Make the link behave like a container */
+  overflow: hidden;    /* Hide parts of the caption when it's off-screen */
+  /* Re-apply the border from your original styles */
+  border-top: 1px solid #222;
+  border-right: 1px solid #222;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.sketch-link img {
+  display: block; /* Removes tiny space below the image */
+  width: 100%;
+  height: auto; /* Let the image scale proportionally */
+}
+
+.sketch-link .caption {
+  /* This styles the existing <div class="caption"> */
+  position: absolute;
+  bottom: 0; /* Position at the bottom of the link */
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, .7); /* Slightly darker for better contrast */
+  color: #fff;
+  text-align: center;
+  padding: .75em 1em;
+  font-family: "Helvetica", sans-serif;
+  font-size: .9em;
+}
+
 
 
 /* All devices - These rules are now secondary to the fixes above */
@@ -71,4 +102,28 @@ h2{min-width:100%}
   .title-first-line {
     display: block;
   }
+}
+
+/* --- Responsive Title Line Break --- */
+
+/* Default (Mobile View): Enforce the line break */
+#title-space {
+  display: none; /* Hide the space after "principles" */
+}
+#title-line-break {
+  display: block; /* Show the <br> tag to create the line break */
+}
+
+/* Desktop View (screens 768px and wider) */
+@media (min-width: 768px) {
+  #title-space {
+    display: inline; /* Show the space to connect the two parts */
+  }
+  #title-line-break {
+    display: none; /* Hide the <br> tag to make it one line */
+  }
+}
+
+#header {
+  padding-bottom: 2.5em;
 }
