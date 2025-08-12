@@ -102,6 +102,10 @@ h2{min-width:100%}
   .title-first-line {
     display: block;
   }
+
+  #footer a {
+    font-size: 16px;
+  }
 }
 
 /* --- Responsive Title Line Break --- */
@@ -126,8 +130,4 @@ h2{min-width:100%}
 
 #header {
   padding-bottom: 2.5em;
-}
-
-#footer {
-  font-size: 1em;
 }
